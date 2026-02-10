@@ -400,6 +400,67 @@
             margin-top: 10px;
         }
 
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border: 2px solid var(--accent-primary);
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 400px;
+            width: 90%;
+            animation: slideUp 0.3s ease-out;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+        }
+
+        .modal-header {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--accent-primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .modal-subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+        }
+
+        .btn-cancel {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
         @media (prefers-color-scheme: light) {
             :root {
                 --bg-primary: #f5f5f5;
@@ -462,6 +523,21 @@
         </div>
 
         <div class="machines-list" id="machinesList"></div>
+    </div>
+
+    <div class="modal" id="foundModal">
+        <div class="modal-content">
+            <div class="modal-header">Mark as Found</div>
+            <div class="modal-subtitle" id="modalMachineId"></div>
+            <div class="form-group">
+                <label for="foundNotes">Notes (Optional)</label>
+                <textarea id="foundNotes" placeholder="Where did you find it? Any additional info..."></textarea>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeFoundModal()">Cancel</button>
+                <button class="btn-found" onclick="confirmFound()">✓ Confirm Found</button>
+            </div>
+        </div>
     </div>
 
     <div class="toast" id="toast"></div>
@@ -640,23 +716,50 @@
         });
 
         // Mark as found
+        let pendingFoundMachineId = null;
+
         window.markAsFound = (id) => {
+            pendingFoundMachineId = id;
             const machine = machines.find(m => m.id === id);
+            document.getElementById('modalMachineId').textContent = machine.id;
+            document.getElementById('foundNotes').value = '';
+            document.getElementById('foundModal').classList.add('show');
+        };
+
+        window.closeFoundModal = () => {
+            document.getElementById('foundModal').classList.remove('show');
+            pendingFoundMachineId = null;
+        };
+
+        window.confirmFound = () => {
+            if (!pendingFoundMachineId) return;
+            
+            const machine = machines.find(m => m.id === pendingFoundMachineId);
+            const foundNotes = document.getElementById('foundNotes').value.trim();
+            
             if (machine) {
                 machine.status = 'found';
                 machine.foundDate = new Date().toISOString();
                 
                 foundLog.push({
-                    machineId: id,
+                    machineId: pendingFoundMachineId,
                     timestamp: machine.foundDate,
-                    notes: machine.notes || 'No notes'
+                    notes: foundNotes || machine.notes || 'No notes'
                 });
                 
                 saveData();
                 renderMachines();
                 showToast('Marked as found!');
+                closeFoundModal();
             }
         };
+
+        // Close modal when clicking outside
+        document.getElementById('foundModal').addEventListener('click', (e) => {
+            if (e.target.id === 'foundModal') {
+                closeFoundModal();
+            }
+        });
 
         // Mark as missing
         window.markAsMissing = (id) => {
