@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a0a0a">
+    <title>Machine Tracker | JSU IT</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #252525;
+            --text-primary: #e8e8e8;
+            --text-secondary: #a0a0a0;
+            --accent-primary: #00ff88;
+            --accent-secondary: #ff3366;
+            --accent-warning: #ffaa00;
+            --border: #333;
+            --shadow: rgba(0, 255, 136, 0.1);
+        }
+
+        body {
+            font-family: 'Outfit', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding-bottom: 80px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 255, 136, 0.03) 2px,
+                    rgba(0, 255, 136, 0.03) 4px
+                );
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--accent-primary);
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 5px;
+            color: var(--accent-primary);
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--text-secondary);
+            letter-spacing: 2px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            animation: fadeIn 0.5s ease-out 0.2s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .stat-card {
+            flex: 1;
+            background: var(--bg-secondary);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-primary);
+        }
+
+        .stat-card.found::before {
+            background: var(--accent-primary);
+        }
+
+        .stat-card.missing::before {
+            background: var(--accent-secondary);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .add-section {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border);
+            animation: fadeIn 0.5s ease-out 0.3s both;
+        }
+
+        .add-section h2 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: var(--accent-primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input, textarea {
+            width: 100%;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 12px;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px var(--shadow);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        button {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            border: none;
+            padding: 14px 24px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Outfit', sans-serif;
+            width: 100%;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            animation: fadeIn 0.5s ease-out 0.4s both;
+        }
+
+        .tab {
+            flex: 1;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .machines-list {
+            animation: fadeIn 0.5s ease-out 0.5s both;
+        }
+
+        .machine-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            position: relative;
+            transition: all 0.2s;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(10px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .machine-card.found {
+            border-left: 4px solid var(--accent-primary);
+            opacity: 0.7;
+        }
+
+        .machine-card.missing {
+            border-left: 4px solid var(--accent-secondary);
+        }
+
+        .machine-id {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .machine-details {
+            display: grid;
+            gap: 4px;
+            margin-bottom: 12px;
+        }
+
+        .machine-detail {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .machine-detail strong {
+            color: var(--text-primary);
+        }
+
+        .machine-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .btn-small {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 11px;
+            border-radius: 4px;
+        }
+
+        .btn-found {
+            background: var(--accent-primary);
+        }
+
+        .btn-delete {
+            background: var(--accent-secondary);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .log-entry {
+            background: var(--bg-tertiary);
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--accent-primary);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .log-timestamp {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 4px;
+        }
+
+        .log-machine {
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+            opacity: 0.3;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .clear-all-btn {
+            background: var(--bg-tertiary);
+            color: var(--accent-secondary);
+            margin-top: 10px;
+        }
+
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg-primary: #f5f5f5;
+                --bg-secondary: #ffffff;
+                --bg-tertiary: #e8e8e8;
+                --text-primary: #1a1a1a;
+                --text-secondary: #666666;
+                --accent-primary: #00cc66;
+                --accent-secondary: #ff3366;
+                --border: #d0d0d0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Machine Tracker</h1>
+            <div class="subtitle">JSU IT Support</div>
+        </header>
+
+        <div class="stats">
+            <div class="stat-card missing">
+                <div class="stat-label">Missing</div>
+                <div class="stat-value" id="missingCount">0</div>
+            </div>
+            <div class="stat-card found">
+                <div class="stat-label">Found</div>
+                <div class="stat-value" id="foundCount">0</div>
+            </div>
+        </div>
+
+        <div class="add-section">
+            <h2>➕ Add Machine</h2>
+            <form id="addMachineForm">
+                <div class="form-group">
+                    <label for="machineId">Machine ID *</label>
+                    <input type="text" id="machineId" required placeholder="e.g., LIB-10A-27">
+                </div>
+                <div class="form-group">
+                    <label for="serviceTag">Service Tag</label>
+                    <input type="text" id="serviceTag" placeholder="e.g., 1ZXYGP2">
+                </div>
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input type="text" id="location" placeholder="e.g., Library 2nd Floor">
+                </div>
+                <div class="form-group">
+                    <label for="notes">Notes</label>
+                    <textarea id="notes" placeholder="Additional information..."></textarea>
+                </div>
+                <button type="submit">Add Machine</button>
+            </form>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" data-tab="missing">Missing</div>
+            <div class="tab" data-tab="found">Found</div>
+            <div class="tab" data-tab="log">Log</div>
+        </div>
+
+        <div class="machines-list" id="machinesList"></div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Data management
+        const STORAGE_KEY = 'machine_tracker_data';
+        let machines = [];
+        let foundLog = [];
+        let currentTab = 'missing';
+
+        // Initialize with existing machines from the email
+        const initialMachines = [
+            { id: 'LIB-10A-27', serviceTag: '1ZXYGP2', location: 'Library', notes: 'From Shara McNutt email' },
+            { id: 'LIB-B22B-05', serviceTag: '2G5MQG2', location: 'Library', notes: 'From Shara McNutt email' },
+            { id: 'LIB-B22B-18', serviceTag: '5W01MP2', location: 'Library', notes: 'From Shara McNutt email' },
+            { id: 'JSU007389192257', serviceTag: '', location: '10.80.107.58 tbroom', notes: 'Loaner - Surface Book 2 (21 mo)' },
+            { id: 'JSU00F02214300C', serviceTag: '', location: '10.92.1.120 kwickersham', notes: 'Faculty - Surface Laptop Studio (17 mo)' },
+            { id: 'JSU023682701957', serviceTag: '', location: '10.80.107.147 Alysia Pace', notes: 'Staff - Surface Book 3 (8 mo)' },
+            { id: 'JSU035272201557', serviceTag: '', location: '10.80.111.11 Candi Burton-Momon', notes: 'Staff - Surface Book 3 (9 mo)' },
+            { id: 'JSU042816764453', serviceTag: '', location: '10.80.109.236 shpctac10004', notes: 'Surface Pro 4 (23 mo)' },
+            { id: 'JSU4M0CY74', serviceTag: '', location: '10.80.22.249 kcatlin', notes: 'Faculty - Dell Precision 5690 (11 mo)' },
+            { id: 'JSU5B3FLX3', serviceTag: '', location: '10.80.47.104 rdixon5', notes: 'Student Computer - Dell Latitude 7340 (9 mo)' },
+            { id: 'JSU9N4YG13', serviceTag: '', location: '10.80.23.79 it.tmillican', notes: 'Dell OptiPlex 3070 (4 mo)' },
+            { id: 'JSUBPHKN64', serviceTag: '', location: '10.79.237.240 pmugisha', notes: 'Instructional/Lab - Dell Latitude 7350 (4 mo)' },
+            { id: 'JSUJJ5S203', serviceTag: '', location: '10.80.23.74 JSU', notes: 'Dell Latitude 3510 (5 mo)' },
+            { id: 'LIB-6A-00', serviceTag: '5M6', location: '10.80.108.166 shpctac1000a', notes: 'Instructional/Lab - Dell OptiPlex 3050 (10 mo)' },
+            { id: 'Lib-bsmt-mbspr4', serviceTag: '0355', location: '10.80.106.133', notes: 'Surface Pro 4 (13 mo)' },
+            { id: 'LIB-CIRC2', serviceTag: '331T', location: '10.96.1.20 acarter14', notes: 'Instructional/Lab - Dell OptiPlex 7780 AIO (4 mo)' },
+            { id: 'MAH-130-00', serviceTag: 'GB84', location: '172.20.11.187 cdavis35', notes: 'Instructional/Lab - Dell OptiPlex 7050 (7 mo)' },
+            { id: 'MAH-130-00', serviceTag: '6GQ', location: '172.20.11.117 besmith', notes: 'Instructional/Lab - Dell OptiPlex 3050 (25 mo)' },
+            { id: 'WPLab-08', serviceTag: '0030', location: '10.80.159.115 JSU', notes: 'Instructional/Lab - Surface Laptop Go (19 mo)' }
+        ];
+
+        // Load data from localStorage
+        function loadData() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                const data = JSON.parse(saved);
+                machines = data.machines || [];
+                foundLog = data.foundLog || [];
+            } else {
+                // First time - load initial machines
+                machines = initialMachines.map(m => ({
+                    ...m,
+                    status: 'missing',
+                    addedDate: new Date().toISOString()
+                }));
+                saveData();
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                machines,
+                foundLog
+            }));
+            updateStats();
+        }
+
+        // Update statistics
+        function updateStats() {
+            const missing = machines.filter(m => m.status === 'missing').length;
+            const found = machines.filter(m => m.status === 'found').length;
+            document.getElementById('missingCount').textContent = missing;
+            document.getElementById('foundCount').textContent = found;
+        }
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        // Render machines list
+        function renderMachines() {
+            const container = document.getElementById('machinesList');
+            let items = [];
+
+            if (currentTab === 'missing') {
+                items = machines.filter(m => m.status === 'missing');
+            } else if (currentTab === 'found') {
+                items = machines.filter(m => m.status === 'found');
+            } else if (currentTab === 'log') {
+                renderLog();
+                return;
+            }
+
+            if (items.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">${currentTab === 'missing' ? '✓' : '🔍'}</div>
+                        <div>${currentTab === 'missing' ? 'No missing machines!' : 'No found machines yet'}</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = items.map(machine => `
+                <div class="machine-card ${machine.status}">
+                    <div class="machine-id">${machine.id}</div>
+                    <div class="machine-details">
+                        ${machine.serviceTag ? `<div class="machine-detail"><strong>Service Tag:</strong> ${machine.serviceTag}</div>` : ''}
+                        ${machine.location ? `<div class="machine-detail"><strong>Location:</strong> ${machine.location}</div>` : ''}
+                        ${machine.notes ? `<div class="machine-detail"><strong>Notes:</strong> ${machine.notes}</div>` : ''}
+                        <div class="machine-detail"><strong>Added:</strong> ${new Date(machine.addedDate).toLocaleDateString()}</div>
+                    </div>
+                    <div class="machine-actions">
+                        ${machine.status === 'missing' ? 
+                            `<button class="btn-small btn-found" onclick="markAsFound('${machine.id}')">✓ Mark Found</button>` :
+                            `<button class="btn-small btn-secondary" onclick="markAsMissing('${machine.id}')">↩ Mark Missing</button>`
+                        }
+                        <button class="btn-small btn-delete" onclick="deleteMachine('${machine.id}')">🗑 Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render log
+        function renderLog() {
+            const container = document.getElementById('machinesList');
+            
+            if (foundLog.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <div>No log entries yet</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                ${foundLog.slice().reverse().map(entry => `
+                    <div class="log-entry">
+                        <div class="log-timestamp">${new Date(entry.timestamp).toLocaleString()}</div>
+                        <div class="log-machine">${entry.machineId}</div>
+                        ${entry.notes ? `<div class="machine-detail" style="margin-top: 4px">${entry.notes}</div>` : ''}
+                    </div>
+                `).join('')}
+                <button class="clear-all-btn" onclick="clearLog()">Clear Log</button>
+            `;
+        }
+
+        // Add machine
+        document.getElementById('addMachineForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const machine = {
+                id: document.getElementById('machineId').value.trim(),
+                serviceTag: document.getElementById('serviceTag').value.trim(),
+                location: document.getElementById('location').value.trim(),
+                notes: document.getElementById('notes').value.trim(),
+                status: 'missing',
+                addedDate: new Date().toISOString()
+            };
+
+            // Check for duplicates
+            if (machines.find(m => m.id === machine.id)) {
+                showToast('Machine already exists!');
+                return;
+            }
+
+            machines.push(machine);
+            saveData();
+            renderMachines();
+            showToast('Machine added!');
+            
+            // Reset form
+            e.target.reset();
+        });
+
+        // Mark as found
+        window.markAsFound = (id) => {
+            const machine = machines.find(m => m.id === id);
+            if (machine) {
+                machine.status = 'found';
+                machine.foundDate = new Date().toISOString();
+                
+                foundLog.push({
+                    machineId: id,
+                    timestamp: machine.foundDate,
+                    notes: machine.notes || 'No notes'
+                });
+                
+                saveData();
+                renderMachines();
+                showToast('Marked as found!');
+            }
+        };
+
+        // Mark as missing
+        window.markAsMissing = (id) => {
+            const machine = machines.find(m => m.id === id);
+            if (machine) {
+                machine.status = 'missing';
+                delete machine.foundDate;
+                saveData();
+                renderMachines();
+                showToast('Marked as missing');
+            }
+        };
+
+        // Delete machine
+        window.deleteMachine = (id) => {
+            if (confirm('Delete this machine?')) {
+                machines = machines.filter(m => m.id !== id);
+                saveData();
+                renderMachines();
+                showToast('Machine deleted');
+            }
+        };
+
+        // Clear log
+        window.clearLog = () => {
+            if (confirm('Clear entire log?')) {
+                foundLog = [];
+                saveData();
+                renderLog();
+                showToast('Log cleared');
+            }
+        };
+
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentTab = tab.dataset.tab;
+                renderMachines();
+            });
+        });
+
+        // Initialize
+        loadData();
+        updateStats();
+        renderMachines();
+    </script>
+</body>
+</html>
