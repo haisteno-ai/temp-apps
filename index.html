@@ -1,812 +1,888 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#0a0a0a">
-    <title>Machine Tracker | JSU IT</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IT Ticket Tracker — Week of March 11</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #151820;
+    --surface2: #1c2030;
+    --border: #252a3a;
+    --accent: #4f9cf9;
+    --accent2: #f97b4f;
+    --accent3: #4ff9a0;
+    --warn: #f9c44f;
+    --danger: #f94f6a;
+    --text: #e2e8f8;
+    --muted: #6b7494;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
 
-        :root {
-            --bg-primary: #0a0a0a;
-            --bg-secondary: #1a1a1a;
-            --bg-tertiary: #252525;
-            --text-primary: #e8e8e8;
-            --text-secondary: #a0a0a0;
-            --accent-primary: #00ff88;
-            --accent-secondary: #ff3366;
-            --accent-warning: #ffaa00;
-            --border: #333;
-            --shadow: rgba(0, 255, 136, 0.1);
-        }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
-            font-family: 'Outfit', -apple-system, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            padding-bottom: 80px;
-            position: relative;
-            overflow-x: hidden;
-        }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    padding: 0;
+  }
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                repeating-linear-gradient(
-                    0deg,
-                    transparent,
-                    transparent 2px,
-                    rgba(0, 255, 136, 0.03) 2px,
-                    rgba(0, 255, 136, 0.03) 4px
-                );
-            pointer-events: none;
-            z-index: 1;
-        }
+  /* HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            position: relative;
-            z-index: 2;
-        }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 
-        header {
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid var(--accent-primary);
-            animation: slideDown 0.5s ease-out;
-        }
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: var(--accent);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
 
-        @keyframes slideDown {
-            from {
-                transform: translateY(-20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
+  .logo-text {
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+  }
 
-        h1 {
-            font-size: 32px;
-            font-weight: 800;
-            letter-spacing: -1px;
-            margin-bottom: 5px;
-            color: var(--accent-primary);
-            text-transform: uppercase;
-        }
+  .logo-sub {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 1px;
+  }
 
-        .subtitle {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            color: var(--text-secondary);
-            letter-spacing: 2px;
-        }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
 
-        .stats {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-            animation: fadeIn 0.5s ease-out 0.2s both;
-        }
+  .deadline-badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: rgba(249,196,79,0.12);
+    border: 1px solid rgba(249,196,79,0.3);
+    color: var(--warn);
+    padding: 5px 12px;
+    border-radius: 20px;
+  }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+  }
 
-        .stat-card {
-            flex: 1;
-            background: var(--bg-secondary);
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            position: relative;
-            overflow: hidden;
-        }
+  .progress-bar {
+    width: 120px;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
 
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: var(--accent-primary);
-        }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
 
-        .stat-card.found::before {
-            background: var(--accent-primary);
-        }
+  /* FILTERS */
+  .filters {
+    padding: 16px 28px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
 
-        .stat-card.missing::before {
-            background: var(--accent-secondary);
-        }
+  .filter-btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
 
-        .stat-label {
-            font-size: 11px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
-        }
+  .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
-        .stat-value {
-            font-size: 28px;
-            font-weight: 700;
-            font-family: 'JetBrains Mono', monospace;
-        }
+  /* LAYOUT */
+  .main {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 0;
+    min-height: calc(100vh - 110px);
+  }
 
-        .add-section {
-            background: var(--bg-secondary);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            border: 1px solid var(--border);
-            animation: fadeIn 0.5s ease-out 0.3s both;
-        }
+  .ticket-list {
+    padding: 20px 28px;
+    border-right: 1px solid var(--border);
+  }
 
-        .add-section h2 {
-            font-size: 16px;
-            margin-bottom: 15px;
-            color: var(--accent-primary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+  .sidebar {
+    padding: 20px;
+    background: var(--surface);
+  }
 
-        .form-group {
-            margin-bottom: 12px;
-        }
+  /* TICKETS */
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    margin-top: 4px;
+  }
 
-        label {
-            display: block;
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+  .ticket {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
 
-        input, textarea {
-            width: 100%;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 12px;
-            color: var(--text-primary);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
+  .ticket::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    border-radius: 10px 0 0 10px;
+  }
 
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 3px var(--shadow);
-        }
+  .ticket.status-open::before { background: var(--accent); }
+  .ticket.status-in-progress::before { background: var(--warn); }
+  .ticket.status-needs-scheduling::before { background: var(--accent2); }
+  .ticket.status-done::before { background: var(--accent3); }
 
-        textarea {
-            resize: vertical;
-            min-height: 60px;
-        }
+  .ticket:hover { border-color: #3a4060; transform: translateX(2px); }
+  .ticket.selected { border-color: var(--accent); background: var(--surface2); }
+  .ticket.status-done { opacity: 0.5; }
 
-        button {
-            background: var(--accent-primary);
-            color: var(--bg-primary);
-            border: none;
-            padding: 14px 24px;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: 'Outfit', sans-serif;
-            width: 100%;
-        }
+  .ticket-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
 
-        button:active {
-            transform: scale(0.98);
-        }
+  .ticket-id {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 600;
+    flex-shrink: 0;
+  }
 
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            animation: fadeIn 0.5s ease-out 0.4s both;
-        }
+  .ticket-title {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.35;
+    flex: 1;
+  }
 
-        .tab {
-            flex: 1;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
+  .status-pill {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
 
-        .tab.active {
-            background: var(--accent-primary);
-            color: var(--bg-primary);
-            border-color: var(--accent-primary);
-        }
+  .pill-open { background: rgba(79,156,249,0.12); color: var(--accent); }
+  .pill-in-progress { background: rgba(249,196,79,0.12); color: var(--warn); }
+  .pill-needs-scheduling { background: rgba(249,123,79,0.12); color: var(--accent2); }
+  .pill-done { background: rgba(79,249,160,0.12); color: var(--accent3); }
 
-        .machines-list {
-            animation: fadeIn 0.5s ease-out 0.5s both;
-        }
+  .ticket-meta {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
 
-        .machine-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 12px;
-            position: relative;
-            transition: all 0.2s;
-            animation: slideUp 0.3s ease-out;
-        }
+  .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    background: var(--surface2);
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
 
-        @keyframes slideUp {
-            from {
-                transform: translateY(10px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
+  .tag.tag-person { color: #b794f4; border-color: rgba(183,148,244,0.2); background: rgba(183,148,244,0.06); }
+  .tag.tag-location { color: #76e4f7; border-color: rgba(118,228,247,0.2); background: rgba(118,228,247,0.06); }
 
-        .machine-card.found {
-            border-left: 4px solid var(--accent-primary);
-            opacity: 0.7;
-        }
+  /* DETAIL PANEL */
+  .detail-panel {
+    position: sticky;
+    top: 110px;
+    max-height: calc(100vh - 130px);
+    overflow-y: auto;
+  }
 
-        .machine-card.missing {
-            border-left: 4px solid var(--accent-secondary);
-        }
+  .detail-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 12px;
+    gap: 12px;
+    text-align: center;
+  }
 
-        .machine-id {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: var(--text-primary);
-        }
+  .detail-empty .icon { font-size: 32px; opacity: 0.3; }
 
-        .machine-details {
-            display: grid;
-            gap: 4px;
-            margin-bottom: 12px;
-        }
+  .detail-card { display: none; }
+  .detail-card.active { display: block; }
 
-        .machine-detail {
-            font-size: 12px;
-            color: var(--text-secondary);
-            font-family: 'JetBrains Mono', monospace;
-        }
+  .detail-ticket-id {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
 
-        .machine-detail strong {
-            color: var(--text-primary);
-        }
+  .detail-title {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 16px;
+  }
 
-        .machine-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
-        }
+  .detail-section {
+    margin-bottom: 18px;
+  }
 
-        .btn-small {
-            flex: 1;
-            padding: 8px 12px;
-            font-size: 11px;
-            border-radius: 4px;
-        }
+  .detail-section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
 
-        .btn-found {
-            background: var(--accent-primary);
-        }
+  .detail-desc {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #a0aec0;
+  }
 
-        .btn-delete {
-            background: var(--accent-secondary);
-        }
+  .status-select {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
 
-        .btn-secondary {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-        }
+  .notes-area {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 10px;
+    border-radius: 6px;
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.5;
+  }
 
-        .log-entry {
-            background: var(--bg-tertiary);
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 10px;
-            border-left: 3px solid var(--accent-primary);
-            animation: slideUp 0.3s ease-out;
-        }
+  .notes-area:focus, .status-select:focus { outline: none; border-color: var(--accent); }
 
-        .log-timestamp {
-            font-size: 11px;
-            color: var(--text-secondary);
-            font-family: 'JetBrains Mono', monospace;
-            margin-bottom: 4px;
-        }
+  .save-btn {
+    width: 100%;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 9px;
+    border-radius: 6px;
+    font-family: var(--mono);
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: opacity 0.15s;
+    margin-top: 6px;
+  }
 
-        .log-machine {
-            font-size: 14px;
-            font-weight: 600;
-            font-family: 'JetBrains Mono', monospace;
-        }
+  .save-btn:hover { opacity: 0.85; }
 
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-secondary);
-        }
+  .people-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
 
-        .empty-state-icon {
-            font-size: 48px;
-            margin-bottom: 10px;
-            opacity: 0.3;
-        }
+  .person-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+  }
 
-        .toast {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: var(--accent-primary);
-            color: var(--bg-primary);
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            z-index: 1000;
-            opacity: 0;
-            transition: all 0.3s;
-        }
+  .person-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #b794f4;
+    flex-shrink: 0;
+  }
 
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-        }
+  /* SIDEBAR STATS */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
 
-        .clear-all-btn {
-            background: var(--bg-tertiary);
-            color: var(--accent-secondary);
-            margin-top: 10px;
-        }
+  .stat-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+  }
 
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(4px);
-            animation: fadeIn 0.2s ease-out;
-        }
+  .stat-num {
+    font-family: var(--mono);
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
 
-        .modal.show {
-            display: flex;
-        }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
 
-        .modal-content {
-            background: var(--bg-secondary);
-            border: 2px solid var(--accent-primary);
-            border-radius: 12px;
-            padding: 24px;
-            max-width: 400px;
-            width: 90%;
-            animation: slideUp 0.3s ease-out;
-            box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
-        }
+  .stat-open .stat-num { color: var(--accent); }
+  .stat-sched .stat-num { color: var(--accent2); }
+  .stat-prog .stat-num { color: var(--warn); }
+  .stat-done .stat-num { color: var(--accent3); }
 
-        .modal-header {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: var(--accent-primary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+  /* SCHEDULE SECTION */
+  .schedule-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    font-size: 12px;
+  }
 
-        .modal-subtitle {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-        }
+  .sched-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent2);
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
 
-        .modal-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 16px;
-        }
+  .sched-name { font-weight: 600; }
+  .sched-tick { font-family: var(--mono); font-size: 10px; color: var(--muted); }
 
-        .modal-actions button {
-            flex: 1;
-        }
+  hr { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
 
-        .btn-cancel {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-        }
-
-        @media (prefers-color-scheme: light) {
-            :root {
-                --bg-primary: #f5f5f5;
-                --bg-secondary: #ffffff;
-                --bg-tertiary: #e8e8e8;
-                --text-primary: #1a1a1a;
-                --text-secondary: #666666;
-                --accent-primary: #00cc66;
-                --accent-secondary: #ff3366;
-                --border: #d0d0d0;
-            }
-        }
-    </style>
+  @media (max-width: 900px) {
+    .main { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+  }
+</style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Machine Tracker</h1>
-            <div class="subtitle">JSU IT Support</div>
-        </header>
 
-        <div class="stats">
-            <div class="stat-card missing">
-                <div class="stat-label">Missing</div>
-                <div class="stat-value" id="missingCount">0</div>
-            </div>
-            <div class="stat-card found">
-                <div class="stat-label">Found</div>
-                <div class="stat-value" id="foundCount">0</div>
-            </div>
-        </div>
+<header>
+  <div class="logo">
+    <div class="logo-icon">🎫</div>
+    <div>
+      <div class="logo-text">IT Ticket Tracker</div>
+      <div class="logo-sub">Week of March 11 — Due Friday</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="deadline-badge">⏰ Due: Friday Mar 14 @ 4:30 PM</div>
+    <div class="progress-wrap">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+      </div>
+      <span id="progressText">0/15</span>
+    </div>
+  </div>
+</header>
 
-        <div class="add-section">
-            <h2>➕ Add Machine</h2>
-            <form id="addMachineForm">
-                <div class="form-group">
-                    <label for="machineId">Machine ID *</label>
-                    <input type="text" id="machineId" required placeholder="e.g., LIB-10A-27">
-                </div>
-                <div class="form-group">
-                    <label for="serviceTag">Service Tag</label>
-                    <input type="text" id="serviceTag" placeholder="e.g., 1ZXYGP2">
-                </div>
-                <div class="form-group">
-                    <label for="location">Location</label>
-                    <input type="text" id="location" placeholder="e.g., Library 2nd Floor">
-                </div>
-                <div class="form-group">
-                    <label for="notes">Notes</label>
-                    <textarea id="notes" placeholder="Additional information..."></textarea>
-                </div>
-                <button type="submit">Add Machine</button>
-            </form>
-        </div>
+<div class="filters" id="filterBar">
+  <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+  <button class="filter-btn" onclick="setFilter('open', this)">Open</button>
+  <button class="filter-btn" onclick="setFilter('needs-scheduling', this)">Needs Scheduling</button>
+  <button class="filter-btn" onclick="setFilter('in-progress', this)">In Progress</button>
+  <button class="filter-btn" onclick="setFilter('done', this)">Done</button>
+</div>
 
-        <div class="tabs">
-            <div class="tab active" data-tab="missing">Missing</div>
-            <div class="tab" data-tab="found">Found</div>
-            <div class="tab" data-tab="log">Log</div>
-        </div>
-
-        <div class="machines-list" id="machinesList"></div>
+<div class="main">
+  <div class="ticket-list" id="ticketList"></div>
+  <div class="sidebar">
+    <div id="detailPanel">
+      <div class="detail-empty">
+        <div class="icon">📋</div>
+        <div>Select a ticket<br>to view details</div>
+      </div>
     </div>
 
-    <div class="modal" id="foundModal">
-        <div class="modal-content">
-            <div class="modal-header">Mark as Found</div>
-            <div class="modal-subtitle" id="modalMachineId"></div>
-            <div class="form-group">
-                <label for="foundNotes">Notes (Optional)</label>
-                <textarea id="foundNotes" placeholder="Where did you find it? Any additional info..."></textarea>
-            </div>
-            <div class="modal-actions">
-                <button class="btn-cancel" onclick="closeFoundModal()">Cancel</button>
-                <button class="btn-found" onclick="confirmFound()">✓ Confirm Found</button>
-            </div>
-        </div>
+    <hr>
+
+    <div class="section-label">Stats</div>
+    <div class="stat-grid">
+      <div class="stat-box stat-open"><div class="stat-num" id="statOpen">-</div><div class="stat-label">Open</div></div>
+      <div class="stat-box stat-sched"><div class="stat-num" id="statSched">-</div><div class="stat-label">To Schedule</div></div>
+      <div class="stat-box stat-prog"><div class="stat-num" id="statProg">-</div><div class="stat-label">In Progress</div></div>
+      <div class="stat-box stat-done"><div class="stat-num" id="statDone">-</div><div class="stat-label">Done</div></div>
     </div>
 
-    <div class="toast" id="toast"></div>
+    <div class="section-label">Scheduling Needed</div>
+    <div id="schedList"></div>
+  </div>
+</div>
 
-    <script>
-        // Data management
-        const STORAGE_KEY = 'machine_tracker_data';
-        let machines = [];
-        let foundLog = [];
-        let currentTab = 'missing';
+<script>
+const TICKETS = [
+  {
+    id: "60348",
+    title: "6th Floor Student Machines — Hardwire Request",
+    desc: "AD machines on WiFi are slow to load user profiles. Department wants them hardwired, but no network ports are available. Need to find a solution (patch panel work, switch, or coordinate with networking team).",
+    tags: ["Networking", "AD"],
+    location: "6th Floor",
+    persons: [],
+    needsScheduling: false,
+    status: "open",
+    notes: ""
+  },
+  {
+    id: "60290",
+    title: "Return Laptop to Daugette Hall",
+    desc: "Return laptop currently in possession to Daugette Hall.",
+    tags: ["Hardware", "Return"],
+    location: "Daugette Hall",
+    persons: [],
+    needsScheduling: false,
+    status: "open",
+    notes: ""
+  },
+  {
+    id: "60745",
+    title: "ACE Machines — Library Rename, KACE & Health Check",
+    desc: "Find ACE machines in the library. Rename them for Kevin. Update KACE agent/record. Verify they are in good working shape.",
+    tags: ["KACE", "Naming", "Audit"],
+    location: "Library",
+    persons: ["Kevin"],
+    needsScheduling: false,
+    status: "open",
+    notes: ""
+  },
+  {
+    id: "60737",
+    title: "Enable Secure Boot — Alisha Cantrell",
+    desc: "Enable Secure Boot on Alisha Cantrell's machine. Must be scheduled with her before proceeding.",
+    tags: ["Secure Boot", "BitLocker"],
+    location: "",
+    persons: ["Alisha Cantrell"],
+    needsScheduling: true,
+    status: "needs-scheduling",
+    notes: ""
+  },
+  {
+    id: "60729",
+    title: "Enable Secure Boot — John Upchurch (Machine + Lib Circ 2)",
+    desc: "Enable Secure Boot on both John Upchurch's personal machine AND the Lib Circ 2 machine. Needs to be scheduled with John.",
+    tags: ["Secure Boot", "BitLocker"],
+    location: "Library Circ 2",
+    persons: ["John Upchurch"],
+    needsScheduling: true,
+    status: "needs-scheduling",
+    notes: ""
+  },
+  {
+    id: "60714",
+    title: "Enable Secure Boot — Lisa Gowens",
+    desc: "Enable Secure Boot on Lisa Gowens's machine.",
+    tags: ["Secure Boot"],
+    location: "",
+    persons: ["Lisa Gowens"],
+    needsScheduling: true,
+    status: "needs-scheduling",
+    notes: ""
+  },
+  {
+    id: "60713",
+    title: "Enable Secure Boot — Debrah Fragoso",
+    desc: "Enable Secure Boot on Debrah Fragoso's machine.",
+    tags: ["Secure Boot"],
+    location: "",
+    persons: ["Debrah Fragoso"],
+    needsScheduling: true,
+    status: "needs-scheduling",
+    notes: ""
+  },
+  {
+    id: "60710",
+    title: "Enable Secure Boot — Allyson Spivey",
+    desc: "Enable Secure Boot on Allyson Spivey's machine.",
+    tags: ["Secure Boot"],
+    location: "",
+    persons: ["Allyson Spivey"],
+    needsScheduling: true,
+    status: "needs-scheduling",
+    notes: ""
+  },
+  {
+    id: "60709",
+    title: "Enable Secure Boot — Jodi Poe",
+    desc: "Enable Secure Boot on Jodi Poe's machine.",
+    tags: ["Secure Boot"],
+    location: "",
+    persons: ["Jodi Poe"],
+    needsScheduling: true,
+    status: "needs-scheduling",
+    notes: ""
+  },
+  {
+    id: "60705",
+    title: "Enable Secure Boot — Delores Collier",
+    desc: "Enable Secure Boot on Delores Collier's machine.",
+    tags: ["Secure Boot"],
+    location: "",
+    persons: ["Delores Collier"],
+    needsScheduling: true,
+    status: "needs-scheduling",
+    notes: ""
+  },
+  {
+    id: "60699",
+    title: "Enable Secure Boot — Susan Wiggins",
+    desc: "Enable Secure Boot on Susan Wiggins's machine.",
+    tags: ["Secure Boot"],
+    location: "",
+    persons: ["Susan Wiggins"],
+    needsScheduling: true,
+    status: "needs-scheduling",
+    notes: ""
+  },
+  {
+    id: "60681",
+    title: "Enable Secure Boot — Arlene Brothers (machine w/ Angie Griffin)",
+    desc: "Enable Secure Boot for Arlene Brothers. Note: Angie Griffin currently has the machine — coordinate accordingly.",
+    tags: ["Secure Boot"],
+    location: "",
+    persons: ["Arlene Brothers", "Angie Griffin"],
+    needsScheduling: true,
+    status: "needs-scheduling",
+    notes: ""
+  },
+  {
+    id: "60435",
+    title: "Rebecca Roberts — Surface Hub 2S Teams Call Drops at ~30 Min",
+    desc: "Rebecca Roberts has a Surface Hub 2S running standard Windows 11. During Teams calls, the call disconnects after ~30 minutes. She uses it for Teams calls all day. Investigate: Teams timeout settings, network drops, Windows power/sleep settings, Teams app version, and Surface Hub-specific quirks on standard Win11.",
+    tags: ["Teams", "Surface Hub", "Windows 11"],
+    location: "",
+    persons: ["Rebecca Roberts"],
+    needsScheduling: true,
+    status: "needs-scheduling",
+    notes: ""
+  },
+  {
+    id: "60411",
+    title: "Biology Computer to Daugette — Send Order Info to Rebecca & Lori",
+    desc: "Take old biology computer to Daugette Hall. Then send Rebecca and Lori the information they need to order a replacement machine.",
+    tags: ["Hardware", "Procurement"],
+    location: "Daugette Hall",
+    persons: ["Rebecca", "Lori"],
+    needsScheduling: false,
+    status: "open",
+    notes: ""
+  },
+  {
+    id: "60526",
+    title: "Enable Secure Boot — Mary Bevis",
+    desc: "Enable Secure Boot on Mary Bevis's machine. Schedule with her before proceeding.",
+    tags: ["Secure Boot"],
+    location: "",
+    persons: ["Mary Bevis"],
+    needsScheduling: true,
+    status: "needs-scheduling",
+    notes: ""
+  },
+  {
+    id: "60740",
+    title: "6th Floor Laptop Cart — JSUDK6Q533",
+    desc: "Work order for the 6th floor laptop cart. Asset tag: JSUDK6Q533. Verify details and complete any required tasks for this machine.",
+    tags: ["Hardware", "Laptop Cart"],
+    location: "6th Floor",
+    persons: [],
+    needsScheduling: false,
+    status: "open",
+    notes: ""
+  },
+  {
+    id: "60674",
+    title: "ACE303-09 — Inventory with KACE (Runkbot 4.0)",
+    desc: "Machine ACE303-09 needs to be inventoried and registered in KACE. Use Runkbot 4.0 to complete the inventory process.",
+    tags: ["KACE", "Inventory", "Runkbot"],
+    location: "ACE303",
+    persons: [],
+    needsScheduling: false,
+    status: "open",
+    notes: ""
+  },
+  {
+    id: "60743",
+    title: "Enable Secure Boot — JSU7TKP533 (6th Floor)",
+    desc: "Enable Secure Boot on the 6th floor machine with asset tag JSU7TKP533.",
+    tags: ["Secure Boot"],
+    location: "6th Floor",
+    persons: [],
+    needsScheduling: false,
+    status: "open",
+    notes: ""
+  }
+];
 
-        // Initialize with existing machines from the email
-        const initialMachines = [
-            { id: 'LIB-10A-27', serviceTag: '1ZXYGP2', location: 'Library', notes: 'From Shara McNutt email' },
-            { id: 'LIB-B22B-05', serviceTag: '2G5MQG2', location: 'Library', notes: 'From Shara McNutt email' },
-            { id: 'LIB-B22B-18', serviceTag: '5W01MP2', location: 'Library', notes: 'From Shara McNutt email' },
-            { id: 'JSU007389192257', serviceTag: '', location: '10.80.107.58 tbroom', notes: 'Loaner - Surface Book 2 (21 mo)' },
-            { id: 'JSU00F02214300C', serviceTag: '', location: '10.92.1.120 kwickersham', notes: 'Faculty - Surface Laptop Studio (17 mo)' },
-            { id: 'JSU023682701957', serviceTag: '', location: '10.80.107.147 Alysia Pace', notes: 'Staff - Surface Book 3 (8 mo)' },
-            { id: 'JSU035272201557', serviceTag: '', location: '10.80.111.11 Candi Burton-Momon', notes: 'Staff - Surface Book 3 (9 mo)' },
-            { id: 'JSU042816764453', serviceTag: '', location: '10.80.109.236 shpctac10004', notes: 'Surface Pro 4 (23 mo)' },
-            { id: 'JSU4M0CY74', serviceTag: '', location: '10.80.22.249 kcatlin', notes: 'Faculty - Dell Precision 5690 (11 mo)' },
-            { id: 'JSU5B3FLX3', serviceTag: '', location: '10.80.47.104 rdixon5', notes: 'Student Computer - Dell Latitude 7340 (9 mo)' },
-            { id: 'JSU9N4YG13', serviceTag: '', location: '10.80.23.79 it.tmillican', notes: 'Dell OptiPlex 3070 (4 mo)' },
-            { id: 'JSUBPHKN64', serviceTag: '', location: '10.79.237.240 pmugisha', notes: 'Instructional/Lab - Dell Latitude 7350 (4 mo)' },
-            { id: 'JSUJJ5S203', serviceTag: '', location: '10.80.23.74 JSU', notes: 'Dell Latitude 3510 (5 mo)' },
-            { id: 'LIB-6A-00', serviceTag: '5M6', location: '10.80.108.166 shpctac1000a', notes: 'Instructional/Lab - Dell OptiPlex 3050 (10 mo)' },
-            { id: 'Lib-bsmt-mbspr4', serviceTag: '0355', location: '10.80.106.133', notes: 'Surface Pro 4 (13 mo)' },
-            { id: 'LIB-CIRC2', serviceTag: '331T', location: '10.96.1.20 acarter14', notes: 'Instructional/Lab - Dell OptiPlex 7780 AIO (4 mo)' },
-            { id: 'MAH-130-00', serviceTag: 'GB84', location: '172.20.11.187 cdavis35', notes: 'Instructional/Lab - Dell OptiPlex 7050 (7 mo)' },
-            { id: 'MAH-130-00', serviceTag: '6GQ', location: '172.20.11.117 besmith', notes: 'Instructional/Lab - Dell OptiPlex 3050 (25 mo)' },
-            { id: 'WPLab-08', serviceTag: '0030', location: '10.80.159.115 JSU', notes: 'Instructional/Lab - Surface Laptop Go (19 mo)' }
-        ];
+// Load saved state from localStorage
+function loadState() {
+  try {
+    const saved = localStorage.getItem('it_tickets_v1');
+    if (saved) {
+      const data = JSON.parse(saved);
+      data.forEach(s => {
+        const t = TICKETS.find(t => t.id === s.id);
+        if (t) { t.status = s.status; t.notes = s.notes; }
+      });
+    }
+  } catch(e) {}
+}
 
-        // Load data from localStorage
-        function loadData() {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            if (saved) {
-                const data = JSON.parse(saved);
-                machines = data.machines || [];
-                foundLog = data.foundLog || [];
-            } else {
-                // First time - load initial machines
-                machines = initialMachines.map(m => ({
-                    ...m,
-                    status: 'missing',
-                    addedDate: new Date().toISOString()
-                }));
-                saveData();
-            }
-        }
+function saveState() {
+  const data = TICKETS.map(t => ({ id: t.id, status: t.status, notes: t.notes }));
+  localStorage.setItem('it_tickets_v1', JSON.stringify(data));
+}
 
-        // Save data to localStorage
-        function saveData() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify({
-                machines,
-                foundLog
-            }));
-            updateStats();
-        }
+let currentFilter = 'all';
+let selectedId = null;
 
-        // Update statistics
-        function updateStats() {
-            const missing = machines.filter(m => m.status === 'missing').length;
-            const found = machines.filter(m => m.status === 'found').length;
-            document.getElementById('missingCount').textContent = missing;
-            document.getElementById('foundCount').textContent = found;
-        }
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderList();
+}
 
-        // Show toast notification
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 2000);
-        }
+function statusLabel(s) {
+  const map = { 'open': 'Open', 'in-progress': 'In Progress', 'needs-scheduling': 'Needs Scheduling', 'done': 'Done' };
+  return map[s] || s;
+}
 
-        // Render machines list
-        function renderMachines() {
-            const container = document.getElementById('machinesList');
-            let items = [];
+function pillClass(s) {
+  const map = { 'open': 'pill-open', 'in-progress': 'pill-in-progress', 'needs-scheduling': 'pill-needs-scheduling', 'done': 'pill-done' };
+  return map[s] || '';
+}
 
-            if (currentTab === 'missing') {
-                items = machines.filter(m => m.status === 'missing');
-            } else if (currentTab === 'found') {
-                items = machines.filter(m => m.status === 'found');
-            } else if (currentTab === 'log') {
-                renderLog();
-                return;
-            }
+function renderList() {
+  const list = document.getElementById('ticketList');
+  const filtered = currentFilter === 'all' ? TICKETS : TICKETS.filter(t => t.status === currentFilter);
 
-            if (items.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">${currentTab === 'missing' ? '✓' : '🔍'}</div>
-                        <div>${currentTab === 'missing' ? 'No missing machines!' : 'No found machines yet'}</div>
-                    </div>
-                `;
-                return;
-            }
+  list.innerHTML = '';
 
-            container.innerHTML = items.map(machine => `
-                <div class="machine-card ${machine.status}">
-                    <div class="machine-id">${machine.id}</div>
-                    <div class="machine-details">
-                        ${machine.serviceTag ? `<div class="machine-detail"><strong>Service Tag:</strong> ${machine.serviceTag}</div>` : ''}
-                        ${machine.location ? `<div class="machine-detail"><strong>Location:</strong> ${machine.location}</div>` : ''}
-                        ${machine.notes ? `<div class="machine-detail"><strong>Notes:</strong> ${machine.notes}</div>` : ''}
-                        <div class="machine-detail"><strong>Added:</strong> ${new Date(machine.addedDate).toLocaleDateString()}</div>
-                    </div>
-                    <div class="machine-actions">
-                        ${machine.status === 'missing' ? 
-                            `<button class="btn-small btn-found" onclick="markAsFound('${machine.id}')">✓ Mark Found</button>` :
-                            `<button class="btn-small btn-secondary" onclick="markAsMissing('${machine.id}')">↩ Mark Missing</button>`
-                        }
-                        <button class="btn-small btn-delete" onclick="deleteMachine('${machine.id}')">🗑 Delete</button>
-                    </div>
-                </div>
-            `).join('');
-        }
+  if (filtered.length === 0) {
+    list.innerHTML = '<div style="color:var(--muted);font-family:var(--mono);font-size:12px;padding:40px 0;text-align:center;">No tickets in this category.</div>';
+    return;
+  }
 
-        // Render log
-        function renderLog() {
-            const container = document.getElementById('machinesList');
-            
-            if (foundLog.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">📋</div>
-                        <div>No log entries yet</div>
-                    </div>
-                `;
-                return;
-            }
+  filtered.forEach(t => {
+    const el = document.createElement('div');
+    el.className = `ticket status-${t.status}${selectedId === t.id ? ' selected' : ''}`;
+    el.onclick = () => selectTicket(t.id);
 
-            container.innerHTML = `
-                ${foundLog.slice().reverse().map(entry => `
-                    <div class="log-entry">
-                        <div class="log-timestamp">${new Date(entry.timestamp).toLocaleString()}</div>
-                        <div class="log-machine">${entry.machineId}</div>
-                        ${entry.notes ? `<div class="machine-detail" style="margin-top: 4px">${entry.notes}</div>` : ''}
-                    </div>
-                `).join('')}
-                <button class="clear-all-btn" onclick="clearLog()">Clear Log</button>
-            `;
-        }
+    const personTags = t.persons.map(p => `<span class="tag tag-person">👤 ${p}</span>`).join('');
+    const locTag = t.location ? `<span class="tag tag-location">📍 ${t.location}</span>` : '';
+    const typeTags = t.tags.map(g => `<span class="tag">${g}</span>`).join('');
 
-        // Add machine
-        document.getElementById('addMachineForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const machine = {
-                id: document.getElementById('machineId').value.trim(),
-                serviceTag: document.getElementById('serviceTag').value.trim(),
-                location: document.getElementById('location').value.trim(),
-                notes: document.getElementById('notes').value.trim(),
-                status: 'missing',
-                addedDate: new Date().toISOString()
-            };
+    el.innerHTML = `
+      <div class="ticket-header">
+        <div>
+          <div class="ticket-id">#${t.id}</div>
+          <div class="ticket-title">${t.title}</div>
+        </div>
+        <span class="status-pill ${pillClass(t.status)}">${statusLabel(t.status)}</span>
+      </div>
+      <div class="ticket-meta">
+        ${personTags}${locTag}${typeTags}
+      </div>
+    `;
+    list.appendChild(el);
+  });
 
-            // Check for duplicates
-            if (machines.find(m => m.id === machine.id)) {
-                showToast('Machine already exists!');
-                return;
-            }
+  updateStats();
+}
 
-            machines.push(machine);
-            saveData();
-            renderMachines();
-            showToast('Machine added!');
-            
-            // Reset form
-            e.target.reset();
-        });
+function selectTicket(id) {
+  selectedId = id;
+  const t = TICKETS.find(t => t.id === id);
+  renderList();
 
-        // Mark as found
-        let pendingFoundMachineId = null;
+  const panel = document.getElementById('detailPanel');
 
-        window.markAsFound = (id) => {
-            pendingFoundMachineId = id;
-            const machine = machines.find(m => m.id === id);
-            document.getElementById('modalMachineId').textContent = machine.id;
-            document.getElementById('foundNotes').value = '';
-            document.getElementById('foundModal').classList.add('show');
-        };
+  const personRows = t.persons.map(p => `<div class="person-row"><div class="person-dot"></div>${p}</div>`).join('');
 
-        window.closeFoundModal = () => {
-            document.getElementById('foundModal').classList.remove('show');
-            pendingFoundMachineId = null;
-        };
+  panel.innerHTML = `
+    <div class="detail-card active">
+      <div class="detail-ticket-id">#${t.id}</div>
+      <div class="detail-title">${t.title}</div>
 
-        window.confirmFound = () => {
-            if (!pendingFoundMachineId) return;
-            
-            const machine = machines.find(m => m.id === pendingFoundMachineId);
-            const foundNotes = document.getElementById('foundNotes').value.trim();
-            
-            if (machine) {
-                machine.status = 'found';
-                machine.foundDate = new Date().toISOString();
-                
-                foundLog.push({
-                    machineId: pendingFoundMachineId,
-                    timestamp: machine.foundDate,
-                    notes: foundNotes || machine.notes || 'No notes'
-                });
-                
-                saveData();
-                renderMachines();
-                showToast('Marked as found!');
-                closeFoundModal();
-            }
-        };
+      <div class="detail-section">
+        <div class="detail-section-label">Description</div>
+        <div class="detail-desc">${t.desc}</div>
+      </div>
 
-        // Close modal when clicking outside
-        document.getElementById('foundModal').addEventListener('click', (e) => {
-            if (e.target.id === 'foundModal') {
-                closeFoundModal();
-            }
-        });
+      ${t.persons.length ? `
+      <div class="detail-section">
+        <div class="detail-section-label">People Involved</div>
+        <div class="people-list">${personRows}</div>
+      </div>` : ''}
 
-        // Mark as missing
-        window.markAsMissing = (id) => {
-            const machine = machines.find(m => m.id === id);
-            if (machine) {
-                machine.status = 'missing';
-                delete machine.foundDate;
-                saveData();
-                renderMachines();
-                showToast('Marked as missing');
-            }
-        };
+      ${t.location ? `
+      <div class="detail-section">
+        <div class="detail-section-label">Location</div>
+        <div class="detail-desc">📍 ${t.location}</div>
+      </div>` : ''}
 
-        // Delete machine
-        window.deleteMachine = (id) => {
-            if (confirm('Delete this machine?')) {
-                machines = machines.filter(m => m.id !== id);
-                saveData();
-                renderMachines();
-                showToast('Machine deleted');
-            }
-        };
+      <div class="detail-section">
+        <div class="detail-section-label">Status</div>
+        <select class="status-select" id="statusSel_${t.id}" onchange="updateStatus('${t.id}')">
+          <option value="open" ${t.status==='open'?'selected':''}>Open</option>
+          <option value="needs-scheduling" ${t.status==='needs-scheduling'?'selected':''}>Needs Scheduling</option>
+          <option value="in-progress" ${t.status==='in-progress'?'selected':''}>In Progress</option>
+          <option value="done" ${t.status==='done'?'selected':''}>Done ✓</option>
+        </select>
+      </div>
 
-        // Clear log
-        window.clearLog = () => {
-            if (confirm('Clear entire log?')) {
-                foundLog = [];
-                saveData();
-                renderLog();
-                showToast('Log cleared');
-            }
-        };
+      <div class="detail-section">
+        <div class="detail-section-label">Notes</div>
+        <textarea class="notes-area" id="notes_${t.id}" placeholder="Add notes, time scheduled, steps taken...">${t.notes}</textarea>
+        <button class="save-btn" onclick="saveNotes('${t.id}')">Save Notes</button>
+      </div>
+    </div>
+  `;
+}
 
-        // Tab switching
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                currentTab = tab.dataset.tab;
-                renderMachines();
-            });
-        });
+function updateStatus(id) {
+  const t = TICKETS.find(t => t.id === id);
+  t.status = document.getElementById(`statusSel_${id}`).value;
+  saveState();
+  renderList();
+  updateStats();
+  renderScheduleList();
+}
 
-        // Initialize
-        loadData();
-        updateStats();
-        renderMachines();
-    </script>
+function saveNotes(id) {
+  const t = TICKETS.find(t => t.id === id);
+  t.notes = document.getElementById(`notes_${id}`).value;
+  saveState();
+  const btn = event.target;
+  btn.textContent = 'Saved ✓';
+  btn.style.background = 'var(--accent3)';
+  btn.style.color = '#0d1a12';
+  setTimeout(() => { btn.textContent = 'Save Notes'; btn.style.background = ''; btn.style.color = ''; }, 1500);
+}
+
+function updateStats() {
+  const counts = { open: 0, 'needs-scheduling': 0, 'in-progress': 0, done: 0 };
+  TICKETS.forEach(t => counts[t.status]++);
+  document.getElementById('statOpen').textContent = counts['open'];
+  document.getElementById('statSched').textContent = counts['needs-scheduling'];
+  document.getElementById('statProg').textContent = counts['in-progress'];
+  document.getElementById('statDone').textContent = counts['done'];
+
+  const done = counts['done'];
+  const total = TICKETS.length;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `${done}/${total}`;
+}
+
+function renderScheduleList() {
+  const sched = TICKETS.filter(t => t.needsScheduling && t.status !== 'done');
+  const el = document.getElementById('schedList');
+  if (sched.length === 0) {
+    el.innerHTML = '<div style="color:var(--accent3);font-family:var(--mono);font-size:11px;">All scheduling done! 🎉</div>';
+    return;
+  }
+  el.innerHTML = sched.map(t => `
+    <div class="schedule-item" onclick="selectTicket('${t.id}')" style="cursor:pointer">
+      <div class="sched-dot"></div>
+      <div>
+        <div class="sched-name">${t.persons[0] || 'TBD'}</div>
+        <div class="sched-tick">#${t.id}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Init
+loadState();
+renderList();
+updateStats();
+renderScheduleList();
+</script>
 </body>
 </html>
