@@ -2,887 +2,700 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IT Ticket Tracker — Week of March 11</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0d0d14">
+<title>The Cockpit — Learning Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0d0f14;
-    --surface: #151820;
-    --surface2: #1c2030;
-    --border: #252a3a;
-    --accent: #4f9cf9;
-    --accent2: #f97b4f;
-    --accent3: #4ff9a0;
-    --warn: #f9c44f;
-    --danger: #f94f6a;
-    --text: #e2e8f8;
-    --muted: #6b7494;
-    --mono: 'JetBrains Mono', monospace;
-    --sans: 'Syne', sans-serif;
-  }
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0d0d14;--surface:#14141e;--border:#1e1e2e;--border2:#2a2a3a;
+  --text:#f0e6d3;--text2:#b0a89a;--text3:#8a8a9a;--text4:#6a6a7a;--text5:#4a4a5a;
+  --red:#C41E3A;--red-bg:#C41E3A22;--red-bg2:#C41E3A15;
+  --green:#7dcea0;--blue:#6a9fea;--code-bg:#0a0a12;
+  --mono:'DM Mono',Consolas,monospace;--sans:'DM Sans','Segoe UI',sans-serif;
+}
+html,body{background:var(--bg);color:var(--text);font-family:var(--sans);height:100%;overflow:hidden}
+#app{display:flex;flex-direction:column;height:100%;max-width:480px;margin:0 auto;position:relative}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+/* Header */
+.header{background:linear-gradient(180deg,#16161f,var(--bg));border-bottom:1px solid var(--border);padding:16px 16px 12px;flex-shrink:0}
+.header-inner{display:flex;justify-content:space-between;align-items:center}
+.logo-row{display:flex;align-items:center;gap:10px}
+.logo-icon{font-size:22px;color:var(--red)}
+.logo-title{font-size:16px;font-weight:700;letter-spacing:2px;font-family:var(--mono);color:var(--text)}
+.logo-sub{font-size:10px;color:var(--text4);letter-spacing:1px;font-family:var(--mono);margin-top:1px}
+.hdr-prog{display:flex;align-items:center;gap:8px}
+.mini-bar{width:60px;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.mini-fill{height:100%;background:var(--red);border-radius:2px;transition:width .4s}
+.mini-label{font-size:11px;color:var(--red);font-family:var(--mono);font-weight:600}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--sans);
-    min-height: 100vh;
-    padding: 0;
-  }
+/* Tab bar */
+.tab-bar{display:flex;border-top:1px solid var(--border);background:var(--bg);padding:6px 0 env(safe-area-inset-bottom,8px);flex-shrink:0}
+.tab-btn{flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 0;cursor:pointer;font-family:var(--mono)}
+.tab-icon{font-size:18px;color:var(--text5)}
+.tab-label{font-size:10px;color:var(--text5);font-family:var(--mono)}
+.tab-btn.active .tab-icon{color:var(--red)}
+.tab-btn.active .tab-label{color:var(--red);font-weight:600}
 
-  /* HEADER */
-  header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 18px 28px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
+/* Content */
+.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:20px}
+.tab-content{padding:20px 16px}
+.sec-title{font-size:22px;font-weight:700;margin-bottom:4px}
+.sec-desc{font-size:13px;color:var(--text4);font-family:var(--mono);margin-bottom:16px}
+.hidden{display:none!important}
 
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+/* Phase cards */
+.phase-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:left;cursor:pointer;width:100%;margin-bottom:4px;display:block;transition:border-color .2s}
+.phase-card:active{border-color:var(--border2)}
+.phase-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.phase-badge{background:var(--red-bg);color:var(--red);font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;font-family:var(--mono);letter-spacing:1px}
+.phase-dur{font-size:11px;color:var(--text4);font-family:var(--mono)}
+.phase-title{font-size:17px;font-weight:600;margin-bottom:6px}
+.phase-summary{font-size:13px;color:var(--text3);margin-bottom:12px;line-height:1.5}
+.phase-footer{display:flex;align-items:center;gap:10px}
+.bar-track{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--red),#e8534a);border-radius:3px;transition:width .4s}
+.bar-label{font-size:11px;color:var(--text4);font-family:var(--mono);min-width:30px;text-align:right}
+.timeline-line{width:2px;height:20px;background:var(--border);margin:0 auto 4px}
 
-  .logo-icon {
-    width: 32px; height: 32px;
-    background: var(--accent);
-    border-radius: 6px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-  }
+/* Learn tab */
+.phase-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.phase-nav-btn{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:6px 14px;color:var(--text3);font-size:12px;cursor:pointer;font-family:var(--mono)}
+.phase-nav-btn:disabled{opacity:.3;cursor:default}
+.phase-nav-label{font-size:12px;color:var(--red);font-family:var(--mono);font-weight:600}
+.learn-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-top:8px}
+.learn-fill{height:100%;background:linear-gradient(90deg,var(--red),#e8534a);border-radius:3px;transition:width .4s}
+.learn-sec{font-size:15px;font-weight:600;margin:24px 0 12px;display:flex;align-items:center;gap:8px}
 
-  .logo-text {
-    font-size: 16px;
-    font-weight: 800;
-    letter-spacing: -0.3px;
-  }
+/* Cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px}
+.card-hdr{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.card-title{font-size:14px;font-weight:600;flex:1}
+.chk{width:22px;height:22px;border-radius:6px;border:2px solid var(--border2);background:none;cursor:pointer;flex-shrink:0;font-size:12px;color:transparent;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.chk.done{border-color:var(--red);background:var(--red-bg);color:var(--red);font-weight:700}
+.concept-body{font-size:13px;color:var(--text2);line-height:1.65;white-space:pre-wrap;word-break:break-word}
 
-  .logo-sub {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 1px;
-  }
+/* Flashcards */
+.flashcard{width:100%;background:#1a1a2a;border:1px solid var(--border2);border-radius:8px;padding:12px;cursor:pointer;margin-top:12px;text-align:left}
+.fc-label{font-size:9px;color:var(--red);letter-spacing:1.5px;font-family:var(--mono);font-weight:600;margin-bottom:6px}
+.fc-text{font-size:13px;color:#d0c8ba;line-height:1.5}
 
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
+/* Exercises */
+.ex-type{display:inline-block;font-size:10px;font-weight:600;color:var(--blue);background:#6a9fea18;padding:2px 8px;border-radius:4px;margin-bottom:10px;font-family:var(--mono)}
+.sol-toggle{background:none;border:1px solid var(--border2);border-radius:6px;padding:6px 12px;color:var(--text3);font-size:12px;cursor:pointer;margin-top:10px;font-family:var(--mono);width:100%;text-align:center}
+.sol-code{font-size:12px;color:var(--green);background:var(--code-bg);border:1px solid #1a1a2a;border-radius:6px;padding:12px;margin-top:10px;white-space:pre-wrap;font-family:var(--mono);line-height:1.55;overflow-x:auto;word-break:break-word}
 
-  .deadline-badge {
-    font-family: var(--mono);
-    font-size: 11px;
-    background: rgba(249,196,79,0.12);
-    border: 1px solid rgba(249,196,79,0.3);
-    color: var(--warn);
-    padding: 5px 12px;
-    border-radius: 20px;
-  }
+/* Claude Prompts */
+.prompt-desc{font-size:13px;color:var(--text3);margin-bottom:8px;line-height:1.5}
+.prompts-wrap{margin-top:12px;display:flex;flex-direction:column;gap:12px}
+.prompt-block{background:var(--code-bg);border:1px solid #1a1a2a;border-radius:8px;padding:12px;position:relative}
+.prompt-label{font-size:9px;color:var(--red);letter-spacing:1.5px;font-family:var(--mono);font-weight:600;margin-bottom:8px}
+.prompt-code{font-size:12px;color:#d0c8ba;white-space:pre-wrap;font-family:var(--mono);line-height:1.5;word-break:break-word}
+.copy-btn{position:absolute;top:8px;right:8px;background:var(--border);border:1px solid var(--border2);border-radius:4px;padding:3px 8px;color:var(--text4);font-size:10px;cursor:pointer;font-family:var(--mono)}
+.copy-btn.copied{color:var(--green);border-color:var(--green)}
 
-  .progress-wrap {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--muted);
-  }
+/* Glossary */
+.search-input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:14px;outline:none;margin-bottom:12px;font-family:var(--sans)}
+.search-input::placeholder{color:var(--text5)}
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.filter-btn{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:5px 12px;color:var(--text4);font-size:11px;cursor:pointer;font-family:var(--mono)}
+.filter-btn.active{background:var(--red-bg);border-color:var(--red);color:var(--red)}
+.g-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px}
+.g-term-row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px}
+.g-term{font-size:14px;font-weight:600}
+.g-cat{font-size:10px;color:var(--red);background:var(--red-bg2);padding:2px 6px;border-radius:4px;font-family:var(--mono);flex-shrink:0;white-space:nowrap}
+.g-def{font-size:13px;color:var(--text3);line-height:1.55}
 
-  .progress-bar {
-    width: 120px;
-    height: 6px;
-    background: var(--border);
-    border-radius: 3px;
-    overflow: hidden;
-  }
+/* Progress */
+.prog-overall{display:flex;flex-direction:column;align-items:center;padding:20px 0 24px}
+.prog-label{font-size:13px;color:var(--text4);font-family:var(--mono);margin-top:8px}
+.prog-phase{margin-bottom:18px}
+.prog-phase-info{display:flex;justify-content:space-between;margin-bottom:6px}
+.prog-phase-name{font-size:13px;font-weight:500}
+.prog-phase-pct{font-size:13px;color:var(--red);font-family:var(--mono);font-weight:600}
+.prog-details{display:flex;gap:12px;margin-top:6px}
+.prog-detail{font-size:11px;color:var(--text4);font-family:var(--mono)}
+.reset-btn{width:100%;background:none;border:1px solid #3a1a1a;border-radius:8px;padding:10px;color:var(--red);font-size:12px;cursor:pointer;margin-top:24px;font-family:var(--mono)}
 
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--accent3));
-    border-radius: 3px;
-    transition: width 0.4s ease;
-  }
+/* Empty */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;text-align:center}
+.empty-icon{font-size:36px;color:var(--border2);margin-bottom:12px}
+.empty-text{font-size:14px;color:var(--text4)}
 
-  /* FILTERS */
-  .filters {
-    padding: 16px 28px;
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-  }
-
-  .filter-btn {
-    font-family: var(--mono);
-    font-size: 11px;
-    padding: 5px 14px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--muted);
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-
-  .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-
-  /* LAYOUT */
-  .main {
-    display: grid;
-    grid-template-columns: 1fr 340px;
-    gap: 0;
-    min-height: calc(100vh - 110px);
-  }
-
-  .ticket-list {
-    padding: 20px 28px;
-    border-right: 1px solid var(--border);
-  }
-
-  .sidebar {
-    padding: 20px;
-    background: var(--surface);
-  }
-
-  /* TICKETS */
-  .section-label {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 1.5px;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 12px;
-    margin-top: 4px;
-  }
-
-  .ticket {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px 18px;
-    margin-bottom: 10px;
-    cursor: pointer;
-    transition: border-color 0.15s, transform 0.15s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .ticket::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 3px;
-    border-radius: 10px 0 0 10px;
-  }
-
-  .ticket.status-open::before { background: var(--accent); }
-  .ticket.status-in-progress::before { background: var(--warn); }
-  .ticket.status-needs-scheduling::before { background: var(--accent2); }
-  .ticket.status-done::before { background: var(--accent3); }
-
-  .ticket:hover { border-color: #3a4060; transform: translateX(2px); }
-  .ticket.selected { border-color: var(--accent); background: var(--surface2); }
-  .ticket.status-done { opacity: 0.5; }
-
-  .ticket-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 8px;
-  }
-
-  .ticket-id {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--accent);
-    font-weight: 600;
-    flex-shrink: 0;
-  }
-
-  .ticket-title {
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1.35;
-    flex: 1;
-  }
-
-  .status-pill {
-    font-family: var(--mono);
-    font-size: 10px;
-    padding: 3px 8px;
-    border-radius: 20px;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .pill-open { background: rgba(79,156,249,0.12); color: var(--accent); }
-  .pill-in-progress { background: rgba(249,196,79,0.12); color: var(--warn); }
-  .pill-needs-scheduling { background: rgba(249,123,79,0.12); color: var(--accent2); }
-  .pill-done { background: rgba(79,249,160,0.12); color: var(--accent3); }
-
-  .ticket-meta {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  .tag {
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--muted);
-    background: var(--surface2);
-    padding: 2px 8px;
-    border-radius: 4px;
-    border: 1px solid var(--border);
-  }
-
-  .tag.tag-person { color: #b794f4; border-color: rgba(183,148,244,0.2); background: rgba(183,148,244,0.06); }
-  .tag.tag-location { color: #76e4f7; border-color: rgba(118,228,247,0.2); background: rgba(118,228,247,0.06); }
-
-  /* DETAIL PANEL */
-  .detail-panel {
-    position: sticky;
-    top: 110px;
-    max-height: calc(100vh - 130px);
-    overflow-y: auto;
-  }
-
-  .detail-empty {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 300px;
-    color: var(--muted);
-    font-family: var(--mono);
-    font-size: 12px;
-    gap: 12px;
-    text-align: center;
-  }
-
-  .detail-empty .icon { font-size: 32px; opacity: 0.3; }
-
-  .detail-card { display: none; }
-  .detail-card.active { display: block; }
-
-  .detail-ticket-id {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--accent);
-    margin-bottom: 6px;
-  }
-
-  .detail-title {
-    font-size: 18px;
-    font-weight: 700;
-    line-height: 1.3;
-    margin-bottom: 16px;
-  }
-
-  .detail-section {
-    margin-bottom: 18px;
-  }
-
-  .detail-section-label {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 1px;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-
-  .detail-desc {
-    font-size: 13px;
-    line-height: 1.6;
-    color: #a0aec0;
-  }
-
-  .status-select {
-    width: 100%;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 12px;
-    padding: 8px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-bottom: 10px;
-  }
-
-  .notes-area {
-    width: 100%;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 12px;
-    padding: 10px;
-    border-radius: 6px;
-    resize: vertical;
-    min-height: 80px;
-    line-height: 1.5;
-  }
-
-  .notes-area:focus, .status-select:focus { outline: none; border-color: var(--accent); }
-
-  .save-btn {
-    width: 100%;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    padding: 9px;
-    border-radius: 6px;
-    font-family: var(--mono);
-    font-size: 12px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: opacity 0.15s;
-    margin-top: 6px;
-  }
-
-  .save-btn:hover { opacity: 0.85; }
-
-  .people-list {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .person-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-  }
-
-  .person-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: #b794f4;
-    flex-shrink: 0;
-  }
-
-  /* SIDEBAR STATS */
-  .stat-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 20px;
-  }
-
-  .stat-box {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px;
-    text-align: center;
-  }
-
-  .stat-num {
-    font-family: var(--mono);
-    font-size: 24px;
-    font-weight: 700;
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-
-  .stat-label {
-    font-family: var(--mono);
-    font-size: 9px;
-    letter-spacing: 1px;
-    color: var(--muted);
-    text-transform: uppercase;
-  }
-
-  .stat-open .stat-num { color: var(--accent); }
-  .stat-sched .stat-num { color: var(--accent2); }
-  .stat-prog .stat-num { color: var(--warn); }
-  .stat-done .stat-num { color: var(--accent3); }
-
-  /* SCHEDULE SECTION */
-  .schedule-item {
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
-    margin-bottom: 10px;
-    font-size: 12px;
-  }
-
-  .sched-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--accent2);
-    margin-top: 4px;
-    flex-shrink: 0;
-  }
-
-  .sched-name { font-weight: 600; }
-  .sched-tick { font-family: var(--mono); font-size: 10px; color: var(--muted); }
-
-  hr { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
-
-  @media (max-width: 900px) {
-    .main { grid-template-columns: 1fr; }
-    .sidebar { display: none; }
-  }
+/* scrollbar */
+.content::-webkit-scrollbar{width:4px}
+.content::-webkit-scrollbar-track{background:transparent}
+.content::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 </style>
 </head>
 <body>
-
-<header>
-  <div class="logo">
-    <div class="logo-icon">🎫</div>
-    <div>
-      <div class="logo-text">IT Ticket Tracker</div>
-      <div class="logo-sub">Week of March 11 — Due Friday</div>
-    </div>
-  </div>
-  <div class="header-right">
-    <div class="deadline-badge">⏰ Due: Friday Mar 14 @ 4:30 PM</div>
-    <div class="progress-wrap">
-      <div class="progress-bar">
-        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+<div id="app">
+  <div class="header">
+    <div class="header-inner">
+      <div class="logo-row">
+        <span class="logo-icon">✈</span>
+        <div><div class="logo-title">THE COCKPIT</div><div class="logo-sub">Learning &amp; Development Hub</div></div>
       </div>
-      <span id="progressText">0/15</span>
-    </div>
-  </div>
-</header>
-
-<div class="filters" id="filterBar">
-  <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
-  <button class="filter-btn" onclick="setFilter('open', this)">Open</button>
-  <button class="filter-btn" onclick="setFilter('needs-scheduling', this)">Needs Scheduling</button>
-  <button class="filter-btn" onclick="setFilter('in-progress', this)">In Progress</button>
-  <button class="filter-btn" onclick="setFilter('done', this)">Done</button>
-</div>
-
-<div class="main">
-  <div class="ticket-list" id="ticketList"></div>
-  <div class="sidebar">
-    <div id="detailPanel">
-      <div class="detail-empty">
-        <div class="icon">📋</div>
-        <div>Select a ticket<br>to view details</div>
+      <div class="hdr-prog">
+        <div class="mini-bar"><div class="mini-fill" id="hdr-bar"></div></div>
+        <span class="mini-label" id="hdr-pct">0%</span>
       </div>
     </div>
-
-    <hr>
-
-    <div class="section-label">Stats</div>
-    <div class="stat-grid">
-      <div class="stat-box stat-open"><div class="stat-num" id="statOpen">-</div><div class="stat-label">Open</div></div>
-      <div class="stat-box stat-sched"><div class="stat-num" id="statSched">-</div><div class="stat-label">To Schedule</div></div>
-      <div class="stat-box stat-prog"><div class="stat-num" id="statProg">-</div><div class="stat-label">In Progress</div></div>
-      <div class="stat-box stat-done"><div class="stat-num" id="statDone">-</div><div class="stat-label">Done</div></div>
-    </div>
-
-    <div class="section-label">Scheduling Needed</div>
-    <div id="schedList"></div>
   </div>
+  <div class="content" id="content"></div>
+  <div class="tab-bar" id="tab-bar"></div>
 </div>
 
 <script>
-const TICKETS = [
-  {
-    id: "60348",
-    title: "6th Floor Student Machines — Hardwire Request",
-    desc: "AD machines on WiFi are slow to load user profiles. Department wants them hardwired, but no network ports are available. Need to find a solution (patch panel work, switch, or coordinate with networking team).",
-    tags: ["Networking", "AD"],
-    location: "6th Floor",
-    persons: [],
-    needsScheduling: false,
-    status: "open",
-    notes: ""
-  },
-  {
-    id: "60290",
-    title: "Return Laptop to Daugette Hall",
-    desc: "Return laptop currently in possession to Daugette Hall.",
-    tags: ["Hardware", "Return"],
-    location: "Daugette Hall",
-    persons: [],
-    needsScheduling: false,
-    status: "open",
-    notes: ""
-  },
-  {
-    id: "60745",
-    title: "ACE Machines — Library Rename, KACE & Health Check",
-    desc: "Find ACE machines in the library. Rename them for Kevin. Update KACE agent/record. Verify they are in good working shape.",
-    tags: ["KACE", "Naming", "Audit"],
-    location: "Library",
-    persons: ["Kevin"],
-    needsScheduling: false,
-    status: "open",
-    notes: ""
-  },
-  {
-    id: "60737",
-    title: "Enable Secure Boot — Alisha Cantrell",
-    desc: "Enable Secure Boot on Alisha Cantrell's machine. Must be scheduled with her before proceeding.",
-    tags: ["Secure Boot", "BitLocker"],
-    location: "",
-    persons: ["Alisha Cantrell"],
-    needsScheduling: true,
-    status: "needs-scheduling",
-    notes: ""
-  },
-  {
-    id: "60729",
-    title: "Enable Secure Boot — John Upchurch (Machine + Lib Circ 2)",
-    desc: "Enable Secure Boot on both John Upchurch's personal machine AND the Lib Circ 2 machine. Needs to be scheduled with John.",
-    tags: ["Secure Boot", "BitLocker"],
-    location: "Library Circ 2",
-    persons: ["John Upchurch"],
-    needsScheduling: true,
-    status: "needs-scheduling",
-    notes: ""
-  },
-  {
-    id: "60714",
-    title: "Enable Secure Boot — Lisa Gowens",
-    desc: "Enable Secure Boot on Lisa Gowens's machine.",
-    tags: ["Secure Boot"],
-    location: "",
-    persons: ["Lisa Gowens"],
-    needsScheduling: true,
-    status: "needs-scheduling",
-    notes: ""
-  },
-  {
-    id: "60713",
-    title: "Enable Secure Boot — Debrah Fragoso",
-    desc: "Enable Secure Boot on Debrah Fragoso's machine.",
-    tags: ["Secure Boot"],
-    location: "",
-    persons: ["Debrah Fragoso"],
-    needsScheduling: true,
-    status: "needs-scheduling",
-    notes: ""
-  },
-  {
-    id: "60710",
-    title: "Enable Secure Boot — Allyson Spivey",
-    desc: "Enable Secure Boot on Allyson Spivey's machine.",
-    tags: ["Secure Boot"],
-    location: "",
-    persons: ["Allyson Spivey"],
-    needsScheduling: true,
-    status: "needs-scheduling",
-    notes: ""
-  },
-  {
-    id: "60709",
-    title: "Enable Secure Boot — Jodi Poe",
-    desc: "Enable Secure Boot on Jodi Poe's machine.",
-    tags: ["Secure Boot"],
-    location: "",
-    persons: ["Jodi Poe"],
-    needsScheduling: true,
-    status: "needs-scheduling",
-    notes: ""
-  },
-  {
-    id: "60705",
-    title: "Enable Secure Boot — Delores Collier",
-    desc: "Enable Secure Boot on Delores Collier's machine.",
-    tags: ["Secure Boot"],
-    location: "",
-    persons: ["Delores Collier"],
-    needsScheduling: true,
-    status: "needs-scheduling",
-    notes: ""
-  },
-  {
-    id: "60699",
-    title: "Enable Secure Boot — Susan Wiggins",
-    desc: "Enable Secure Boot on Susan Wiggins's machine.",
-    tags: ["Secure Boot"],
-    location: "",
-    persons: ["Susan Wiggins"],
-    needsScheduling: true,
-    status: "needs-scheduling",
-    notes: ""
-  },
-  {
-    id: "60681",
-    title: "Enable Secure Boot — Arlene Brothers (machine w/ Angie Griffin)",
-    desc: "Enable Secure Boot for Arlene Brothers. Note: Angie Griffin currently has the machine — coordinate accordingly.",
-    tags: ["Secure Boot"],
-    location: "",
-    persons: ["Arlene Brothers", "Angie Griffin"],
-    needsScheduling: true,
-    status: "needs-scheduling",
-    notes: ""
-  },
-  {
-    id: "60435",
-    title: "Rebecca Roberts — Surface Hub 2S Teams Call Drops at ~30 Min",
-    desc: "Rebecca Roberts has a Surface Hub 2S running standard Windows 11. During Teams calls, the call disconnects after ~30 minutes. She uses it for Teams calls all day. Investigate: Teams timeout settings, network drops, Windows power/sleep settings, Teams app version, and Surface Hub-specific quirks on standard Win11.",
-    tags: ["Teams", "Surface Hub", "Windows 11"],
-    location: "",
-    persons: ["Rebecca Roberts"],
-    needsScheduling: true,
-    status: "needs-scheduling",
-    notes: ""
-  },
-  {
-    id: "60411",
-    title: "Biology Computer to Daugette — Send Order Info to Rebecca & Lori",
-    desc: "Take old biology computer to Daugette Hall. Then send Rebecca and Lori the information they need to order a replacement machine.",
-    tags: ["Hardware", "Procurement"],
-    location: "Daugette Hall",
-    persons: ["Rebecca", "Lori"],
-    needsScheduling: false,
-    status: "open",
-    notes: ""
-  },
-  {
-    id: "60526",
-    title: "Enable Secure Boot — Mary Bevis",
-    desc: "Enable Secure Boot on Mary Bevis's machine. Schedule with her before proceeding.",
-    tags: ["Secure Boot"],
-    location: "",
-    persons: ["Mary Bevis"],
-    needsScheduling: true,
-    status: "needs-scheduling",
-    notes: ""
-  },
-  {
-    id: "60740",
-    title: "6th Floor Laptop Cart — JSUDK6Q533",
-    desc: "Work order for the 6th floor laptop cart. Asset tag: JSUDK6Q533. Verify details and complete any required tasks for this machine.",
-    tags: ["Hardware", "Laptop Cart"],
-    location: "6th Floor",
-    persons: [],
-    needsScheduling: false,
-    status: "open",
-    notes: ""
-  },
-  {
-    id: "60674",
-    title: "ACE303-09 — Inventory with KACE (Runkbot 4.0)",
-    desc: "Machine ACE303-09 needs to be inventoried and registered in KACE. Use Runkbot 4.0 to complete the inventory process.",
-    tags: ["KACE", "Inventory", "Runkbot"],
-    location: "ACE303",
-    persons: [],
-    needsScheduling: false,
-    status: "open",
-    notes: ""
-  },
-  {
-    id: "60743",
-    title: "Enable Secure Boot — JSU7TKP533 (6th Floor)",
-    desc: "Enable Secure Boot on the 6th floor machine with asset tag JSU7TKP533.",
-    tags: ["Secure Boot"],
-    location: "6th Floor",
-    persons: [],
-    needsScheduling: false,
-    status: "open",
-    notes: ""
-  }
+// ═══════════════════════════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const GLOSSARY=[
+{term:"API (Application Programming Interface)",def:"A set of rules that lets two software systems talk to each other. The Cockpit uses APIs to communicate with Azure AD, KACE, and 25Live — your app sends a request, the API sends back data.",cat:"Core"},
+{term:"Azure AD (Azure Active Directory)",def:"Microsoft's cloud identity service. JSU uses it to manage who can log into what. The Cockpit will use Azure AD so users sign in with their JSU credentials — no separate password needed.",cat:"Auth"},
+{term:"OAuth 2.0",def:"An authorization protocol that lets your app access a user's data from another service without seeing their password. When a JSU user taps 'Sign In,' OAuth handles the secure handshake between The Cockpit and Azure AD.",cat:"Auth"},
+{term:"SSO (Single Sign-On)",def:"One login, many apps. Users sign into Azure AD once and get access to The Cockpit plus other JSU apps without re-entering credentials.",cat:"Auth"},
+{term:"JWT (JSON Web Token)",def:"A compact, digitally-signed token that proves who a user is. After Azure AD authenticates a user, it issues a JWT. Your app sends this token with every request to prove 'I am faculty member Jane Doe.'",cat:"Auth"},
+{term:"RBAC (Role-Based Access Control)",def:"Assigning permissions based on roles instead of individual users. The Cockpit has 4 roles: Student, Faculty, Staff, IT Tech. Each role sees different screens and can do different things.",cat:"Security"},
+{term:"RLS (Row Level Security)",def:"A Supabase/PostgreSQL feature that restricts which database rows a user can see or modify. Example: a Faculty user can only see their own tickets, but an IT Tech can see all tickets. The database itself enforces this.",cat:"Supabase"},
+{term:"Edge Function",def:"A small serverless function that runs on Supabase's servers (not your phone). You use these as a secure middleman — your app calls the Edge Function, and the Edge Function calls KACE/25Live using secret API keys the phone never sees.",cat:"Supabase"},
+{term:"Supabase",def:"An open-source backend platform built on PostgreSQL. It gives you a database, authentication, Edge Functions, file storage, and realtime subscriptions. It's your entire backend for The Cockpit.",cat:"Supabase"},
+{term:"PostgreSQL",def:"A powerful open-source relational database. Supabase runs on top of it. Your tables (users, rooms, tickets, schedules) all live in PostgreSQL.",cat:"Supabase"},
+{term:"React Native",def:"A framework for building mobile apps using React (JavaScript/TypeScript). Write once, run on both iOS and Android. It renders real native UI components, not a web view.",cat:"Frontend"},
+{term:"Expo",def:"A platform built on top of React Native that simplifies development. Handles builds, push notifications, OTA updates, and device APIs so you don't have to configure native code manually.",cat:"Frontend"},
+{term:"TypeScript",def:"JavaScript with type annotations. Instead of 'let x = 5' you write 'let x: number = 5'. Catches bugs before your code runs. The Cockpit uses TypeScript everywhere.",cat:"Frontend"},
+{term:"EAS Build",def:"Expo Application Services Build — a cloud service that compiles your React Native code into actual iOS (.ipa) and Android (.apk/.aab) app files ready for the App Store and Google Play.",cat:"DevOps"},
+{term:"OTA Update (Over-The-Air)",def:"Push code updates to users without going through App Store review. Expo lets you ship bug fixes instantly. Major changes still need a full app store submission.",cat:"DevOps"},
+{term:"CORS (Cross-Origin Resource Sharing)",def:"A browser security rule that blocks web pages from making requests to different domains. You've dealt with this on the IT Dashboard. In React Native mobile apps, CORS doesn't apply — but your Edge Functions handle it for web fallbacks.",cat:"Security"},
+{term:"Zero Trust",def:"A security model where nothing is trusted by default — not the app, not the network, not even internal systems. Every request must prove it's authorized. The Cockpit treats the phone as untrusted; all sensitive logic runs server-side.",cat:"Security"},
+{term:"Least Privilege",def:"Give every user/system only the minimum permissions it needs. The KACE service account can create tickets and read assets — nothing more. Faculty can see their own schedule — not other people's.",cat:"Security"},
+{term:"Certificate Pinning",def:"Your app only trusts specific SSL certificates, not just any valid one. Prevents man-in-the-middle attacks where someone intercepts traffic between the app and Supabase.",cat:"Security"},
+{term:"Service Account",def:"A non-human account used by your Edge Functions to talk to KACE and 25Live. It has its own credentials and limited permissions. No real person logs into it.",cat:"Security"},
+{term:"TTL (Time To Live)",def:"How long cached data stays valid before it's refreshed. The Cockpit caches 25Live schedules with a 15-minute TTL — after 15 minutes, it fetches fresh data.",cat:"Core"},
+{term:"Webhook",def:"A callback URL that another system hits when something happens. The Epson projector monitor sends a webhook to your Edge Function when a projector fails, auto-creating a KACE ticket.",cat:"Core"},
+{term:"Geofence",def:"A virtual boundary around a real-world location. When a user's phone enters or exits the boundary (e.g., Merrill Hall), the app can trigger a push notification.",cat:"Core"},
+{term:"GIS (Geographic Information System)",def:"Technology for mapping and spatial data. The Cockpit will use GIS data to render interactive building floor plans and campus wayfinding.",cat:"Core"},
+{term:"Push Token",def:"A unique device identifier used to send push notifications. Generated by Expo, stored in your users table, and refreshed every time the app launches. You send this token to Expo's push API along with the notification content.",cat:"Core"},
+{term:"Parameterized Query",def:"A database query where user input is passed as parameters, not concatenated into the SQL string. Prevents SQL injection attacks. Supabase does this automatically.",cat:"Security"},
+{term:"Delegated Permissions",def:"Azure AD permissions that act on behalf of a signed-in user (not the app itself). The Cockpit uses delegated permissions so it can only access data the logged-in user is allowed to see.",cat:"Auth"},
+{term:"Deno",def:"A JavaScript/TypeScript runtime (like Node.js but more secure). Supabase Edge Functions run on Deno. Syntax is almost identical to what you know — the main difference is import style.",cat:"Supabase"},
+{term:"CI/CD (Continuous Integration / Continuous Deployment)",def:"Automated pipelines that test and deploy your code when you push changes. GitHub Actions can run your tests, then trigger EAS Build to create a new app version.",cat:"DevOps"},
+{term:"MSW (Mock Service Worker)",def:"A testing library that intercepts API calls in your tests and returns fake responses. You'll use it to test ticket creation without actually hitting KACE.",cat:"DevOps"}
 ];
 
-// Load saved state from localStorage
-function loadState() {
+const PHASES=[
+{id:0,title:"Foundation & Permissions",weeks:"Weeks 1–4",duration:"~4 weeks",
+summary:"No user-facing features. You're laying the infrastructure, getting API access approved, and setting up Supabase with security from day one.",
+concepts:[
+{title:"What is Supabase and Why It's Your Backend",
+content:"Supabase replaces what would normally be 4-5 separate services: a database (PostgreSQL), authentication, serverless functions (Edge Functions), file storage, and realtime data sync. Instead of stitching together Firebase + AWS Lambda + a separate DB, Supabase gives you one dashboard.\n\nFor The Cockpit, Supabase handles:\n• Storing users, rooms, tickets, schedules\n• Authenticating users via Azure AD\n• Running Edge Functions that securely talk to KACE & 25Live\n• Enforcing who sees what data via Row Level Security",
+fc:{q:"Why does The Cockpit use Supabase Edge Functions instead of calling KACE/25Live directly from the phone?",a:"API keys and secrets would be exposed in the app binary. Edge Functions run server-side, keeping secrets safe. The phone is untrusted (Zero Trust principle)."}},
+{title:"React Native + Expo + TypeScript — The Stack",
+content:"You've built React components in our Cockpit demo. React Native is the same mental model — components, props, state, hooks — but instead of <div> you use <View>, instead of <p> you use <Text>, and instead of CSS files you use StyleSheet.create().\n\nExpo wraps React Native and handles the hard parts: building for iOS/Android, push notifications, camera access, location services. Think of Expo as the 'easy button' for React Native.\n\nTypeScript adds type safety. Instead of 'let x = 5' you write 'let x: number = 5'. The compiler catches mistakes before you run the app.",
+fc:{q:"What's the key difference between React (web) and React Native (mobile) component syntax?",a:"React Native uses <View> instead of <div>, <Text> instead of <p>/<span>, and StyleSheet.create() instead of CSS files. The component logic (state, hooks, props) is identical."}},
+{title:"Database Schema Design",
+content:"Before writing any code, you design your tables. The Cockpit needs:\n\n• users — id, azure_id, email, name, role, department, push_token\n• rooms — id, building, room_number, seating, av_equipment (JSON), floor\n• schedules — id, room_id, event_name, instructor, start_time, end_time, date\n• tickets — id, reporter_id, room_id, device_id, description, status, priority, created_at\n• room_statuses — id, room_id, status (ready/known_issue/maintenance/resolved), set_by, note, expires_at\n• room_notes — id, room_id, author_id, content, created_at\n• audit_log — id, user_id, action, target_table, target_id, ip, timestamp\n\nEvery table gets Row Level Security policies on day one. Never disable RLS.",
+fc:{q:"What is the audit_log table for?",a:"It records every significant action (ticket creation, room status change, role-based action) with who did it, when, and from where. Required for security compliance and troubleshooting."}},
+{title:"Row Level Security (RLS) — Your Data Gatekeeper",
+content:"RLS is a PostgreSQL feature that adds WHERE clauses to every query automatically based on who's asking. You write policies like:\n\nCREATE POLICY \"Users see own tickets\"\nON tickets FOR SELECT\nUSING (reporter_id = auth.uid());\n\nThis means even if someone hacks the client to request all tickets, the database only returns their own. The security lives in the database, not in your app code.\n\nFor The Cockpit, IT Techs need to see ALL tickets. So you add a second policy:\n\nCREATE POLICY \"Techs see all tickets\"\nON tickets FOR SELECT\nUSING (\n  EXISTS (\n    SELECT 1 FROM users\n    WHERE users.id = auth.uid()\n    AND users.role = 'tech'\n  )\n);",
+fc:{q:"If you forget to enable RLS on the tickets table, what happens?",a:"Any authenticated user can read, update, or delete ANY ticket — not just their own. RLS must be enabled on every table from day one. Supabase lets you toggle it, but leaving it off is a critical security hole."}},
+{title:"Git Workflow & Branch Protection",
+content:"Your roadmap requires a private GitHub repo with branch protection. This means:\n\n• No one (including you) pushes directly to 'main'\n• All changes go through Pull Requests\n• PRs require review before merging\n\nThis matters because production app code needs a review trail. When JSU IT Security audits your project, they want to see that every change was intentional and reviewed.\n\nBasic workflow:\ngit checkout -b feature/ticket-creation\n// make changes\ngit add . && git commit -m \"Add ticket creation Edge Function\"\ngit push origin feature/ticket-creation\n// Open PR on GitHub, review, merge",
+fc:{q:"Why does the roadmap require branch protection on 'main'?",a:"It creates an audit trail. Every code change goes through a Pull Request, which means there's a record of what changed, who approved it, and when. JSU IT Security will want to see this."}}
+],
+exercises:[
+{title:"Exercise: Design a Table",type:"thinking",
+prompt:"Look at the 'tickets' table schema above. Without looking ahead, write down what columns you think the 'room_statuses' table needs. Think about:\n- Who set the status?\n- When does a 'resolved' status expire?\n- What are the possible status values?\n\nThen compare to the schema in the concepts section."},
+{title:"Exercise: Write an RLS Policy",type:"code",
+prompt:"Write a Supabase RLS policy that allows:\n- Faculty to INSERT tickets (but only with their own user ID as reporter_id)\n- Prevents students from creating tickets\n\nHint: You need a policy ON tickets FOR INSERT that checks the user's role.",
+solution:"CREATE POLICY \"Faculty can create tickets\"\nON tickets FOR INSERT\nWITH CHECK (\n  auth.uid() = reporter_id\n  AND EXISTS (\n    SELECT 1 FROM users\n    WHERE users.id = auth.uid()\n    AND users.role IN ('faculty', 'tech')\n  )\n);"},
+{title:"Exercise: TypeScript Basics",type:"code",
+prompt:"Convert this JavaScript to TypeScript by adding type annotations:\n\nfunction createTicket(roomId, description, isUrgent) {\n  return {\n    room_id: roomId,\n    description: description,\n    priority: isUrgent ? 'high' : 'normal',\n    created_at: new Date()\n  };\n}",
+solution:"interface Ticket {\n  room_id: string;\n  description: string;\n  priority: 'high' | 'normal';\n  created_at: Date;\n}\n\nfunction createTicket(\n  roomId: string,\n  description: string,\n  isUrgent: boolean\n): Ticket {\n  return {\n    room_id: roomId,\n    description: description,\n    priority: isUrgent ? 'high' : 'normal',\n    created_at: new Date()\n  };\n}"}
+],
+prompts:[
+{title:"Initialize the Expo Project",desc:"Scaffold the entire project structure with TypeScript, navigation, and folder conventions.",
+cli:'claude "Initialize a new React Native Expo project with TypeScript for a campus facility management app called The Cockpit. Use expo-router for navigation. Create folder structure: /app (screens), /components, /lib (supabase client, API helpers), /types, /constants. Add dependencies: @supabase/supabase-js, expo-secure-store, expo-notifications. Set up a basic tab navigator with Home, Tickets, Rooms, and Profile tabs. Make sure tsconfig is strict."',
+chat:"I'm starting a React Native Expo project called \"The Cockpit\" for JSU campus facility management. I need you to help me:\n\n1. Initialize with TypeScript (strict mode)\n2. Set up expo-router with tab navigation: Home, Tickets, Rooms, Profile\n3. Create folder structure: /app, /components, /lib, /types, /constants\n4. Install: @supabase/supabase-js, expo-secure-store, expo-notifications\n5. Create a basic Supabase client in /lib/supabase.ts using expo-secure-store for token storage\n\nGive me the commands to run and the files to create."},
+{title:"Set Up Supabase Schema",desc:"Create all database tables with proper types, relationships, and RLS policies.",
+cli:'claude "Create a Supabase migration file for The Cockpit app. Tables needed: users (id uuid PK references auth.users, azure_id text unique, email text, full_name text, role text check in student/faculty/staff/tech, department text, push_token text), rooms (id uuid PK, building text, room_number text, seating int, av_equipment jsonb, floor int), schedules (id uuid PK, room_id references rooms, event_name text, instructor text, start_time timestamptz, end_time timestamptz, date date), tickets (id uuid PK, reporter_id references users, room_id references rooms nullable, device_id text nullable, description text, status text default open, priority text default normal, created_at timestamptz default now()), room_statuses, room_notes, audit_log. Enable RLS on ALL tables. Write policies for each role."',
+chat:"I need a complete Supabase SQL migration for The Cockpit. Here are my tables and their RLS requirements:\n\n[Paste the schema from Phase 0 concepts]\n\nRLS Rules:\n- users: users can read their own row, techs can read all\n- rooms: all authenticated users can read\n- schedules: all authenticated can read\n- tickets: faculty see own, tech sees all, students see none\n- room_statuses: all authenticated can read, only tech can write\n- room_notes: all can read, tech can write\n- audit_log: only tech/admin can read, system inserts only\n\nPlease write the full migration SQL with CREATE TABLE, ALTER TABLE ENABLE ROW LEVEL SECURITY, and CREATE POLICY statements."}
+]},
+
+{id:1,title:"Core Platform",weeks:"Weeks 5–12",duration:"~8 weeks",
+summary:"The MVP: Azure AD login, live room schedules from 25Live, ticket creation via KACE, IT tech dashboard, and push notifications. The static demo becomes a real app.",
+concepts:[
+{title:"OAuth 2.0 Flow — How Azure AD Login Actually Works",
+content:"When a user taps 'Sign In with JSU,' here's what happens step by step:\n\n1. App opens a browser window to Azure AD's login page\n2. User enters JSU email + password (your app never sees the password)\n3. Azure AD validates credentials and sends back an authorization code\n4. Your app exchanges that code for tokens (access token + refresh token)\n5. The access token is a JWT containing user info (name, email, groups)\n6. Your app sends this JWT to Supabase, which verifies the signature\n7. Supabase creates/updates the user record and issues a Supabase session\n\nThe key insight: your app never handles passwords. Azure AD does all the hard work. Your app just receives tokens.",
+fc:{q:"In the OAuth flow, does The Cockpit app ever see the user's JSU password?",a:"No. The user types their password into Azure AD's login page. The app only receives tokens (JWT) after successful authentication. The app never handles or stores passwords."}},
+{title:"Edge Functions as a Secure API Proxy",
+content:"Every external API call follows this pattern:\n\nPhone → Edge Function → External API (KACE/25Live)\nPhone ← Edge Function ← External API\n\nThe Edge Function is a small TypeScript program running on Supabase's Deno servers. It:\n1. Verifies the caller's JWT (is this a real, logged-in user?)\n2. Checks the caller's role (is this user allowed to do this?)\n3. Makes the API call using secrets stored as environment variables\n4. Transforms the response (strips sensitive data, reshapes for the app)\n5. Returns clean JSON to the phone\n\nExample Edge Function structure:\nimport { serve } from \"https://deno.land/std/http/server.ts\"\nimport { createClient } from \"https://esm.sh/@supabase/supabase-js\"\n\nserve(async (req) => {\n  // 1. Get JWT from Authorization header\n  // 2. Verify with Supabase\n  // 3. Check role\n  // 4. Call KACE/25Live with stored secrets\n  // 5. Return transformed data\n})",
+fc:{q:"What are the 3 things an Edge Function checks BEFORE making an external API call?",a:"1. Is the JWT valid? (Authentication) 2. Does this user's role allow this action? (Authorization) 3. Is the request data valid? (Input validation). Only then does it call the external API."}},
+{title:"25Live Integration — Read-Only Schedule Data",
+content:"25Live is JSU's room scheduling system. The integration pattern:\n\n1. Edge Function authenticates to 25Live's API using a service account\n2. Fetches today's schedules for requested building(s)\n3. Transforms the response into your app's schema\n4. Caches results in a schedules_cache table with a 15-min TTL\n5. Next request checks cache first — if fresh, returns cached data\n\nWhy start with 25Live? It's read-only (low risk), the data format is predictable, and it directly replaces your current CSV-based system. You're upgrading from static CSVs to live data with one integration.",
+fc:{q:"Why does the roadmap recommend building the 25Live integration BEFORE KACE?",a:"25Live is read-only (you only fetch schedules, never write). This makes it lower risk. KACE involves writes (creating tickets) which need more security validation. Start simple."}},
+{title:"KACE Integration — Ticket Creation & Device Lookup",
+content:"KACE is the ticketing system. This integration is more complex because it writes data:\n\nTicket Creation Flow:\n1. Faculty taps 'Report Issue' → selects emoji (projector/computer/sound) or types description\n2. App pre-fills: room (from schedule), reporter (from Azure AD), device (from KACE lookup)\n3. Faculty chooses: 'Come ASAP' or 'After class at [end time from 25Live]'\n4. App sends to Edge Function → validates → creates KACE ticket → returns ticket ID\n5. Edge Function triggers push notification to all IT Techs\n6. Edge Function logs action to audit_log table\n\nDevice Lookup:\nFor personal device tickets, the Edge Function queries KACE's asset management:\nGET /api/devices?user_id=xxx → returns devices assigned to that user\nIf only one device, it's auto-selected. If multiple, user picks from a list.",
+fc:{q:"When a faculty member creates a classroom ticket, where does the 'after class' time come from?",a:"The end time of their current class, pulled from 25Live schedule data that's already cached in Supabase. The app knows who they are (Azure AD) and where they're scheduled to be (25Live), so the ticket is mostly pre-filled."}},
+{title:"Push Notifications with Expo",
+content:"Push notifications use a chain: Your App → Supabase → Expo Push Service → Apple (APNs) / Google (FCM) → User's Phone.\n\nSetup:\n1. On app launch, call Notifications.getExpoPushTokenAsync() to get the device's push token\n2. Store this token in the users table\n3. When a ticket is created, a Supabase database trigger fires\n4. The trigger calls an Edge Function that fetches all tech users' push tokens\n5. The Edge Function sends tokens + message to Expo's push API\n6. Expo routes to Apple or Google depending on the device\n\nKey push events in The Cockpit:\n• New ticket → all IT Techs\n• Room marked unavailable → instructors scheduled in that room\n• Ticket resolved → the person who filed it",
+fc:{q:"What is an Expo Push Token?",a:"A unique string identifying a specific device for push notifications. Generated by Expo, stored in your users table, and refreshed every time the app launches. You send this token to Expo's push API along with the notification content."}}
+],
+exercises:[
+{title:"Exercise: Trace the Ticket Flow",type:"thinking",
+prompt:"A faculty member in MAH 130 taps the 'projector not working' emoji. Trace every system involved from tap to the IT tech receiving a push notification. List each step and which system handles it (App, Edge Function, Supabase, KACE, Azure AD, 25Live, Expo Push)."},
+{title:"Exercise: Write an Edge Function Skeleton",type:"code",
+prompt:"Write the skeleton of a Supabase Edge Function that:\n1. Reads the JWT from the Authorization header\n2. Verifies the user is a 'tech' role\n3. Returns 401 if no JWT, 403 if wrong role\n4. Returns a JSON response { status: \"ok\" } if authorized\n\nUse Deno serve() and @supabase/supabase-js",
+solution:"import { serve } from \"https://deno.land/std@0.177.0/http/server.ts\";\nimport { createClient } from \"https://esm.sh/@supabase/supabase-js@2\";\n\nserve(async (req) => {\n  const authHeader = req.headers.get(\"Authorization\");\n  if (!authHeader) {\n    return new Response(\n      JSON.stringify({ error: \"No authorization header\" }),\n      { status: 401, headers: { \"Content-Type\": \"application/json\" } }\n    );\n  }\n\n  const supabase = createClient(\n    Deno.env.get(\"SUPABASE_URL\"),\n    Deno.env.get(\"SUPABASE_ANON_KEY\"),\n    { global: { headers: { Authorization: authHeader } } }\n  );\n\n  const { data: { user }, error } = await supabase.auth.getUser();\n  if (error || !user) {\n    return new Response(\n      JSON.stringify({ error: \"Invalid token\" }),\n      { status: 401, headers: { \"Content-Type\": \"application/json\" } }\n    );\n  }\n\n  const { data: profile } = await supabase\n    .from(\"users\")\n    .select(\"role\")\n    .eq(\"id\", user.id)\n    .single();\n\n  if (profile?.role !== \"tech\") {\n    return new Response(\n      JSON.stringify({ error: \"Insufficient permissions\" }),\n      { status: 403, headers: { \"Content-Type\": \"application/json\" } }\n    );\n  }\n\n  return new Response(\n    JSON.stringify({ status: \"ok\" }),\n    { status: 200, headers: { \"Content-Type\": \"application/json\" } }\n  );\n});"},
+{title:"Exercise: Cache Logic",type:"thinking",
+prompt:"The 25Live Edge Function caches schedules with a 15-minute TTL. Write pseudocode for the cache check:\n- If cache exists and is fresh → return cached data\n- If cache is stale or missing → fetch from 25Live, store in cache, return\n\nWhat column in your schedules_cache table determines freshness?"}
+],
+prompts:[
+{title:"Build Azure AD Authentication",desc:"Implement the complete SSO flow with role mapping.",
+cli:'claude "Implement Azure AD SSO for The Cockpit. I have an Azure AD App Registration with client_id and tenant_id. Configure Supabase Auth with Azure AD as an OAuth provider. Create the auth flow: login button → Azure AD browser auth → callback handler → read user\'s AD group memberships → map groups to app roles (student/faculty/staff/tech) → upsert into users table. Use expo-auth-session for the OAuth flow and expo-secure-store for token storage. Include a useAuth hook that provides user, role, loading, signIn, signOut."',
+chat:"I need to implement Azure AD SSO in my Expo app. Here's what I have:\n- Azure AD App Registration (client_id: [YOUR_ID], tenant_id: [YOUR_TENANT])\n- Supabase project configured\n- Expo app with expo-auth-session installed\n\nPlease build:\n1. The OAuth flow using expo-auth-session to authenticate with Azure AD\n2. A Supabase Edge Function for the callback that reads AD group memberships and maps to roles\n3. A useAuth() React hook that exposes: user, role, isLoading, signIn(), signOut()\n4. Token refresh logic using expo-secure-store\n\nExplain each step as you go so I understand the flow."},
+{title:"Build the KACE Ticket Creation Edge Function",desc:"Secure ticket creation with full validation and audit logging.",
+cli:'claude "Create a Supabase Edge Function at /api/tickets for The Cockpit. POST creates a ticket: validate JWT, check role is faculty/staff/tech, validate required fields (description, room_id or device_id), call KACE API to create the ticket using service account creds from env vars, store ticket reference in Supabase tickets table, log to audit_log, trigger push notification to tech role users via Expo push API. Include error handling for KACE API failures. The KACE API endpoint is [YOUR_KACE_URL]/api/service_desk/tickets."',
+chat:"I need a Supabase Edge Function for ticket creation. The flow:\n\n1. Receive POST with: { description, room_id?, device_id?, priority, timing? }\n2. Verify JWT → get user from Supabase\n3. Check user.role is faculty, staff, or tech (students can't create tickets)\n4. Call KACE API: POST [KACE_URL]/api/service_desk/tickets with ticket data\n5. Store the KACE ticket ID in my Supabase tickets table\n6. Insert an audit_log record\n7. Fetch all users with role='tech' and their push_tokens\n8. Send push notification via Expo push API\n9. Return the created ticket\n\nKACE API uses basic auth with a service account. Creds are in env vars KACE_URL, KACE_USER, KACE_PASS.\n\nWrite the complete Edge Function with error handling."}
+]},
+
+{id:2,title:"Student Experience & Room Finder",weeks:"Weeks 13–18",duration:"~6 weeks",
+summary:"Add the student role with class schedules, dining menus, and app links. Build the searchable room availability finder. Extend tickets to non-teaching staff.",
+concepts:[
+{title:"Multi-Role UI Architecture",
+content:"The Cockpit renders different screens based on the user's role. This isn't just hiding buttons — it's a full architectural pattern:\n\n1. After login, the useAuth hook provides the user's role\n2. The tab navigator conditionally renders tabs based on role\n3. Each screen checks role before rendering role-specific content\n4. The backend (RLS + Edge Functions) independently enforces the same rules\n\nNever rely on the UI alone for security. If you hide a button but the API still works, someone can call the API directly. Security is enforced at both layers.",
+fc:{q:"Why must role checks happen on BOTH the client (UI) and server (Edge Functions/RLS)?",a:"The UI can be bypassed. Someone could call your Edge Function directly using curl or Postman. If only the UI checks roles, anyone with a valid JWT could perform any action. Server-side checks are the real security layer; client-side checks are just UX."}},
+{title:"Data Scraping & Menu Integration",
+content:"The dining menu comes from JSU's Sodexo page (jsudining.sodexomyway.com). Two approaches:\n\n1. API/JSON scraping: Many Sodexo sites embed menu data as preloaded JSON in the HTML. An Edge Function can fetch the page, extract the JSON, and serve it to the app.\n\n2. Static rotation: If scraping is unreliable, store a rotating menu schedule in Supabase that staff can update manually.\n\nThe Edge Function approach is better because it's always current, but you need a fallback in case the Sodexo site structure changes.",
+fc:{q:"Why use an Edge Function to scrape the Sodexo menu instead of doing it directly in the app?",a:"CORS would block the request from a web context, and even in React Native, putting scraping logic in the app means updates require a new app release. An Edge Function can be updated instantly and handles parsing server-side."}},
+{title:"Advanced Supabase Queries — Room Finder",
+content:"The Room Finder replaces your TSC Room Tracker. Users select building, date, time range, and optionally filter by AV equipment or seating. The query:\n\n1. Get all rooms in the selected building\n2. LEFT JOIN with schedules for that date\n3. Filter OUT rooms that have a schedule conflict in the requested time range\n4. Optionally filter by av_equipment (JSONB contains) and minimum seating\n\nIn Supabase JS:\nconst { data } = await supabase\n  .from('rooms')\n  .select('*, schedules!left(*)')\n  .eq('building', 'MAH')\n  .gte('seating', minSeats)\n  .contains('av_equipment', requiredAV)\n\nThen filter client-side for time conflicts (or use a database function for better performance).",
+fc:{q:"What does a LEFT JOIN do in the room finder query?",a:"It returns ALL rooms, even those with no schedule entries. This is what you want — rooms with no schedules for that time are available. An INNER JOIN would only return rooms that HAVE schedules, which is the opposite of what you need."}}
+],
+exercises:[
+{title:"Exercise: Role-Based Tab Config",type:"code",
+prompt:"Write a TypeScript function getTabsForRole(role: string) that returns an array of tab objects. Rules:\n- Student: Home, Schedule, Dining, Links\n- Faculty: Home, Schedule, Tickets, Rooms\n- Staff: Home, Tickets, Rooms\n- Tech: Home, Tickets, Rooms, Dashboard",
+solution:"type Tab = {\n  name: string;\n  icon: string;\n  screen: string;\n};\n\nconst ALL_TABS: Record<string, Tab> = {\n  home: { name: \"Home\", icon: \"home\", screen: \"HomeScreen\" },\n  schedule: { name: \"Schedule\", icon: \"calendar\", screen: \"ScheduleScreen\" },\n  tickets: { name: \"Tickets\", icon: \"ticket\", screen: \"TicketsScreen\" },\n  rooms: { name: \"Rooms\", icon: \"door-open\", screen: \"RoomsScreen\" },\n  dining: { name: \"Dining\", icon: \"utensils\", screen: \"DiningScreen\" },\n  links: { name: \"Links\", icon: \"link\", screen: \"LinksScreen\" },\n  dashboard: { name: \"Dashboard\", icon: \"chart-bar\", screen: \"DashboardScreen\" },\n};\n\nconst ROLE_TABS: Record<string, string[]> = {\n  student: [\"home\", \"schedule\", \"dining\", \"links\"],\n  faculty: [\"home\", \"schedule\", \"tickets\", \"rooms\"],\n  staff: [\"home\", \"tickets\", \"rooms\"],\n  tech: [\"home\", \"tickets\", \"rooms\", \"dashboard\"],\n};\n\nfunction getTabsForRole(role: string): Tab[] {\n  const tabKeys = ROLE_TABS[role] || ROLE_TABS.student;\n  return tabKeys.map(key => ALL_TABS[key]);\n}"},
+{title:"Exercise: Room Availability Query",type:"thinking",
+prompt:"A user searches for rooms in Martin Hall on Monday from 2:00–3:30 PM with a projector and at least 30 seats. Write the pseudocode for this query. Which parts happen in the database vs. client-side filtering?"}
+],
+prompts:[
+{title:"Build the Student Home Screen",desc:"Schedule display, dining menu, quick links, and first-launch prompts.",
+cli:'claude "Build the Student Home Screen for The Cockpit. Components: 1) Today\'s schedule — show class cards with room, time, instructor from the schedules cache. 2) DiningMenu — call the /api/dining Edge Function and show today\'s meals. 3) QuickLinks — grid of buttons for MyJAXState, DUO, OmniAlert, Everyday, JSU Athletics using Linking.openURL(). 4) FirstLaunchModal — on first open, prompt to download MyJAXState and OmniAlert with deep links to app stores. Store hasSeenPrompt in AsyncStorage. Use the existing useAuth hook for role checking."',
+chat:"I need the Student Home Screen for The Cockpit. It has 4 sections:\n\n1. Today's Schedule: Card list showing each class (time, room, instructor) from my schedules cache in Supabase\n2. Dining Menu: Fetched from an Edge Function I'll build separately\n3. Quick Links: Buttons that open MyJAXState, DUO, OmniAlert, Everyday, JSU Athletics via deep link or URL\n4. First-Launch Modal: Shows once, prompts user to download MyJAXState and OmniAlert\n\nPlease build the React Native screen component with proper TypeScript types. Use the useAuth() hook for the user's name and role."}
+]},
+
+{id:3,title:"AV Guides, Maps & Analytics",weeks:"Weeks 19–28",duration:"~10 weeks",
+summary:"Room-specific AV how-to guides, interactive campus maps with wayfinding, and an analytics dashboard for IT leadership.",
+concepts:[
+{title:"Structured Content in Supabase (AV Guides)",
+content:"AV guides are stored as structured JSON in Supabase, not as PDFs or images. Each room has a guide with steps:\n\n{\n  \"room_id\": \"mah-130\",\n  \"begin_class\": [\n    { \"step\": 1, \"text\": \"Turn on projector using remote\", \"image_url\": \"...\" },\n    { \"step\": 2, \"text\": \"Switch input to HDMI 1\", \"image_url\": \"...\" }\n  ],\n  \"end_class\": [\n    { \"step\": 1, \"text\": \"Power off projector\", \"image_url\": \"...\" }\n  ],\n  \"version\": 3,\n  \"updated_by\": \"tech-user-id\",\n  \"updated_at\": \"2026-05-01T10:00:00Z\"\n}\n\nVersioning means IT techs can update guides in-app without losing history. Every edit creates a new version in an av_guide_versions table.",
+fc:{q:"Why store AV guides as structured JSON instead of PDF files?",a:"JSON renders natively as step-by-step cards in the app (better UX). It's searchable, versionable, and editable by IT techs directly in the app. A PDF would need a viewer and can't be updated without re-uploading."}},
+{title:"Maps with react-native-maps",
+content:"react-native-maps renders Google Maps or Apple Maps in your app. For indoor floor plans:\n\n1. Create SVG or tile-based floor plans for each building\n2. Overlay them on the map as custom tile layers positioned to match the building's real coordinates\n3. Tapping a room on the floor plan opens the room card\n4. Wayfinding uses the device's GPS + floor plan data to show walking directions\n\nStart with the 4 buildings with the most AV rooms: Martin Hall, Merrill Building, Stone Center, Ayers Hall. You can expand later.",
+fc:{q:"What is a tile overlay in react-native-maps?",a:"A custom image layer positioned over the real map at specific coordinates. You use these to show indoor floor plans on top of the building's footprint on the map. The floor plan aligns with the building's real-world position."}},
+{title:"Analytics with Aggregated Queries",
+content:"The analytics dashboard doesn't query raw data — it queries aggregated views. You create PostgreSQL views or functions:\n\n• Ticket volume by building (last 30 days)\n• Average resolution time by issue type\n• Most common issues (count of each emoji/category)\n• Room utilization rate (scheduled hours / available hours)\n\nThese run as database queries, not client-side math. For performance, you can materialize these as Supabase database functions that run on a schedule.\n\nOnly IT Tech and Admin roles can access this screen — enforced by both UI rendering and Edge Function role checks.",
+fc:{q:"Why calculate analytics in the database instead of fetching all tickets and calculating in the app?",a:"Performance and security. Aggregating thousands of tickets on a phone is slow and drains battery. Doing it in PostgreSQL is fast. Also, the app would need access to ALL tickets, which violates least privilege for non-tech users."}}
+],
+exercises:[
+{title:"Exercise: AV Guide JSON Schema",type:"code",
+prompt:"Write a TypeScript interface for an AV guide that includes: room ID, building, begin-class steps, end-class steps, a troubleshooting section, version number, and who last updated it. Each step has a number, text instruction, and optional image URL.",
+solution:"interface AVGuideStep {\n  step: number;\n  text: string;\n  imageUrl?: string;\n}\n\ninterface TroubleshootingItem {\n  issue: string;\n  solution: string;\n  escalate: boolean; // true = suggest filing a ticket\n}\n\ninterface AVGuide {\n  roomId: string;\n  building: string;\n  beginClass: AVGuideStep[];\n  endClass: AVGuideStep[];\n  troubleshooting: TroubleshootingItem[];\n  version: number;\n  updatedBy: string;\n  updatedAt: string; // ISO timestamp\n}"}
+],
+prompts:[
+{title:"Build the AV Guide Screen",desc:"Room-specific how-to with inline ticket creation.",
+cli:'claude "Build an AV Guide screen for The Cockpit. It fetches the guide for the user\'s current scheduled room from Supabase av_guides table. Display as step cards with BEGIN CLASS and END CLASS sections. Each step shows number, text, and optional image. Add a Still need help? floating button that opens the ticket creation form pre-filled with the current room. IT Tech role sees an Edit Guide button that enables inline editing of steps with version tracking. Use TypeScript and React Native components."',
+chat:"I need an AV Guide screen that:\n1. Detects the user's current room from their schedule\n2. Fetches that room's AV guide from Supabase (JSON format)\n3. Shows step-by-step cards for BEGIN CLASS and END CLASS\n4. Has a \"Still need help?\" button → opens ticket form pre-filled with room\n5. IT Techs see an \"Edit\" button to modify steps in-app\n6. Edits create a new version (don't overwrite history)\n\nPlease build the React Native screen with TypeScript. Include the Supabase query and the edit/save logic."}
+]},
+
+{id:4,title:"Geofencing, Monitoring & Automation",weeks:"Weeks 29–36",duration:"~8 weeks",
+summary:"Location-based notifications, automatic projector monitoring via Epson webhooks, and department-specific role extensions.",
+concepts:[
+{title:"Geofencing with expo-location",
+content:"Geofencing creates invisible boundaries around buildings. When a phone crosses one, your app is woken up (even if backgrounded) and can act.\n\nSetup:\nLocation.startGeofencingAsync(\"BUILDING_FENCES\", [\n  { latitude: 33.8209, longitude: -85.7653, radius: 50, identifier: \"merrill\" },\n  { latitude: 33.8215, longitude: -85.7648, radius: 50, identifier: \"martin\" },\n]);\n\nThis requires \"Always Allow\" location permission — many users will deny this. Fallbacks:\n1. WiFi hub: Determine proximity from which campus WiFi access point the device is connected to\n2. Schedule-based: If a student has a class in Merrill at 2:00 PM and the notification is about Merrill at 2:30 PM, send it anyway\n\nAll location data is anonymized. You never store individual user positions.",
+fc:{q:"What are the two fallback methods if a user denies 'Always Allow' location permission?",a:"1. WiFi hub association — infer which building they're near based on which campus WiFi access point they're connected to. 2. Schedule-based proximity — if they have a class in that building near the notification's time, send it regardless of location."}},
+{title:"Webhooks — Automatic Projector Monitoring",
+content:"A webhook is the reverse of an API call. Instead of your app calling Epson, Epson calls your Edge Function when something happens.\n\nFlow:\n1. Epson monitoring system detects projector error in MAH 130\n2. Epson sends HTTP POST to your Edge Function: /api/webhooks/epson\n3. Edge Function validates the payload (is this really from Epson?)\n4. Maps the projector serial number to a room in your rooms table\n5. Creates a KACE ticket automatically\n6. Updates room_statuses to 'known_issue'\n7. Sends push notification to IT techs\n\nNo human involved. The projector breaks, and within seconds the ticket exists and techs are notified.",
+fc:{q:"How does the Edge Function verify a webhook is really from Epson and not a spoofed request?",a:"Typically via a shared secret or HMAC signature. Epson includes a hash of the payload signed with a secret key. Your Edge Function computes the same hash and compares. If they match, it's legitimate."}},
+{title:"Department Role Extensions",
+content:"Post-launch, different departments will want custom UIs:\n• Custodians: Room cleaning schedules, supply requests\n• Electricians: Power system alerts, maintenance logs\n• Administration: Campus-wide analytics, policy announcements\n\nThe architecture supports this via Azure AD groups. Each department gets an AD group, which maps to an app role. New roles get new RLS policies and new UI screens. The app's tab navigator already conditionally renders based on role — adding a new role means adding a new tab configuration and the screens it includes.\n\nThis is why RBAC is built into the foundation, not bolted on later.",
+fc:{q:"How do you add a new department role (like Custodian) without rebuilding the app?",a:"1. Create an Azure AD group for custodians. 2. Add the role mapping in your Edge Function. 3. Write new RLS policies for custodian-specific data. 4. Add a new tab configuration in ROLE_TABS. 5. Build the custodian-specific screens. Push via OTA update."}}
+],
+exercises:[
+{title:"Exercise: Webhook Validation",type:"code",
+prompt:"Write a function that validates an incoming webhook from the Epson monitoring system. It receives the request body and a signature header. Use HMAC-SHA256 with a shared secret to verify the payload hasn't been tampered with.\n\nHint: Deno has a built-in crypto.subtle API.",
+solution:"async function validateWebhook(\n  body: string,\n  signatureHeader: string,\n  secret: string\n): Promise<boolean> {\n  const encoder = new TextEncoder();\n  const key = await crypto.subtle.importKey(\n    \"raw\",\n    encoder.encode(secret),\n    { name: \"HMAC\", hash: \"SHA-256\" },\n    false,\n    [\"sign\"]\n  );\n\n  const signature = await crypto.subtle.sign(\n    \"HMAC\",\n    key,\n    encoder.encode(body)\n  );\n\n  const expectedHex = Array.from(new Uint8Array(signature))\n    .map(b => b.toString(16).padStart(2, \"0\"))\n    .join(\"\");\n\n  return expectedHex === signatureHeader;\n}"},
+{title:"Exercise: Design the Notification Logic",type:"thinking",
+prompt:"An admin creates a geofenced notification: \"Water shut off in Merrill Hall 2:30–4:00 PM today.\" Design the logic that decides WHO gets this notification. Consider:\n- Users with \"Always Allow\" location near Merrill\n- Users on Merrill WiFi\n- Users with classes in Merrill between 1:30–4:00 PM\n- Users who denied all location permissions and aren't on WiFi\n\nWrite pseudocode for the notification targeting function."}
+],
+prompts:[
+{title:"Build the Epson Webhook Edge Function",desc:"Automatic ticket creation from projector monitoring.",
+cli:'claude "Create a Supabase Edge Function at /api/webhooks/epson for The Cockpit. It receives POST requests from Epson\'s projector monitoring system. Validate HMAC-SHA256 signature using EPSON_WEBHOOK_SECRET env var. Parse payload to extract projector serial number and error type. Look up room by projector serial in a projector_assets table. Create a KACE ticket via the existing /api/tickets Edge Function pattern. Update room_statuses to known_issue with the error description as the note. Send push notification to tech role users. Log to audit_log with action auto_ticket_projector. Return 200 on success, 401 on invalid signature, 500 on processing error."',
+chat:"I need a webhook Edge Function for automatic projector ticket creation. When Epson's monitoring system detects a projector error, it POSTs to my Edge Function. Build the full flow:\n\n1. Validate the webhook signature (HMAC-SHA256)\n2. Extract projector serial + error type from payload\n3. Map serial number to a room via projector_assets table\n4. Create a KACE ticket (reuse my existing ticket creation pattern)\n5. Update room_statuses to 'known_issue'\n6. Push notify IT techs\n7. Audit log the event\n\nInclude error handling for: invalid signature, unknown projector serial, KACE API failure.\n\nAlso create the projector_assets table migration (serial_number, room_id, model, install_date)."}
+]}
+];
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// STATE & PERSISTENCE
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const STORAGE_KEY = 'cockpit-learning-progress';
+let state = {
+  tab: 'Roadmap',
+  phase: null,
+  progress: {},
+  flipped: {},
+  solutions: {},
+  prompts: {},
+  gSearch: '',
+  gFilter: 'All'
+};
+
+function loadProgress() {
   try {
-    const saved = localStorage.getItem('it_tickets_v1');
-    if (saved) {
-      const data = JSON.parse(saved);
-      data.forEach(s => {
-        const t = TICKETS.find(t => t.id === s.id);
-        if (t) { t.status = s.status; t.notes = s.notes; }
-      });
-    }
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) state.progress = JSON.parse(raw);
   } catch(e) {}
 }
 
-function saveState() {
-  const data = TICKETS.map(t => ({ id: t.id, status: t.status, notes: t.notes }));
-  localStorage.setItem('it_tickets_v1', JSON.stringify(data));
+function saveProgress() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.progress)); } catch(e) {}
 }
 
-let currentFilter = 'all';
-let selectedId = null;
-
-function setFilter(f, btn) {
-  currentFilter = f;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderList();
+function toggleProgress(key) {
+  state.progress[key] = !state.progress[key];
+  saveProgress();
+  render();
 }
 
-function statusLabel(s) {
-  const map = { 'open': 'Open', 'in-progress': 'In Progress', 'needs-scheduling': 'Needs Scheduling', 'done': 'Done' };
-  return map[s] || s;
+function getPhaseProgress(pid) {
+  const p = PHASES[pid];
+  const total = p.concepts.length + p.exercises.length + p.prompts.length;
+  let done = 0;
+  p.concepts.forEach((_,i) => { if(state.progress[`p${pid}-c${i}`]) done++; });
+  p.exercises.forEach((_,i) => { if(state.progress[`p${pid}-e${i}`]) done++; });
+  p.prompts.forEach((_,i) => { if(state.progress[`p${pid}-cp${i}`]) done++; });
+  return { done, total, pct: total ? Math.round(done/total*100) : 0 };
 }
 
-function pillClass(s) {
-  const map = { 'open': 'pill-open', 'in-progress': 'pill-in-progress', 'needs-scheduling': 'pill-needs-scheduling', 'done': 'pill-done' };
-  return map[s] || '';
+function getTotalProgress() {
+  let done=0, total=0;
+  PHASES.forEach(p => { const r=getPhaseProgress(p.id); done+=r.done; total+=r.total; });
+  return { done, total, pct: total ? Math.round(done/total*100) : 0 };
 }
 
-function renderList() {
-  const list = document.getElementById('ticketList');
-  const filtered = currentFilter === 'all' ? TICKETS : TICKETS.filter(t => t.status === currentFilter);
+// ═══════════════════════════════════════════════════════════════════════════════
+// RENDERING
+// ═══════════════════════════════════════════════════════════════════════════════
 
-  list.innerHTML = '';
+function h(tag, attrs, ...children) {
+  const el = document.createElement(tag);
+  if (attrs) Object.entries(attrs).forEach(([k,v]) => {
+    if (k === 'onclick' || k === 'oninput') el[k] = v;
+    else if (k === 'className') el.className = v;
+    else if (k === 'innerHTML') el.innerHTML = v;
+    else if (k === 'disabled') { if(v) el.setAttribute('disabled',''); }
+    else el.setAttribute(k, v);
+  });
+  children.flat().forEach(c => {
+    if (c == null) return;
+    el.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+  });
+  return el;
+}
 
-  if (filtered.length === 0) {
-    list.innerHTML = '<div style="color:var(--muted);font-family:var(--mono);font-size:12px;padding:40px 0;text-align:center;">No tickets in this category.</div>';
+function renderTabBar() {
+  const bar = document.getElementById('tab-bar');
+  bar.innerHTML = '';
+  const tabs = [
+    {name:'Roadmap',icon:'◈'},{name:'Learn',icon:'◉'},{name:'Glossary',icon:'◎'},{name:'Progress',icon:'◆'}
+  ];
+  tabs.forEach(t => {
+    const btn = h('button', {
+      className: 'tab-btn' + (state.tab===t.name?' active':''),
+      onclick: () => { state.tab=t.name; render(); }
+    },
+      h('span',{className:'tab-icon'},t.icon),
+      h('span',{className:'tab-label'},t.name)
+    );
+    bar.appendChild(btn);
+  });
+}
+
+function renderHeader() {
+  const tp = getTotalProgress();
+  document.getElementById('hdr-bar').style.width = tp.pct+'%';
+  document.getElementById('hdr-pct').textContent = tp.pct+'%';
+}
+
+function renderRoadmap(container) {
+  const wrap = h('div',{className:'tab-content'});
+  wrap.appendChild(h('h2',{className:'sec-title'},'Development Roadmap'));
+  wrap.appendChild(h('p',{className:'sec-desc'},'5 phases, 36 weeks. Tap a phase to start learning.'));
+
+  PHASES.forEach((phase,i) => {
+    const prog = getPhaseProgress(phase.id);
+    const card = h('button',{className:'phase-card', onclick:()=>{ state.phase=phase.id; state.tab='Learn'; render(); }},
+      h('div',{className:'phase-hdr'},
+        h('span',{className:'phase-badge'},'Phase '+phase.id),
+        h('span',{className:'phase-dur'},phase.duration)
+      ),
+      h('div',{className:'phase-title'},phase.title),
+      h('p',{className:'phase-summary'},phase.summary),
+      h('div',{className:'phase-footer'},
+        h('div',{className:'bar-track'}, h('div',{className:'bar-fill',style:'width:'+prog.pct+'%'})),
+        h('span',{className:'bar-label'},prog.done+'/'+prog.total)
+      )
+    );
+    wrap.appendChild(card);
+    if (i < PHASES.length-1) wrap.appendChild(h('div',{className:'timeline-line'}));
+  });
+  container.appendChild(wrap);
+}
+
+function renderLearn(container) {
+  const wrap = h('div',{className:'tab-content'});
+
+  if (state.phase === null) {
+    wrap.appendChild(h('div',{className:'empty'},
+      h('div',{className:'empty-icon'},'◉'),
+      h('p',{className:'empty-text'},'Select a phase from the Roadmap tab to begin learning')
+    ));
+    container.appendChild(wrap);
     return;
   }
 
-  filtered.forEach(t => {
-    const el = document.createElement('div');
-    el.className = `ticket status-${t.status}${selectedId === t.id ? ' selected' : ''}`;
-    el.onclick = () => selectTicket(t.id);
+  const phase = PHASES[state.phase];
+  const prog = getPhaseProgress(phase.id);
 
-    const personTags = t.persons.map(p => `<span class="tag tag-person">👤 ${p}</span>`).join('');
-    const locTag = t.location ? `<span class="tag tag-location">📍 ${t.location}</span>` : '';
-    const typeTags = t.tags.map(g => `<span class="tag">${g}</span>`).join('');
+  // Nav
+  const nav = h('div',{className:'phase-nav'},
+    h('button',{className:'phase-nav-btn',disabled:phase.id===0,onclick:()=>{state.phase=phase.id-1;render();}},'← Prev'),
+    h('span',{className:'phase-nav-label'},'Phase '+phase.id),
+    h('button',{className:'phase-nav-btn',disabled:phase.id===4,onclick:()=>{state.phase=phase.id+1;render();}},'Next →')
+  );
+  wrap.appendChild(nav);
+  wrap.appendChild(h('h2',{className:'sec-title'},phase.title));
+  wrap.appendChild(h('p',{className:'sec-desc'},phase.weeks+' · '+phase.duration));
+  wrap.appendChild(h('div',{className:'learn-bar'},h('div',{className:'learn-fill',style:'width:'+prog.pct+'%'})));
+  wrap.appendChild(h('p',{className:'sec-desc',style:'margin-top:4px'},prog.done+' of '+prog.total+' items complete'));
 
-    el.innerHTML = `
-      <div class="ticket-header">
-        <div>
-          <div class="ticket-id">#${t.id}</div>
-          <div class="ticket-title">${t.title}</div>
-        </div>
-        <span class="status-pill ${pillClass(t.status)}">${statusLabel(t.status)}</span>
-      </div>
-      <div class="ticket-meta">
-        ${personTags}${locTag}${typeTags}
-      </div>
-    `;
-    list.appendChild(el);
+  // Concepts
+  wrap.appendChild(h('h3',{className:'learn-sec'},h('span',null,'📖'),' Concepts'));
+  phase.concepts.forEach((c,i) => {
+    const key = `p${phase.id}-c${i}`;
+    const fcKey = `p${phase.id}-fc${i}`;
+    const card = h('div',{className:'card'});
+    card.appendChild(h('div',{className:'card-hdr'},
+      h('button',{className:'chk'+(state.progress[key]?' done':''),onclick:()=>toggleProgress(key)}, state.progress[key]?'✓':''),
+      h('h4',{className:'card-title'},c.title)
+    ));
+    card.appendChild(h('div',{className:'concept-body'},c.content));
+    if (c.fc) {
+      const flipped = state.flipped[fcKey];
+      const fcBtn = h('button',{className:'flashcard',onclick:()=>{state.flipped[fcKey]=!state.flipped[fcKey];render();}},
+        h('div',{className:'fc-label'},'FLASHCARD — '+(flipped?'ANSWER':'TAP TO FLIP')),
+        h('p',{className:'fc-text'},flipped?c.fc.a:c.fc.q)
+      );
+      card.appendChild(fcBtn);
+    }
+    wrap.appendChild(card);
   });
 
-  updateStats();
+  // Exercises
+  wrap.appendChild(h('h3',{className:'learn-sec'},h('span',null,'🛠'),' Exercises'));
+  phase.exercises.forEach((ex,i) => {
+    const key = `p${phase.id}-e${i}`;
+    const solKey = `p${phase.id}-sol${i}`;
+    const card = h('div',{className:'card'});
+    card.appendChild(h('div',{className:'card-hdr'},
+      h('button',{className:'chk'+(state.progress[key]?' done':''),onclick:()=>toggleProgress(key)}, state.progress[key]?'✓':''),
+      h('h4',{className:'card-title'},ex.title)
+    ));
+    card.appendChild(h('span',{className:'ex-type'},ex.type==='code'?'Coding':'Thinking'));
+    card.appendChild(h('div',{className:'concept-body'},ex.prompt));
+    if (ex.solution) {
+      const showing = state.solutions[solKey];
+      card.appendChild(h('button',{className:'sol-toggle',onclick:()=>{state.solutions[solKey]=!state.solutions[solKey];render();}},
+        showing?'Hide Solution ▲':'Show Solution ▼'));
+      if (showing) card.appendChild(h('pre',{className:'sol-code'},ex.solution));
+    }
+    wrap.appendChild(card);
+  });
+
+  // Claude Prompts
+  wrap.appendChild(h('h3',{className:'learn-sec'},h('span',null,'🤖'),' Claude Prompts'));
+  phase.prompts.forEach((cp,i) => {
+    const key = `p${phase.id}-cp${i}`;
+    const expKey = `p${phase.id}-exp${i}`;
+    const card = h('div',{className:'card'});
+    card.appendChild(h('div',{className:'card-hdr'},
+      h('button',{className:'chk'+(state.progress[key]?' done':''),onclick:()=>toggleProgress(key)}, state.progress[key]?'✓':''),
+      h('h4',{className:'card-title'},cp.title)
+    ));
+    card.appendChild(h('p',{className:'prompt-desc'},cp.desc));
+    const expanded = state.prompts[expKey];
+    card.appendChild(h('button',{className:'sol-toggle',onclick:()=>{state.prompts[expKey]=!state.prompts[expKey];render();}},
+      expanded?'Hide Prompts ▲':'View Prompts ▼'));
+    if (expanded) {
+      const pw = h('div',{className:'prompts-wrap'});
+      // CLI
+      const cliBlock = h('div',{className:'prompt-block'});
+      cliBlock.appendChild(h('div',{className:'prompt-label'},'CLAUDE CODE CLI'));
+      cliBlock.appendChild(h('div',{className:'prompt-code'},cp.cli));
+      const cliCopy = h('button',{className:'copy-btn',onclick:(e)=>{
+        navigator.clipboard.writeText(cp.cli).then(()=>{e.target.textContent='Copied!';e.target.classList.add('copied');setTimeout(()=>{e.target.textContent='Copy';e.target.classList.remove('copied');},1500);});
+      }},'Copy');
+      cliBlock.appendChild(cliCopy);
+      pw.appendChild(cliBlock);
+      // Chat
+      const chatBlock = h('div',{className:'prompt-block'});
+      chatBlock.appendChild(h('div',{className:'prompt-label'},'CHAT PROMPT'));
+      chatBlock.appendChild(h('div',{className:'prompt-code'},cp.chat));
+      const chatCopy = h('button',{className:'copy-btn',onclick:(e)=>{
+        navigator.clipboard.writeText(cp.chat).then(()=>{e.target.textContent='Copied!';e.target.classList.add('copied');setTimeout(()=>{e.target.textContent='Copy';e.target.classList.remove('copied');},1500);});
+      }},'Copy');
+      chatBlock.appendChild(chatCopy);
+      pw.appendChild(chatBlock);
+      card.appendChild(pw);
+    }
+    wrap.appendChild(card);
+  });
+
+  container.appendChild(wrap);
 }
 
-function selectTicket(id) {
-  selectedId = id;
-  const t = TICKETS.find(t => t.id === id);
-  renderList();
+function renderGlossary(container) {
+  const wrap = h('div',{className:'tab-content'});
+  const cats = ['All',...[...new Set(GLOSSARY.map(g=>g.cat))]];
+  wrap.appendChild(h('h2',{className:'sec-title'},'Glossary'));
+  wrap.appendChild(h('p',{className:'sec-desc'},GLOSSARY.length+' terms across '+(cats.length-1)+' categories'));
 
-  const panel = document.getElementById('detailPanel');
+  const input = h('input',{className:'search-input',type:'text',placeholder:'Search terms...',value:state.gSearch,
+    oninput:(e)=>{state.gSearch=e.target.value;render();}});
+  wrap.appendChild(input);
 
-  const personRows = t.persons.map(p => `<div class="person-row"><div class="person-dot"></div>${p}</div>`).join('');
+  const filterRow = h('div',{className:'filter-row'});
+  cats.forEach(c => {
+    filterRow.appendChild(h('button',{className:'filter-btn'+(state.gFilter===c?' active':''),
+      onclick:()=>{state.gFilter=c;render();}},c));
+  });
+  wrap.appendChild(filterRow);
 
-  panel.innerHTML = `
-    <div class="detail-card active">
-      <div class="detail-ticket-id">#${t.id}</div>
-      <div class="detail-title">${t.title}</div>
+  const filtered = GLOSSARY.filter(g => {
+    const ms = !state.gSearch || g.term.toLowerCase().includes(state.gSearch.toLowerCase()) || g.def.toLowerCase().includes(state.gSearch.toLowerCase());
+    const mc = state.gFilter==='All' || g.cat===state.gFilter;
+    return ms && mc;
+  });
 
-      <div class="detail-section">
-        <div class="detail-section-label">Description</div>
-        <div class="detail-desc">${t.desc}</div>
-      </div>
+  filtered.forEach(g => {
+    wrap.appendChild(h('div',{className:'g-item'},
+      h('div',{className:'g-term-row'},
+        h('span',{className:'g-term'},g.term),
+        h('span',{className:'g-cat'},g.cat)
+      ),
+      h('p',{className:'g-def'},g.def)
+    ));
+  });
 
-      ${t.persons.length ? `
-      <div class="detail-section">
-        <div class="detail-section-label">People Involved</div>
-        <div class="people-list">${personRows}</div>
-      </div>` : ''}
-
-      ${t.location ? `
-      <div class="detail-section">
-        <div class="detail-section-label">Location</div>
-        <div class="detail-desc">📍 ${t.location}</div>
-      </div>` : ''}
-
-      <div class="detail-section">
-        <div class="detail-section-label">Status</div>
-        <select class="status-select" id="statusSel_${t.id}" onchange="updateStatus('${t.id}')">
-          <option value="open" ${t.status==='open'?'selected':''}>Open</option>
-          <option value="needs-scheduling" ${t.status==='needs-scheduling'?'selected':''}>Needs Scheduling</option>
-          <option value="in-progress" ${t.status==='in-progress'?'selected':''}>In Progress</option>
-          <option value="done" ${t.status==='done'?'selected':''}>Done ✓</option>
-        </select>
-      </div>
-
-      <div class="detail-section">
-        <div class="detail-section-label">Notes</div>
-        <textarea class="notes-area" id="notes_${t.id}" placeholder="Add notes, time scheduled, steps taken...">${t.notes}</textarea>
-        <button class="save-btn" onclick="saveNotes('${t.id}')">Save Notes</button>
-      </div>
-    </div>
-  `;
+  if (!filtered.length) wrap.appendChild(h('p',{className:'empty-text',style:'text-align:center;padding:20px'},'No terms match your search.'));
+  container.appendChild(wrap);
 }
 
-function updateStatus(id) {
-  const t = TICKETS.find(t => t.id === id);
-  t.status = document.getElementById(`statusSel_${id}`).value;
-  saveState();
-  renderList();
-  updateStats();
-  renderScheduleList();
+function renderProgress(container) {
+  const wrap = h('div',{className:'tab-content'});
+  const total = getTotalProgress();
+
+  wrap.appendChild(h('h2',{className:'sec-title'},'Your Progress'));
+
+  // SVG circle
+  const overall = h('div',{className:'prog-overall'});
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(svgNS,'svg');
+  svg.setAttribute('viewBox','0 0 100 100');
+  svg.style.width='120px'; svg.style.height='120px';
+
+  const bgCircle = document.createElementNS(svgNS,'circle');
+  bgCircle.setAttribute('cx','50'); bgCircle.setAttribute('cy','50'); bgCircle.setAttribute('r','42');
+  bgCircle.setAttribute('fill','none'); bgCircle.setAttribute('stroke','#2a2a3a'); bgCircle.setAttribute('stroke-width','8');
+  svg.appendChild(bgCircle);
+
+  const fgCircle = document.createElementNS(svgNS,'circle');
+  fgCircle.setAttribute('cx','50'); fgCircle.setAttribute('cy','50'); fgCircle.setAttribute('r','42');
+  fgCircle.setAttribute('fill','none'); fgCircle.setAttribute('stroke','#C41E3A'); fgCircle.setAttribute('stroke-width','8');
+  fgCircle.setAttribute('stroke-dasharray', (total.pct*2.64)+' '+(264-total.pct*2.64));
+  fgCircle.setAttribute('stroke-dashoffset','66'); fgCircle.setAttribute('stroke-linecap','round');
+  fgCircle.style.transition='stroke-dasharray 0.5s ease';
+  svg.appendChild(fgCircle);
+
+  const pctText = document.createElementNS(svgNS,'text');
+  pctText.setAttribute('x','50'); pctText.setAttribute('y','46'); pctText.setAttribute('text-anchor','middle');
+  pctText.setAttribute('fill','#f0e6d3'); pctText.setAttribute('font-size','22'); pctText.setAttribute('font-weight','bold');
+  pctText.setAttribute('font-family',"'DM Mono',monospace");
+  pctText.textContent=total.pct+'%';
+  svg.appendChild(pctText);
+
+  const countText = document.createElementNS(svgNS,'text');
+  countText.setAttribute('x','50'); countText.setAttribute('y','62'); countText.setAttribute('text-anchor','middle');
+  countText.setAttribute('fill','#8a8a9a'); countText.setAttribute('font-size','10');
+  countText.setAttribute('font-family',"'DM Mono',monospace");
+  countText.textContent=total.done+'/'+total.total;
+  svg.appendChild(countText);
+
+  overall.appendChild(svg);
+  overall.appendChild(h('p',{className:'prog-label'},'Overall Mastery'));
+  wrap.appendChild(overall);
+
+  // Per phase
+  PHASES.forEach(phase => {
+    const p = getPhaseProgress(phase.id);
+    const row = h('div',{className:'prog-phase'});
+    row.appendChild(h('div',{className:'prog-phase-info'},
+      h('span',{className:'prog-phase-name'},'Phase '+phase.id+': '+phase.title),
+      h('span',{className:'prog-phase-pct'},p.pct+'%')
+    ));
+    row.appendChild(h('div',{className:'bar-track'},h('div',{className:'bar-fill',style:'width:'+p.pct+'%'})));
+    const cDone = phase.concepts.filter((_,i)=>state.progress[`p${phase.id}-c${i}`]).length;
+    const eDone = phase.exercises.filter((_,i)=>state.progress[`p${phase.id}-e${i}`]).length;
+    const cpDone = phase.prompts.filter((_,i)=>state.progress[`p${phase.id}-cp${i}`]).length;
+    row.appendChild(h('div',{className:'prog-details'},
+      h('span',{className:'prog-detail'},'Concepts: '+cDone+'/'+phase.concepts.length),
+      h('span',{className:'prog-detail'},'Exercises: '+eDone+'/'+phase.exercises.length),
+      h('span',{className:'prog-detail'},'Prompts: '+cpDone+'/'+phase.prompts.length)
+    ));
+    wrap.appendChild(row);
+  });
+
+  wrap.appendChild(h('button',{className:'reset-btn',onclick:()=>{
+    if(confirm('Reset all progress? This cannot be undone.')){state.progress={};saveProgress();render();}
+  }},'Reset All Progress'));
+
+  container.appendChild(wrap);
 }
 
-function saveNotes(id) {
-  const t = TICKETS.find(t => t.id === id);
-  t.notes = document.getElementById(`notes_${id}`).value;
-  saveState();
-  const btn = event.target;
-  btn.textContent = 'Saved ✓';
-  btn.style.background = 'var(--accent3)';
-  btn.style.color = '#0d1a12';
-  setTimeout(() => { btn.textContent = 'Save Notes'; btn.style.background = ''; btn.style.color = ''; }, 1500);
+function render() {
+  const content = document.getElementById('content');
+  content.innerHTML = '';
+  content.scrollTop = 0;
+
+  renderHeader();
+  renderTabBar();
+
+  if (state.tab==='Roadmap') renderRoadmap(content);
+  else if (state.tab==='Learn') renderLearn(content);
+  else if (state.tab==='Glossary') renderGlossary(content);
+  else if (state.tab==='Progress') renderProgress(content);
 }
 
-function updateStats() {
-  const counts = { open: 0, 'needs-scheduling': 0, 'in-progress': 0, done: 0 };
-  TICKETS.forEach(t => counts[t.status]++);
-  document.getElementById('statOpen').textContent = counts['open'];
-  document.getElementById('statSched').textContent = counts['needs-scheduling'];
-  document.getElementById('statProg').textContent = counts['in-progress'];
-  document.getElementById('statDone').textContent = counts['done'];
-
-  const done = counts['done'];
-  const total = TICKETS.length;
-  const pct = Math.round((done / total) * 100);
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressText').textContent = `${done}/${total}`;
-}
-
-function renderScheduleList() {
-  const sched = TICKETS.filter(t => t.needsScheduling && t.status !== 'done');
-  const el = document.getElementById('schedList');
-  if (sched.length === 0) {
-    el.innerHTML = '<div style="color:var(--accent3);font-family:var(--mono);font-size:11px;">All scheduling done! 🎉</div>';
-    return;
-  }
-  el.innerHTML = sched.map(t => `
-    <div class="schedule-item" onclick="selectTicket('${t.id}')" style="cursor:pointer">
-      <div class="sched-dot"></div>
-      <div>
-        <div class="sched-name">${t.persons[0] || 'TBD'}</div>
-        <div class="sched-tick">#${t.id}</div>
-      </div>
-    </div>
-  `).join('');
-}
-
-// Init
-loadState();
-renderList();
-updateStats();
-renderScheduleList();
+// Boot
+loadProgress();
+render();
 </script>
 </body>
 </html>
