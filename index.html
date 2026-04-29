@@ -310,16 +310,9 @@ body{
 .meal-tab.active{background:var(--accent);color:var(--bg);border-color:var(--accent);}
 .meal-tab.now::after{content:' \2022';color:var(--green);}
 .meal-tab.active.now::after{color:var(--bg);}
-
-/* FONT SIZE SCALER */
-[data-fontsize="compact"] body{font-size:12px !important;}
-[data-fontsize="default"] body{font-size:14px !important;}
-[data-fontsize="large"] body{font-size:16px !important;}
-[data-fontsize="xl"] body{font-size:18px !important;}
-.fontsize-btns{display:flex;gap:4px;}
-.fontsize-btn{font-family:var(--font-mono);font-size:10px;font-weight:600;padding:5px 10px;border-radius:calc(var(--radius)*.35);border:1px solid var(--border);background:var(--input-bg);color:var(--muted);cursor:pointer;transition:all .15s;}
-.fontsize-btn:hover{border-color:var(--accent);color:var(--accent);}
-.fontsize-btn.active{background:var(--accent);color:var(--bg);border-color:var(--accent);}
+.meal-tab.closed-now::after{content:' \2022';color:var(--red-alert);}
+.meal-tab.active.closed-now::after{color:var(--bg);}
+.meal-tab.active.closed-now{background:var(--red-alert);border-color:var(--red-alert);}
 
 /* EVENTS SOURCE FILTER */
 .events-source-filter{display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap;}
@@ -327,6 +320,8 @@ body{
 .esf-btn:hover{border-color:var(--accent);color:var(--accent);}
 .esf-btn.active{background:var(--accent-dim);color:var(--accent);border-color:var(--accent);}
 .events-updated{font-family:var(--font-mono);font-size:9px;color:var(--muted);opacity:.5;margin-top:9px;font-weight:500;}
+#events-body{max-height:340px;overflow-y:auto;}
+#scores-body{max-height:400px;overflow-y:auto;}
 
 /* SCOREBOARD */
 .live-banner{display:none;padding:10px 12px;background:var(--accent-dim);border:1px solid var(--accent);border-radius:calc(var(--radius)*.5);margin-bottom:10px;animation:livepulse 2.5s infinite;}
@@ -731,15 +726,6 @@ body.radio-active .footer{padding-bottom:48px;}
     <div class="modal-section">
       <div class="modal-section-title">Display</div>
       <div class="modal-row">
-        <span class="modal-row-label">Font Size</span>
-        <div class="fontsize-btns" id="fontsize-btns">
-          <button class="fontsize-btn" data-size="compact">Compact</button>
-          <button class="fontsize-btn" data-size="default">Default</button>
-          <button class="fontsize-btn" data-size="large">Large</button>
-          <button class="fontsize-btn" data-size="xl">XL</button>
-        </div>
-      </div>
-      <div class="modal-row">
         <span class="modal-row-label">24-Hour Clock</span>
         <label class="ios-toggle"><input type="checkbox" id="setting-24h" checked/><div class="ios-track"></div><div class="ios-thumb"></div></label>
       </div>
@@ -857,27 +843,6 @@ document.getElementById('settings-close').addEventListener('click',function(){do
 document.getElementById('settings-overlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
 
 applyVis();applyRibbon();
-
-// ══════════════════════════════════
-// FONT SIZE SCALER
-// ══════════════════════════════════
-var savedFontSize=localStorage.getItem('jsu_fontsize')||'default';
-document.documentElement.setAttribute('data-fontsize',savedFontSize);
-function renderFontSizeBtns(){
-  var cur=document.documentElement.getAttribute('data-fontsize')||'default';
-  document.querySelectorAll('#fontsize-btns .fontsize-btn').forEach(function(btn){
-    btn.classList.toggle('active',btn.dataset.size===cur);
-  });
-}
-document.getElementById('fontsize-btns').addEventListener('click',function(e){
-  var btn=e.target.closest('.fontsize-btn');
-  if(!btn)return;
-  var size=btn.dataset.size;
-  document.documentElement.setAttribute('data-fontsize',size);
-  localStorage.setItem('jsu_fontsize',size);
-  renderFontSizeBtns();
-});
-renderFontSizeBtns();
 
 // ══════════════════════════════════
 // FEEDS MANAGEMENT
@@ -1374,24 +1339,26 @@ document.getElementById('svc-refresh').addEventListener('click',loadStatus);
   function renderTabs(){
     var mp=getCurrent();
     var active=getActiveMeal();
+    var isClosed=sodexoChecked&&!sodexoHasData;
     var tabsEl=document.getElementById('meal-tabs');
     tabsEl.innerHTML=MEALS.map(function(p){
       var isCurrent=mp.cur&&mp.cur.name===p.name;
       var isActive=active===p.name;
-      var cls='meal-tab'+(isActive?' active':'')+(isCurrent?' now':'');
-      return '<button class="'+cls+'" data-meal="'+p.name+'">'+p.emoji+' '+p.name+'</button>';
+      var cls='meal-tab'+(isActive?' active':'')+(isCurrent?(isClosed?' closed-now':' now'):'');
+      return '<button class="'+cls+'" data-meal="'+p.name+'"'+(isClosed?' disabled style="opacity:.5;cursor:default;"':'')+'>'+p.emoji+' '+p.name+'</button>';
     }).join('');
-    tabsEl.querySelectorAll('.meal-tab').forEach(function(btn){
-      btn.addEventListener('click',function(){
-        var meal=btn.dataset.meal;
-        var mp2=getCurrent();
-        var autoMeal=mp2.cur?mp2.cur.name:MEALS[mp2.next].name;
-        // If tapping the current auto meal, go back to auto mode
-        if(meal===autoMeal)selectedMeal=null;
-        else selectedMeal=meal;
-        render();
+    if(!isClosed){
+      tabsEl.querySelectorAll('.meal-tab').forEach(function(btn){
+        btn.addEventListener('click',function(){
+          var meal=btn.dataset.meal;
+          var mp2=getCurrent();
+          var autoMeal=mp2.cur?mp2.cur.name:MEALS[mp2.next].name;
+          if(meal===autoMeal)selectedMeal=null;
+          else selectedMeal=meal;
+          render();
+        });
       });
-    });
+    }
   }
 
   function updateIndicator(){
@@ -1426,8 +1393,8 @@ document.getElementById('svc-refresh').addEventListener('click',loadStatus);
   }
 
   function renderMenu(){
-    // If Sodexo confirmed no data and user isn't manually browsing meals, show closed
-    if(!sodexoHasData&&sodexoChecked&&!selectedMeal){
+    // If Sodexo confirmed no data, always show closed regardless of selected tab
+    if(sodexoChecked&&!sodexoHasData){
       showDiningClosed('No menu published for today. The dining hall may be closed or between semesters.');
       return;
     }
