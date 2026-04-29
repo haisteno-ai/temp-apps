@@ -308,7 +308,7 @@ body{
 .meal-tab{font-family:var(--font-mono);font-size:9px;font-weight:600;letter-spacing:.5px;padding:4px 8px;border-radius:calc(var(--radius)*.35);border:1px solid var(--border);background:var(--input-bg);color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap;}
 .meal-tab:hover{border-color:var(--accent);color:var(--accent);}
 .meal-tab.active{background:var(--accent);color:var(--bg);border-color:var(--accent);}
-.meal-tab.now::after{content:' \u2022';color:var(--green);}
+.meal-tab.now::after{content:' \2022';color:var(--green);}
 .meal-tab.active.now::after{color:var(--bg);}
 
 /* FONT SIZE SCALER */
@@ -739,6 +739,10 @@ body.radio-active .footer{padding-bottom:48px;}
           <button class="fontsize-btn" data-size="xl">XL</button>
         </div>
       </div>
+      <div class="modal-row">
+        <span class="modal-row-label">24-Hour Clock</span>
+        <label class="ios-toggle"><input type="checkbox" id="setting-24h" checked/><div class="ios-track"></div><div class="ios-thumb"></div></label>
+      </div>
     </div>
     <button class="modal-close-btn" id="settings-close">DONE</button>
   </div>
@@ -965,14 +969,23 @@ document.getElementById('add-feed-btn').addEventListener('click',function(){
 });
 
 // ══════════════════════════════════
-// CLOCK
+// CLOCK + TIME FORMAT
 // ══════════════════════════════════
+var use24h=localStorage.getItem('jsu_24h')!=='false';
 function tick(){
   var n=new Date();
-  document.getElementById('clock').textContent=n.toLocaleTimeString('en-US',{hour12:false});
+  document.getElementById('clock').textContent=n.toLocaleTimeString('en-US',{hour12:!use24h});
   document.getElementById('date').textContent=n.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase();
 }
 tick();setInterval(tick,1000);
+
+// 24h toggle in settings
+document.getElementById('setting-24h').checked=use24h;
+document.getElementById('setting-24h').addEventListener('change',function(){
+  use24h=this.checked;
+  localStorage.setItem('jsu_24h',use24h?'true':'false');
+  tick();
+});
 
 // ══════════════════════════════════
 // QUICK ACCESS — collapsible columns
@@ -1385,13 +1398,20 @@ document.getElementById('svc-refresh').addEventListener('click',loadStatus);
     var mp=getCurrent();
     var dot=document.querySelector('#cafe-period-indicator .cafe-period-dot');
     var txt=document.getElementById('cafe-period-text');
+    // If Sodexo confirmed closed, show red closed indicator
+    if(sodexoChecked&&!sodexoHasData&&!selectedMeal){
+      dot.style.background='var(--red-alert)';dot.style.boxShadow='0 0 5px var(--red-alert)';dot.style.animation='none';
+      txt.textContent='DINING HALL CLOSED';
+      txt.style.color='var(--red-alert)';
+      return;
+    }
     if(mp.cur){
-      dot.style.background='var(--green)';dot.style.boxShadow='0 0 5px var(--green)';
+      dot.style.background='var(--green)';dot.style.boxShadow='0 0 5px var(--green)';dot.style.animation='';
       txt.textContent='NOW SERVING: '+mp.cur.emoji+' '+mp.cur.name.toUpperCase()+' (until '+fmt(mp.cur.eH,mp.cur.eM)+')';
       txt.style.color='var(--green)';
     }else{
       var nx=MEALS[mp.next];
-      dot.style.background='var(--yellow)';dot.style.boxShadow='0 0 5px var(--yellow)';
+      dot.style.background='var(--yellow)';dot.style.boxShadow='0 0 5px var(--yellow)';dot.style.animation='';
       txt.textContent='BETWEEN MEALS \u2014 NEXT: '+nx.emoji+' '+nx.name.toUpperCase()+' at '+fmt(nx.sH,nx.sM);
       txt.style.color='var(--yellow)';
     }
@@ -1442,6 +1462,7 @@ document.getElementById('svc-refresh').addEventListener('click',loadStatus);
       +'<div style="font-size:11px;opacity:.6;">'+reason+'</div>'
       +'<div style="font-size:10px;opacity:.4;margin-top:8px;"><a href="https://jsudining.sodexomyway.com/en-us/locations/dining-hall" target="_blank" style="color:var(--accent);text-decoration:none;">Check Sodexo site for hours &rarr;</a></div>'
       +'</div>';
+    updateIndicator();
   }
 
   function fetchSodexoMenu(){
@@ -1545,26 +1566,26 @@ document.getElementById('svc-refresh').addEventListener('click',loadStatus);
       }
       return parseRSSEvents(text,feed.label);
     };
-    // Strategy 1: allorigins /get (most reliable, JSON wrapper)
-    return fetchWithTimeout('https://api.allorigins.win/get?url='+encodeURIComponent(url),{cache:'no-cache'},10000)
-      .then(function(r){if(!r.ok)throw new Error('ao-get '+r.status);return r.json();})
-      .then(function(j){if(!j.contents)throw new Error('empty');return parseResult(j.contents);})
+    // Strategy 1: codetabs (most reliable for large iCal files)
+    return fetchWithTimeout('https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(url),{cache:'no-cache'},12000)
+      .then(function(r){if(!r.ok)throw new Error('codetabs');return r.text();})
+      .then(function(text){return parseResult(text);})
       .catch(function(){
-        // Strategy 2: allorigins /raw
+        // Strategy 2: allorigins /get
+        return fetchWithTimeout('https://api.allorigins.win/get?url='+encodeURIComponent(url),{cache:'no-cache'},10000)
+          .then(function(r){if(!r.ok)throw new Error('ao-get');return r.json();})
+          .then(function(j){if(!j.contents)throw new Error('empty');return parseResult(j.contents);});
+      })
+      .catch(function(){
+        // Strategy 3: allorigins /raw
         return fetchWithTimeout('https://api.allorigins.win/raw?url='+encodeURIComponent(url),{cache:'no-cache'},10000)
           .then(function(r){if(!r.ok)throw new Error('ao-raw');return r.text();})
           .then(function(text){return parseResult(text);});
       })
       .catch(function(){
-        // Strategy 3: corsproxy
+        // Strategy 4: corsproxy
         return fetchWithTimeout('https://corsproxy.io/?'+encodeURIComponent(url),{cache:'no-cache'},8000)
           .then(function(r){if(!r.ok)throw new Error('cors');return r.text();})
-          .then(function(text){return parseResult(text);});
-      })
-      .catch(function(){
-        // Strategy 4: direct (for feeds that serve CORS headers)
-        return fetchWithTimeout(url,{cache:'no-cache'},8000)
-          .then(function(r){if(!r.ok)throw new Error('direct');return r.text();})
           .then(function(text){return parseResult(text);});
       });
   }
@@ -1733,17 +1754,22 @@ document.getElementById('svc-refresh').addEventListener('click',loadStatus);
   function timeAgo(ts){var m=Math.round((Date.now()-ts)/60000);if(m<1)return'just now';if(m<60)return m+'m ago';return Math.round(m/60)+'h ago';}
 
   function proxyFetch(url){
-    // Strategy 1: allorigins /get (most reliable)
-    return fetchWithTimeout('https://api.allorigins.win/get?url='+encodeURIComponent(url),{cache:'no-cache'},10000)
+    // Strategy 1: codetabs
+    return fetchWithTimeout('https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(url),{cache:'no-cache'},12000)
       .then(function(r){if(!r.ok)throw new Error('');return r.json();})
-      .then(function(j){if(!j.contents)throw new Error('');return JSON.parse(j.contents);})
       .catch(function(){
-        // Strategy 2: allorigins /raw
+        // Strategy 2: allorigins /get
+        return fetchWithTimeout('https://api.allorigins.win/get?url='+encodeURIComponent(url),{cache:'no-cache'},10000)
+          .then(function(r){if(!r.ok)throw new Error('');return r.json();})
+          .then(function(j){if(!j.contents)throw new Error('');return JSON.parse(j.contents);});
+      })
+      .catch(function(){
+        // Strategy 3: allorigins /raw
         return fetchWithTimeout('https://api.allorigins.win/raw?url='+encodeURIComponent(url),{cache:'no-cache'},10000)
           .then(function(r){if(!r.ok)throw new Error('');return r.json();});
       })
       .catch(function(){
-        // Strategy 3: corsproxy
+        // Strategy 4: corsproxy
         return fetchWithTimeout('https://corsproxy.io/?'+encodeURIComponent(url),{cache:'no-cache'},8000)
           .then(function(r){if(!r.ok)throw new Error('');return r.json();});
       });
