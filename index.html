@@ -312,10 +312,10 @@ body{
 .meal-tab.active.now::after{color:var(--bg);}
 
 /* FONT SIZE SCALER */
-[data-fontsize="compact"]{font-size:12px;}
-[data-fontsize="default"]{font-size:14px;}
-[data-fontsize="large"]{font-size:16px;}
-[data-fontsize="xl"]{font-size:18px;}
+[data-fontsize="compact"] body{font-size:12px !important;}
+[data-fontsize="default"] body{font-size:14px !important;}
+[data-fontsize="large"] body{font-size:16px !important;}
+[data-fontsize="xl"] body{font-size:18px !important;}
 .fontsize-btns{display:flex;gap:4px;}
 .fontsize-btn{font-family:var(--font-mono);font-size:10px;font-weight:600;padding:5px 10px;border-radius:calc(var(--radius)*.35);border:1px solid var(--border);background:var(--input-bg);color:var(--muted);cursor:pointer;transition:all .15s;}
 .fontsize-btn:hover{border-color:var(--accent);color:var(--accent);}
@@ -1406,6 +1406,11 @@ document.getElementById('svc-refresh').addEventListener('click',loadStatus);
   }
 
   function renderMenu(){
+    // If Sodexo confirmed no data and user isn't manually browsing meals, show closed
+    if(!sodexoHasData&&sodexoChecked&&!selectedMeal){
+      showDiningClosed('No menu published for today. The dining hall may be closed or between semesters.');
+      return;
+    }
     var meal=getActiveMeal();
     var data=MENU[meal]||[];
     var h='';
@@ -1425,10 +1430,19 @@ document.getElementById('svc-refresh').addEventListener('click',loadStatus);
 
   render();
 
-  // Sodexo Live API — attempts to fetch real menu, falls back to hardcoded
+  // Sodexo Live API — fetch real menu, show closed if empty
   var SODEXO_API='https://api-prd.sodexomyway.net/v0.2/data/menu/54263001/15321';
   var SODEXO_KEY='68717828-b754-420d-9488-4c37cb7d7ef7';
-  var sodexoAttempted=false;
+  var sodexoHasData=false;
+  var sodexoChecked=false;
+
+  function showDiningClosed(reason){
+    document.getElementById('cafe-row').innerHTML='<div class="nloading" style="text-align:left;padding:20px 14px;">'
+      +'<div style="font-size:16px;margin-bottom:6px;">&#x1F6AB; Dining Hall Closed</div>'
+      +'<div style="font-size:11px;opacity:.6;">'+reason+'</div>'
+      +'<div style="font-size:10px;opacity:.4;margin-top:8px;"><a href="https://jsudining.sodexomyway.com/en-us/locations/dining-hall" target="_blank" style="color:var(--accent);text-decoration:none;">Check Sodexo site for hours &rarr;</a></div>'
+      +'</div>';
+  }
 
   function fetchSodexoMenu(){
     var today=new Date();
@@ -1438,30 +1452,21 @@ document.getElementById('svc-refresh').addEventListener('click',loadStatus);
     })
     .then(function(r){return r.ok?r.json():null;})
     .then(function(data){
-      sodexoAttempted=true;
       if(!data||!Array.isArray(data)||!data.length){
-        // API returned empty — check if it's a weekday during normal hours
-        var day=today.getDay();
-        var hour=today.getHours();
-        if(day>=1&&day<=5&&hour>=7&&hour<=21){
-          // Weekday during service hours but API empty — dining hall likely closed
-          document.getElementById('cafe-row').innerHTML='<div class="nloading" style="text-align:left;">&#x1F6AB; Dining Hall appears to be closed today.<br><span style="font-size:9px;opacity:.6;margin-top:4px;display:inline-block;">Sodexo API returned no menu data. Showing default menu below as reference.</span></div>';
-          // Still render hardcoded below after a moment
-          setTimeout(function(){renderMenu();},100);
-        }
+        sodexoChecked=true;
+        showDiningClosed('No menu published for today. The dining hall may be closed or between semesters.');
         return;
       }
-      // Parse Sodexo data and replace hardcoded menu
-      // TODO: Map Sodexo JSON structure to MENU format once we have a sample response
-      // For now, the data structure is unknown — log it for inspection
+      sodexoChecked=true;
+      sodexoHasData=true;
+      // TODO: Parse Sodexo JSON into menu format once we have a real response sample (test May 7+)
       console.log('Sodexo menu data received:',data);
     })
     .catch(function(){
-      sodexoAttempted=true;
-      // API unreachable — silently use hardcoded data
+      sodexoChecked=true;
+      showDiningClosed('Could not reach Sodexo menu service. Check back later.');
     });
   }
-  // Attempt Sodexo fetch on load
   fetchSodexoMenu();
 
   var lastAutoMeal=getActiveMeal();
@@ -1532,20 +1537,35 @@ document.getElementById('svc-refresh').addEventListener('click',loadStatus);
 
   function fetchEventFeed(feed){
     var url=feed.url;
-    return fetchWithTimeout('https://corsproxy.io/?'+encodeURIComponent(url),{cache:'no-cache'},15000)
-      .then(function(r){if(!r.ok)throw new Error('');return r.text();})
+    var parseResult=function(text){
+      if(feed.type==='ical'){
+        if(text.indexOf('BEGIN:VCALENDAR')<0)throw new Error('Not iCal');
+        var events=parseICal(text);
+        return events.map(function(e){e.source=feed.label;return e;});
+      }
+      return parseRSSEvents(text,feed.label);
+    };
+    // Strategy 1: allorigins /get (most reliable, JSON wrapper)
+    return fetchWithTimeout('https://api.allorigins.win/get?url='+encodeURIComponent(url),{cache:'no-cache'},10000)
+      .then(function(r){if(!r.ok)throw new Error('ao-get '+r.status);return r.json();})
+      .then(function(j){if(!j.contents)throw new Error('empty');return parseResult(j.contents);})
       .catch(function(){
-        return fetchWithTimeout('https://api.allorigins.win/raw?url='+encodeURIComponent(url),{cache:'no-cache'},15000)
-          .then(function(r){if(!r.ok)throw new Error('');return r.text();});
+        // Strategy 2: allorigins /raw
+        return fetchWithTimeout('https://api.allorigins.win/raw?url='+encodeURIComponent(url),{cache:'no-cache'},10000)
+          .then(function(r){if(!r.ok)throw new Error('ao-raw');return r.text();})
+          .then(function(text){return parseResult(text);});
       })
-      .then(function(text){
-        if(feed.type==='ical'){
-          if(text.indexOf('BEGIN:VCALENDAR')<0)throw new Error('Not iCal');
-          var events=parseICal(text);
-          return events.map(function(e){e.source=feed.label;return e;});
-        }
-        // RSS parsing for Trumba RSS
-        return parseRSSEvents(text,feed.label);
+      .catch(function(){
+        // Strategy 3: corsproxy
+        return fetchWithTimeout('https://corsproxy.io/?'+encodeURIComponent(url),{cache:'no-cache'},8000)
+          .then(function(r){if(!r.ok)throw new Error('cors');return r.text();})
+          .then(function(text){return parseResult(text);});
+      })
+      .catch(function(){
+        // Strategy 4: direct (for feeds that serve CORS headers)
+        return fetchWithTimeout(url,{cache:'no-cache'},8000)
+          .then(function(r){if(!r.ok)throw new Error('direct');return r.text();})
+          .then(function(text){return parseResult(text);});
       });
   }
 
@@ -1713,10 +1733,18 @@ document.getElementById('svc-refresh').addEventListener('click',loadStatus);
   function timeAgo(ts){var m=Math.round((Date.now()-ts)/60000);if(m<1)return'just now';if(m<60)return m+'m ago';return Math.round(m/60)+'h ago';}
 
   function proxyFetch(url){
-    return fetchWithTimeout('https://corsproxy.io/?'+encodeURIComponent(url),{cache:'no-cache'},15000)
+    // Strategy 1: allorigins /get (most reliable)
+    return fetchWithTimeout('https://api.allorigins.win/get?url='+encodeURIComponent(url),{cache:'no-cache'},10000)
       .then(function(r){if(!r.ok)throw new Error('');return r.json();})
+      .then(function(j){if(!j.contents)throw new Error('');return JSON.parse(j.contents);})
       .catch(function(){
-        return fetchWithTimeout('https://api.allorigins.win/raw?url='+encodeURIComponent(url),{cache:'no-cache'},15000)
+        // Strategy 2: allorigins /raw
+        return fetchWithTimeout('https://api.allorigins.win/raw?url='+encodeURIComponent(url),{cache:'no-cache'},10000)
+          .then(function(r){if(!r.ok)throw new Error('');return r.json();});
+      })
+      .catch(function(){
+        // Strategy 3: corsproxy
+        return fetchWithTimeout('https://corsproxy.io/?'+encodeURIComponent(url),{cache:'no-cache'},8000)
           .then(function(r){if(!r.ok)throw new Error('');return r.json();});
       });
   }
