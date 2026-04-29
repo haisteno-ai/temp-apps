@@ -1,701 +1,2071 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="cocky">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0d0d14">
-<title>The Cockpit — Learning Hub</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23cc0000'/%3E%3Ctext x='16' y='22' font-family='Arial,sans-serif' font-size='13' font-weight='bold' text-anchor='middle' fill='white'%3ETSC%3C/text%3E%3C/svg%3E"/>
+<title>JSU IT Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{
-  --bg:#0d0d14;--surface:#14141e;--border:#1e1e2e;--border2:#2a2a3a;
-  --text:#f0e6d3;--text2:#b0a89a;--text3:#8a8a9a;--text4:#6a6a7a;--text5:#4a4a5a;
-  --red:#C41E3A;--red-bg:#C41E3A22;--red-bg2:#C41E3A15;
-  --green:#7dcea0;--blue:#6a9fea;--code-bg:#0a0a12;
-  --mono:'DM Mono',Consolas,monospace;--sans:'DM Sans','Segoe UI',sans-serif;
+/* ═══════════════════════════════════════
+   THEMES — 12 from TSC Scheduler
+═══════════════════════════════════════ */
+:root,[data-theme="cocky"]{
+  --bg:#080000;--surface:#100000;--surface2:#170000;--border:#2e0000;
+  --accent:#cc0000;--accent-glow:rgba(204,0,0,0.25);--accent-dim:rgba(204,0,0,0.08);
+  --text:#f0f0f0;--text2:#d4d0cc;--muted:#888;--dim:#555;
+  --green:#22c55e;--yellow:#f39c12;--red-alert:#ef4444;
+  --header-bg:linear-gradient(135deg,#7a0000 0%,#2a0000 100%);
+  --card-shadow:0 1px 3px rgba(0,0,0,.4),0 4px 12px rgba(0,0,0,.2);
+  --overlay:rgba(0,0,0,.7);--input-bg:rgba(255,255,255,.04);
+  --font-display:'Rajdhani',sans-serif;--font-body:'DM Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;--radius:14px;
+  --ticker-bg:#060000;--jsu-accent:#cc0000;
 }
-html,body{background:var(--bg);color:var(--text);font-family:var(--sans);height:100%;overflow:hidden}
-#app{display:flex;flex-direction:column;height:100%;max-width:480px;margin:0 auto;position:relative}
+[data-theme="jobs"]{
+  --bg:#f2f2f7;--surface:#fff;--surface2:#f8f8fc;--border:#d1d1d6;
+  --accent:#007aff;--accent-glow:rgba(0,122,255,.2);--accent-dim:rgba(0,122,255,.06);
+  --text:#1c1c1e;--text2:#3a3a3c;--muted:#6c6c70;--dim:#aeaeb2;
+  --green:#34c759;--yellow:#ff9500;--red-alert:#ff3b30;
+  --header-bg:linear-gradient(180deg,#f9f9f9 0%,#f2f2f7 100%);
+  --card-shadow:0 1px 3px rgba(0,0,0,.06),0 4px 12px rgba(0,0,0,.04);
+  --overlay:rgba(0,0,0,.4);--input-bg:rgba(0,0,0,.03);
+  --font-display:-apple-system,'Helvetica Neue',sans-serif;--font-body:-apple-system,'Helvetica Neue',sans-serif;
+  --font-mono:'SF Mono','Menlo',monospace;--radius:18px;
+  --ticker-bg:#e8e8ed;--jsu-accent:#007aff;
+}
+[data-theme="woz"]{
+  --bg:#c8c8c8;--surface:#e8e8e8;--surface2:#d8d8d8;--border:#888;
+  --accent:#333;--accent-glow:rgba(0,0,0,.2);--accent-dim:rgba(0,0,0,.06);
+  --text:#1a1a1a;--text2:#333;--muted:#555;--dim:#999;
+  --green:#006600;--yellow:#996600;--red-alert:#cc0000;
+  --header-bg:linear-gradient(180deg,#e8e8e8 0%,#c0c0c0 100%);
+  --card-shadow:0 2px 4px rgba(0,0,0,.15);
+  --overlay:rgba(0,0,0,.4);--input-bg:rgba(0,0,0,.05);
+  --font-display:'Courier Prime',monospace;--font-body:'Courier Prime',monospace;
+  --font-mono:'Courier Prime',monospace;--radius:4px;
+  --ticker-bg:#bbb;--jsu-accent:#333;
+}
+[data-theme="terminal"]{
+  --bg:#000;--surface:#0a0a0a;--surface2:#0f0f0f;--border:#003300;
+  --accent:#00ff00;--accent-glow:rgba(0,255,0,.2);--accent-dim:rgba(0,255,0,.06);
+  --text:#00ee00;--text2:#00cc00;--muted:#007700;--dim:#004400;
+  --green:#00ff00;--yellow:#00ff00;--red-alert:#ff4444;
+  --header-bg:#000;
+  --card-shadow:0 0 1px rgba(0,255,0,.2);
+  --overlay:rgba(0,0,0,.8);--input-bg:rgba(0,255,0,.04);
+  --font-display:'Courier Prime',monospace;--font-body:'Courier Prime',monospace;
+  --font-mono:'Courier Prime',monospace;--radius:0px;
+  --ticker-bg:#000;--jsu-accent:#00ff00;
+}
+[data-theme="oled"]{
+  --bg:#000;--surface:#0d0d0d;--surface2:#161616;--border:#222;
+  --accent:#fff;--accent-glow:rgba(255,255,255,.1);--accent-dim:rgba(255,255,255,.04);
+  --text:#fff;--text2:#ddd;--muted:#888;--dim:#444;
+  --green:#30d158;--yellow:#ffd60a;--red-alert:#ff453a;
+  --header-bg:#000;
+  --card-shadow:0 1px 2px rgba(255,255,255,.03);
+  --overlay:rgba(0,0,0,.8);--input-bg:rgba(255,255,255,.04);
+  --font-display:-apple-system,'Helvetica Neue',sans-serif;--font-body:-apple-system,'Helvetica Neue',sans-serif;
+  --font-mono:'SF Mono','Menlo',monospace;--radius:16px;
+  --ticker-bg:#000;--jsu-accent:#fff;
+}
+[data-theme="tesla"]{
+  --bg:#03010f;--surface:#080520;--surface2:#0d0830;--border:#1a0f4a;
+  --accent:#a87fff;--accent-glow:rgba(140,90,255,.28);--accent-dim:rgba(140,90,255,.08);
+  --text:#e8e0ff;--text2:#c8b8ee;--muted:#8877bb;--dim:#3d3370;
+  --green:#40e8c0;--yellow:#e8c040;--red-alert:#ff4466;
+  --header-bg:linear-gradient(135deg,#120a38 0%,#03010f 100%);
+  --card-shadow:0 1px 3px rgba(0,0,0,.4),0 4px 12px rgba(0,0,0,.2);
+  --overlay:rgba(0,0,0,.7);--input-bg:rgba(140,90,255,.05);
+  --font-display:'Rajdhani',sans-serif;--font-body:'DM Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;--radius:14px;
+  --ticker-bg:#02010a;--jsu-accent:#a87fff;
+}
+[data-theme="gotham"]{
+  --bg:#080c12;--surface:#0e1520;--surface2:#141d2c;--border:#1e2d42;
+  --accent:#7ab3e0;--accent-glow:rgba(122,179,224,.2);--accent-dim:rgba(122,179,224,.06);
+  --text:#cddcee;--text2:#a0b8d0;--muted:#6888aa;--dim:#2e4460;
+  --green:#3dcf8e;--yellow:#e0c050;--red-alert:#e05566;
+  --header-bg:linear-gradient(160deg,#0e1828 0%,#080c12 100%);
+  --card-shadow:0 1px 3px rgba(0,0,0,.3),0 4px 12px rgba(0,0,0,.15);
+  --overlay:rgba(0,0,0,.7);--input-bg:rgba(122,179,224,.04);
+  --font-display:'Rajdhani',sans-serif;--font-body:'DM Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;--radius:10px;
+  --ticker-bg:#060a10;--jsu-accent:#7ab3e0;
+}
+[data-theme="obsidian"]{
+  --bg:#0a0a0a;--surface:#111;--surface2:#181818;--border:#2a1800;
+  --accent:#ff6622;--accent-glow:rgba(255,102,34,.25);--accent-dim:rgba(255,102,34,.06);
+  --text:#f0ebe4;--text2:#d4ccc0;--muted:#886655;--dim:#442211;
+  --green:#88cc44;--yellow:#cc9900;--red-alert:#ff3322;
+  --header-bg:linear-gradient(135deg,#1a0a00 0%,#0a0a0a 100%);
+  --card-shadow:0 1px 3px rgba(0,0,0,.4),0 4px 12px rgba(0,0,0,.2);
+  --overlay:rgba(0,0,0,.7);--input-bg:rgba(255,102,34,.04);
+  --font-display:'Rajdhani',sans-serif;--font-body:'DM Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;--radius:6px;
+  --ticker-bg:#060400;--jsu-accent:#ff6622;
+}
+[data-theme="gameboy"]{
+  --bg:#0f380f;--surface:#306230;--surface2:#8bac0f;--border:#306230;
+  --accent:#9bbc0f;--accent-glow:rgba(155,188,15,.3);--accent-dim:rgba(155,188,15,.08);
+  --text:#9bbc0f;--text2:#8bac0f;--muted:#8bac0f;--dim:#306230;
+  --green:#9bbc0f;--yellow:#9bbc0f;--red-alert:#9bbc0f;
+  --header-bg:#0f380f;
+  --card-shadow:0 0 0 1px #306230;
+  --overlay:rgba(15,56,15,.8);--input-bg:rgba(155,188,15,.08);
+  --font-display:'Courier Prime',monospace;--font-body:'Courier Prime',monospace;
+  --font-mono:'Courier Prime',monospace;--radius:0px;
+  --ticker-bg:#0f380f;--jsu-accent:#9bbc0f;
+}
+[data-theme="synthwave"]{
+  --bg:#0d0015;--surface:#160025;--surface2:#1e0035;--border:#3d0060;
+  --accent:#ff00ff;--accent-glow:rgba(255,0,255,.22);--accent-dim:rgba(255,0,255,.06);
+  --text:#ffe8ff;--text2:#ddb8ee;--muted:#aa44bb;--dim:#5c1870;
+  --green:#00ffcc;--yellow:#ffcc00;--red-alert:#ff2266;
+  --header-bg:linear-gradient(135deg,#280040 0%,#0d0015 100%);
+  --card-shadow:0 1px 3px rgba(0,0,0,.4),0 4px 12px rgba(0,0,0,.2);
+  --overlay:rgba(0,0,0,.7);--input-bg:rgba(255,0,255,.04);
+  --font-display:'Rajdhani',sans-serif;--font-body:'DM Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;--radius:4px;
+  --ticker-bg:#080010;--jsu-accent:#ff00ff;
+}
+[data-theme="phosphor"]{
+  --bg:#0a0500;--surface:#120900;--surface2:#1a0e00;--border:#3a2200;
+  --accent:#ffaa00;--accent-glow:rgba(255,170,0,.25);--accent-dim:rgba(255,170,0,.06);
+  --text:#ffcc44;--text2:#dda830;--muted:#997700;--dim:#4d3300;
+  --green:#ffcc44;--yellow:#ffaa00;--red-alert:#ff6600;
+  --header-bg:#0a0500;
+  --card-shadow:0 0 1px rgba(255,170,0,.15);
+  --overlay:rgba(0,0,0,.8);--input-bg:rgba(255,170,0,.05);
+  --font-display:'Courier Prime',monospace;--font-body:'Courier Prime',monospace;
+  --font-mono:'Courier Prime',monospace;--radius:0px;
+  --ticker-bg:#060300;--jsu-accent:#ffaa00;
+}
+[data-theme="nightgame"]{
+  --bg:#000;--surface:#0a0a0a;--surface2:#111;--border:#222;
+  --accent:#ffcc00;--accent-glow:rgba(255,204,0,.22);--accent-dim:rgba(255,204,0,.06);
+  --text:#fff;--text2:#ddd;--muted:#aaa;--dim:#444;
+  --green:#44dd66;--yellow:#ffcc00;--red-alert:#ff3333;
+  --header-bg:linear-gradient(180deg,#1a1400 0%,#000 100%);
+  --card-shadow:0 1px 3px rgba(0,0,0,.4),0 4px 12px rgba(0,0,0,.2);
+  --overlay:rgba(0,0,0,.8);--input-bg:rgba(255,204,0,.04);
+  --font-display:'Rajdhani',sans-serif;--font-body:'DM Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;--radius:12px;
+  --ticker-bg:#000;--jsu-accent:#ffcc00;
+}
 
-/* Header */
-.header{background:linear-gradient(180deg,#16161f,var(--bg));border-bottom:1px solid var(--border);padding:16px 16px 12px;flex-shrink:0}
-.header-inner{display:flex;justify-content:space-between;align-items:center}
-.logo-row{display:flex;align-items:center;gap:10px}
-.logo-icon{font-size:22px;color:var(--red)}
-.logo-title{font-size:16px;font-weight:700;letter-spacing:2px;font-family:var(--mono);color:var(--text)}
-.logo-sub{font-size:10px;color:var(--text4);letter-spacing:1px;font-family:var(--mono);margin-top:1px}
-.hdr-prog{display:flex;align-items:center;gap:8px}
-.mini-bar{width:60px;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
-.mini-fill{height:100%;background:var(--red);border-radius:2px;transition:width .4s}
-.mini-label{font-size:11px;color:var(--red);font-family:var(--mono);font-weight:600}
+/* ═══════════════════════════════════════
+   BASE
+═══════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:var(--font-body);
+  min-height:100vh;overflow-x:hidden;
+  display:flex;flex-direction:column;
+  transition:background .35s,color .35s;
+  font-size:14px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
 
-/* Tab bar */
-.tab-bar{display:flex;border-top:1px solid var(--border);background:var(--bg);padding:6px 0 env(safe-area-inset-bottom,8px);flex-shrink:0}
-.tab-btn{flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 0;cursor:pointer;font-family:var(--mono)}
-.tab-icon{font-size:18px;color:var(--text5)}
-.tab-label{font-size:10px;color:var(--text5);font-family:var(--mono)}
-.tab-btn.active .tab-icon{color:var(--red)}
-.tab-btn.active .tab-label{color:var(--red);font-weight:600}
+/* ═══════════════════════════════════════
+   ALERT BANNER
+═══════════════════════════════════════ */
+#alert-banner{display:none;flex-shrink:0;background:linear-gradient(90deg,#a01028,#D4163C,#a01028);color:#fff;font-family:var(--font-mono);font-size:11px;letter-spacing:1.5px;padding:8px 28px;text-align:center;animation:alertpulse 2s infinite;z-index:100;font-weight:600;}
+@keyframes alertpulse{0%,100%{opacity:1}50%{opacity:.8}}
 
-/* Content */
-.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:20px}
-.tab-content{padding:20px 16px}
-.sec-title{font-size:22px;font-weight:700;margin-bottom:4px}
-.sec-desc{font-size:13px;color:var(--text4);font-family:var(--mono);margin-bottom:16px}
-.hidden{display:none!important}
+/* ═══════════════════════════════════════
+   HEADLINE RIBBON (RSS)
+═══════════════════════════════════════ */
+.headline-ribbon{display:none;background:var(--ticker-bg);border-bottom:1px solid var(--border);height:32px;overflow:hidden;flex-shrink:0;}
+.headline-ribbon.active{display:flex;align-items:stretch;}
+.hr-label{display:flex;align-items:center;padding:0 12px;background:var(--accent);font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--bg);white-space:nowrap;flex-shrink:0;gap:4px;}
+.hr-wrap{flex:1;overflow:hidden;position:relative;}
+.hr-track{display:flex;align-items:center;white-space:nowrap;position:absolute;top:0;left:0;height:100%;animation:tickscroll 80s linear infinite;will-change:transform;}
+.hr-track:hover{animation-play-state:paused;}
+@keyframes tickscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.hr-item{display:inline-flex;align-items:center;gap:6px;padding:0 20px;font-family:var(--font-body);font-size:13px;font-weight:500;color:var(--text2);text-decoration:none;border-right:1px solid var(--border);white-space:nowrap;height:100%;transition:color .15s;}
+.hr-item:hover{color:var(--accent);}
+.hr-badge{font-family:var(--font-mono);font-size:8px;padding:1px 5px;border-radius:3px;background:var(--accent-dim);color:var(--accent);border:1px solid var(--border);letter-spacing:.5px;flex-shrink:0;font-weight:600;}
 
-/* Phase cards */
-.phase-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:left;cursor:pointer;width:100%;margin-bottom:4px;display:block;transition:border-color .2s}
-.phase-card:active{border-color:var(--border2)}
-.phase-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.phase-badge{background:var(--red-bg);color:var(--red);font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;font-family:var(--mono);letter-spacing:1px}
-.phase-dur{font-size:11px;color:var(--text4);font-family:var(--mono)}
-.phase-title{font-size:17px;font-weight:600;margin-bottom:6px}
-.phase-summary{font-size:13px;color:var(--text3);margin-bottom:12px;line-height:1.5}
-.phase-footer{display:flex;align-items:center;gap:10px}
-.bar-track{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
-.bar-fill{height:100%;background:linear-gradient(90deg,var(--red),#e8534a);border-radius:3px;transition:width .4s}
-.bar-label{font-size:11px;color:var(--text4);font-family:var(--mono);min-width:30px;text-align:right}
-.timeline-line{width:2px;height:20px;background:var(--border);margin:0 auto 4px}
+/* ═══════════════════════════════════════
+   HEADER
+═══════════════════════════════════════ */
+.header{display:flex;align-items:center;justify-content:space-between;padding:10px 24px;background:var(--surface);border-bottom:1px solid var(--border);position:relative;flex-shrink:0;transition:all .35s;gap:16px;}
+.header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 5%,var(--accent) 50%,transparent 95%);opacity:.3;}
+.header-brand{display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.rooster{width:40px;height:40px;background:var(--accent);border-radius:calc(var(--radius)*.7);display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 2px 10px var(--accent-glow);flex-shrink:0;transition:all .35s;}
+.brand-text{display:flex;flex-direction:column;}
+.brand-title{font-family:var(--font-display);font-size:18px;font-weight:700;letter-spacing:1px;text-transform:uppercase;line-height:1.1;color:var(--text);}
+.brand-sub{font-family:var(--font-mono);font-size:9px;color:var(--accent);letter-spacing:1.5px;margin-top:2px;font-weight:500;}
+.hdr-center{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;}
+.hdr-link{display:flex;align-items:center;gap:6px;padding:7px 14px;background:var(--input-bg);border:1px solid var(--border);border-radius:calc(var(--radius)*.5);color:var(--text);text-decoration:none;font-family:var(--font-display);font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;transition:all .2s;white-space:nowrap;}
+.hdr-link:hover{border-color:var(--accent);box-shadow:0 0 12px var(--accent-glow);color:var(--accent);}
+.hdr-link.primary{background:var(--accent-dim);border-color:var(--accent);animation:spulse 4s infinite;}
+@keyframes spulse{0%,100%{box-shadow:none}50%{box-shadow:0 0 8px 1px var(--accent-glow)}}
+.hdr-right{display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.weather-ribbon{display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:11px;color:var(--text);font-weight:500;white-space:nowrap;}
+.weather-ribbon .wr-icon{font-size:18px;line-height:1;}
+.weather-ribbon .wr-temp{font-size:16px;font-weight:600;}
+.weather-ribbon .wr-sep{width:1px;height:18px;background:var(--border);margin:0 2px;}
+.weather-ribbon .wr-desc{font-size:10px;color:var(--muted);max-width:80px;overflow:hidden;text-overflow:ellipsis;}
+.clock-block{text-align:right;flex-shrink:0;}
+.clock-time{font-family:var(--font-mono);font-size:22px;line-height:1;letter-spacing:1px;color:var(--text);font-weight:600;}
+.clock-date{font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:1px;margin-top:3px;}
+.hdr-btn{background:none;border:1px solid var(--border);color:var(--muted);width:34px;height:34px;border-radius:calc(var(--radius)*.5);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:15px;flex-shrink:0;}
+.hdr-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim);}
 
-/* Learn tab */
-.phase-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-.phase-nav-btn{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:6px 14px;color:var(--text3);font-size:12px;cursor:pointer;font-family:var(--mono)}
-.phase-nav-btn:disabled{opacity:.3;cursor:default}
-.phase-nav-label{font-size:12px;color:var(--red);font-family:var(--mono);font-weight:600}
-.learn-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-top:8px}
-.learn-fill{height:100%;background:linear-gradient(90deg,var(--red),#e8534a);border-radius:3px;transition:width .4s}
-.learn-sec{font-size:15px;font-weight:600;margin:24px 0 12px;display:flex;align-items:center;gap:8px}
+/* ═══════════════════════════════════════
+   MAIN & CARDS
+═══════════════════════════════════════ */
+.main{padding:14px 24px;display:flex;flex-direction:column;gap:12px;flex:1;}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all .35s;box-shadow:var(--card-shadow);animation:fadeIn .4s cubic-bezier(.16,1,.3,1) both;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.ph{display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--surface2);border-bottom:1px solid var(--border);transition:all .35s;}
+.pdot{width:5px;height:5px;border-radius:50%;background:var(--accent);box-shadow:0 0 5px var(--accent-glow);flex-shrink:0;}
+.ptitle{font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+.ptitle a{color:inherit;text-decoration:none;transition:color .15s;}
+.ptitle a:hover{color:var(--accent);}
+.pb{padding:14px;}
+.rbtn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:calc(var(--radius)*.35);padding:3px 9px;font-family:var(--font-mono);font-size:10px;cursor:pointer;margin-left:auto;transition:all .15s;letter-spacing:.5px;font-weight:500;}
+.rbtn:hover{border-color:var(--accent);color:var(--accent);}
 
-/* Cards */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px}
-.card-hdr{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
-.card-title{font-size:14px;font-weight:600;flex:1}
-.chk{width:22px;height:22px;border-radius:6px;border:2px solid var(--border2);background:none;cursor:pointer;flex-shrink:0;font-size:12px;color:transparent;display:flex;align-items:center;justify-content:center;margin-top:1px}
-.chk.done{border-color:var(--red);background:var(--red-bg);color:var(--red);font-weight:700}
-.concept-body{font-size:13px;color:var(--text2);line-height:1.65;white-space:pre-wrap;word-break:break-word}
+/* ═══════════════════════════════════════
+   QUICK ACCESS
+═══════════════════════════════════════ */
+.links-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.lg-col{transition:all .3s;}
+.lg-col.collapsed .lg-stack{display:none;}
+.lg-col.collapsed .lg-title::after{content:' [+]';opacity:.5;}
+.lg-title{font-family:var(--font-mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border);font-weight:600;cursor:pointer;user-select:none;transition:color .15s;}
+.lg-title:hover{opacity:.8;}
+.lg-stack{display:flex;flex-direction:column;gap:4px;}
+.lb{display:flex;align-items:center;gap:8px;padding:8px 11px;background:var(--input-bg);border:1px solid var(--border);border-radius:calc(var(--radius)*.5);color:var(--text);text-decoration:none;font-family:var(--font-body);font-size:13px;font-weight:500;transition:all .15s;white-space:nowrap;overflow:hidden;}
+.lb:hover{background:var(--surface2);border-color:var(--accent);box-shadow:0 0 8px var(--accent-glow);transform:translateX(2px);}
+.li{font-size:13px;flex-shrink:0;}
+.ll{overflow:hidden;text-overflow:ellipsis;flex:1;}
 
-/* Flashcards */
-.flashcard{width:100%;background:#1a1a2a;border:1px solid var(--border2);border-radius:8px;padding:12px;cursor:pointer;margin-top:12px;text-align:left}
-.fc-label{font-size:9px;color:var(--red);letter-spacing:1.5px;font-family:var(--mono);font-weight:600;margin-bottom:6px}
-.fc-text{font-size:13px;color:#d0c8ba;line-height:1.5}
+/* User links */
+.user-links-section{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);}
+.user-links-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.user-links-title{font-family:var(--font-mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:600;}
+.user-links-grid{display:flex;flex-wrap:wrap;gap:5px;}
+.user-link-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;background:var(--input-bg);border:1px solid var(--border);border-radius:calc(var(--radius)*.4);color:var(--text);text-decoration:none;font-size:12px;font-weight:500;transition:all .15s;max-width:200px;}
+.user-link-chip:hover{border-color:var(--accent);background:var(--surface2);}
+.user-link-chip .ulc-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.user-link-chip .ulc-del{font-size:10px;color:var(--muted);cursor:pointer;flex-shrink:0;padding:0 2px;transition:color .15s;opacity:.5;}
+.user-link-chip .ulc-del:hover{color:var(--red-alert);opacity:1;}
+.add-link-btn{background:none;border:1px dashed var(--border);color:var(--muted);border-radius:calc(var(--radius)*.4);padding:5px 10px;font-family:var(--font-mono);font-size:10px;cursor:pointer;transition:all .15s;font-weight:500;}
+.add-link-btn:hover{border-color:var(--accent);color:var(--accent);}
 
-/* Exercises */
-.ex-type{display:inline-block;font-size:10px;font-weight:600;color:var(--blue);background:#6a9fea18;padding:2px 8px;border-radius:4px;margin-bottom:10px;font-family:var(--mono)}
-.sol-toggle{background:none;border:1px solid var(--border2);border-radius:6px;padding:6px 12px;color:var(--text3);font-size:12px;cursor:pointer;margin-top:10px;font-family:var(--mono);width:100%;text-align:center}
-.sol-code{font-size:12px;color:var(--green);background:var(--code-bg);border:1px solid #1a1a2a;border-radius:6px;padding:12px;margin-top:10px;white-space:pre-wrap;font-family:var(--mono);line-height:1.55;overflow-x:auto;word-break:break-word}
+/* ═══════════════════════════════════════
+   TWO-COLUMN ROW
+═══════════════════════════════════════ */
+.dual-row{display:grid;grid-template-columns:55fr 45fr;gap:12px;}
 
-/* Claude Prompts */
-.prompt-desc{font-size:13px;color:var(--text3);margin-bottom:8px;line-height:1.5}
-.prompts-wrap{margin-top:12px;display:flex;flex-direction:column;gap:12px}
-.prompt-block{background:var(--code-bg);border:1px solid #1a1a2a;border-radius:8px;padding:12px;position:relative}
-.prompt-label{font-size:9px;color:var(--red);letter-spacing:1.5px;font-family:var(--mono);font-weight:600;margin-bottom:8px}
-.prompt-code{font-size:12px;color:#d0c8ba;white-space:pre-wrap;font-family:var(--mono);line-height:1.5;word-break:break-word}
-.copy-btn{position:absolute;top:8px;right:8px;background:var(--border);border:1px solid var(--border2);border-radius:4px;padding:3px 8px;color:var(--text4);font-size:10px;cursor:pointer;font-family:var(--mono)}
-.copy-btn.copied{color:var(--green);border-color:var(--green)}
+/* ═══════════════════════════════════════
+   SERVICE STATUS
+═══════════════════════════════════════ */
+.svc-grid{display:flex;flex-direction:column;gap:6px;}
+.svc-row{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:var(--input-bg);border:1px solid var(--border);border-radius:calc(var(--radius)*.5);transition:all .2s;}
+.svc-row.warn{border-color:rgba(243,156,18,.35);background:rgba(243,156,18,.04);}
+.svc-row.down{border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.04);animation:chipblink 1.5s infinite;}
+@keyframes chipblink{0%,100%{opacity:1}50%{opacity:.6}}
+.svc-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.svc-dot.ok{background:var(--green);box-shadow:0 0 5px var(--green);}
+.svc-dot.warn{background:var(--yellow);box-shadow:0 0 5px var(--yellow);}
+.svc-dot.down{background:var(--red-alert);box-shadow:0 0 5px var(--red-alert);}
+.svc-dot.loading{background:var(--dim);}
+.svc-dot.unknown{background:var(--muted);}
+.svc-info{flex:1;min-width:0;}
+.svc-name{font-family:var(--font-mono);font-size:11px;font-weight:600;color:var(--text);letter-spacing:.3px;}
+.svc-incident{font-family:var(--font-body);font-size:11px;color:var(--muted);margin-top:2px;line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.svc-updated{font-family:var(--font-mono);font-size:9px;color:var(--muted);opacity:.5;margin-top:9px;font-weight:500;}
 
-/* Glossary */
-.search-input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:14px;outline:none;margin-bottom:12px;font-family:var(--sans)}
-.search-input::placeholder{color:var(--text5)}
-.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
-.filter-btn{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:5px 12px;color:var(--text4);font-size:11px;cursor:pointer;font-family:var(--mono)}
-.filter-btn.active{background:var(--red-bg);border-color:var(--red);color:var(--red)}
-.g-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px}
-.g-term-row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px}
-.g-term{font-size:14px;font-weight:600}
-.g-cat{font-size:10px;color:var(--red);background:var(--red-bg2);padding:2px 6px;border-radius:4px;font-family:var(--mono);flex-shrink:0;white-space:nowrap}
-.g-def{font-size:13px;color:var(--text3);line-height:1.55}
+/* ═══════════════════════════════════════
+   DINING HALL
+═══════════════════════════════════════ */
+.cafe-period-indicator{display:flex;align-items:center;gap:6px;margin-bottom:10px;}
+.cafe-period-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green);animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.cafe-period-text{font-family:var(--font-mono);font-size:9px;color:var(--green);letter-spacing:.5px;font-weight:500;}
+.cafe-station{margin-bottom:10px;}
+.cafe-station:last-child{margin-bottom:0;}
+.cafe-station-name{font-family:var(--font-mono);font-size:9px;color:var(--accent);letter-spacing:1.5px;margin-bottom:4px;text-transform:uppercase;font-weight:600;}
+.cafe-items{display:flex;flex-wrap:wrap;gap:3px;}
+.cafe-item{display:inline-flex;padding:3px 9px;background:var(--input-bg);border-radius:calc(var(--radius)*.35);font-size:12px;font-weight:500;color:var(--text);border:1px solid var(--border);}
 
-/* Progress */
-.prog-overall{display:flex;flex-direction:column;align-items:center;padding:20px 0 24px}
-.prog-label{font-size:13px;color:var(--text4);font-family:var(--mono);margin-top:8px}
-.prog-phase{margin-bottom:18px}
-.prog-phase-info{display:flex;justify-content:space-between;margin-bottom:6px}
-.prog-phase-name{font-size:13px;font-weight:500}
-.prog-phase-pct{font-size:13px;color:var(--red);font-family:var(--mono);font-weight:600}
-.prog-details{display:flex;gap:12px;margin-top:6px}
-.prog-detail{font-size:11px;color:var(--text4);font-family:var(--mono)}
-.reset-btn{width:100%;background:none;border:1px solid #3a1a1a;border-radius:8px;padding:10px;color:var(--red);font-size:12px;cursor:pointer;margin-top:24px;font-family:var(--mono)}
+/* ═══════════════════════════════════════
+   NEWS
+═══════════════════════════════════════ */
+/* News list kept for potential future use */
 
-/* Empty */
-.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;text-align:center}
-.empty-icon{font-size:36px;color:var(--border2);margin-bottom:12px}
-.empty-text{font-size:14px;color:var(--text4)}
+/* MEAL TOGGLE TABS */
+.meal-tabs{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap;}
+.meal-tab{font-family:var(--font-mono);font-size:9px;font-weight:600;letter-spacing:.5px;padding:4px 8px;border-radius:calc(var(--radius)*.35);border:1px solid var(--border);background:var(--input-bg);color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.meal-tab:hover{border-color:var(--accent);color:var(--accent);}
+.meal-tab.active{background:var(--accent);color:var(--bg);border-color:var(--accent);}
+.meal-tab.now::after{content:' \u2022';color:var(--green);}
+.meal-tab.active.now::after{color:var(--bg);}
 
-/* scrollbar */
-.content::-webkit-scrollbar{width:4px}
-.content::-webkit-scrollbar-track{background:transparent}
-.content::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+/* FONT SIZE SCALER */
+[data-fontsize="compact"]{font-size:12px;}
+[data-fontsize="default"]{font-size:14px;}
+[data-fontsize="large"]{font-size:16px;}
+[data-fontsize="xl"]{font-size:18px;}
+.fontsize-btns{display:flex;gap:4px;}
+.fontsize-btn{font-family:var(--font-mono);font-size:10px;font-weight:600;padding:5px 10px;border-radius:calc(var(--radius)*.35);border:1px solid var(--border);background:var(--input-bg);color:var(--muted);cursor:pointer;transition:all .15s;}
+.fontsize-btn:hover{border-color:var(--accent);color:var(--accent);}
+.fontsize-btn.active{background:var(--accent);color:var(--bg);border-color:var(--accent);}
+
+/* EVENTS SOURCE FILTER */
+.events-source-filter{display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap;}
+.esf-btn{font-family:var(--font-mono);font-size:8px;font-weight:600;letter-spacing:.5px;padding:3px 7px;border-radius:calc(var(--radius)*.3);border:1px solid var(--border);background:var(--input-bg);color:var(--muted);cursor:pointer;transition:all .15s;}
+.esf-btn:hover{border-color:var(--accent);color:var(--accent);}
+.esf-btn.active{background:var(--accent-dim);color:var(--accent);border-color:var(--accent);}
+.events-updated{font-family:var(--font-mono);font-size:9px;color:var(--muted);opacity:.5;margin-top:9px;font-weight:500;}
+
+/* SCOREBOARD */
+.live-banner{display:none;padding:10px 12px;background:var(--accent-dim);border:1px solid var(--accent);border-radius:calc(var(--radius)*.5);margin-bottom:10px;animation:livepulse 2.5s infinite;}
+.live-banner.active{display:flex;align-items:center;gap:10px;}
+@keyframes livepulse{0%,100%{opacity:1}50%{opacity:.85}}
+.live-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent-glow);animation:blink 1.2s infinite;flex-shrink:0;}
+.live-label{font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--accent);flex-shrink:0;}
+.live-info{flex:1;min-width:0;}
+.live-matchup{font-family:var(--font-body);font-size:13px;font-weight:600;color:var(--text);}
+.live-score{font-family:var(--font-mono);font-size:18px;font-weight:700;color:var(--accent);}
+.live-link{font-family:var(--font-mono);font-size:9px;color:var(--accent);text-decoration:none;font-weight:500;}
+.live-link:hover{text-decoration:underline;}
+
+.sport-filter-tabs{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap;}
+.sport-tab{font-family:var(--font-mono);font-size:8px;font-weight:600;letter-spacing:.5px;padding:3px 7px;border-radius:calc(var(--radius)*.3);border:1px solid var(--border);background:var(--input-bg);color:var(--muted);cursor:pointer;transition:all .15s;}
+.sport-tab:hover{border-color:var(--accent);color:var(--accent);}
+.sport-tab.active{background:var(--accent-dim);color:var(--accent);border-color:var(--accent);}
+.sport-tab.today-btn.active{background:var(--green);color:var(--bg);border-color:var(--green);}
+
+.scores-section{margin-bottom:12px;}
+.scores-section:last-child{margin-bottom:0;}
+.scores-section-title{font-family:var(--font-mono);font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--border);}
+.game-row{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:calc(var(--radius)*.35);margin-bottom:2px;transition:background .15s;cursor:pointer;}
+.game-row:hover{background:var(--input-bg);}
+.game-sport{font-family:var(--font-mono);font-size:9px;font-weight:700;color:var(--accent);min-width:40px;flex-shrink:0;letter-spacing:.5px;}
+.game-details{flex:1;min-width:0;}
+.game-matchup{font-family:var(--font-body);font-size:12px;font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.game-meta{font-family:var(--font-mono);font-size:9px;color:var(--muted);font-weight:500;margin-top:1px;}
+.game-result{font-family:var(--font-mono);font-size:12px;font-weight:700;flex-shrink:0;padding:2px 6px;border-radius:calc(var(--radius)*.25);}
+.game-result.win{color:var(--green);background:rgba(34,197,94,.08);}
+.game-result.loss{color:var(--red-alert);background:rgba(239,68,68,.08);}
+.game-time{font-family:var(--font-mono);font-size:11px;font-weight:600;color:var(--muted);flex-shrink:0;min-width:55px;text-align:right;}
+
+/* EVENTS CARD */
+.events-day-group{margin-bottom:12px;}
+.events-day-group:last-child{margin-bottom:0;}
+.events-day-label{font-family:var(--font-mono);font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--border);}
+.event-row{display:flex;gap:10px;padding:6px 8px;border-radius:calc(var(--radius)*.35);transition:all .15s;margin-bottom:2px;}
+.event-row:hover{background:var(--input-bg);}
+.event-time{font-family:var(--font-mono);font-size:11px;font-weight:600;color:var(--accent);min-width:65px;flex-shrink:0;}
+.event-details{flex:1;min-width:0;}
+.event-title{font-family:var(--font-body);font-size:13px;font-weight:500;color:var(--text);line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.event-loc{font-family:var(--font-mono);font-size:9px;color:var(--muted);font-weight:500;margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.event-src-tag{display:inline-block;font-family:var(--font-mono);font-size:7px;padding:1px 5px;border-radius:3px;background:var(--accent-dim);color:var(--accent);border:1px solid var(--border);letter-spacing:.5px;font-weight:600;margin-left:6px;vertical-align:middle;}
+.events-empty{font-family:var(--font-mono);font-size:11px;color:var(--muted);opacity:.5;padding:18px;text-align:center;font-weight:500;}
+.events-footer{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
+.news-list{display:flex;flex-direction:column;}
+.ni{padding:8px 10px;border-left:2px solid transparent;transition:all .15s;border-radius:calc(var(--radius)*.3);margin-bottom:1px;}
+.ni:hover{background:var(--surface2);border-left-color:var(--accent);}
+.ni a{text-decoration:none;color:inherit;display:block;}
+.nh{font-size:13px;font-weight:500;line-height:1.45;margin-bottom:2px;color:var(--text);}
+.nm{font-family:var(--font-mono);font-size:9px;color:var(--muted);opacity:.6;font-weight:500;}
+.src-tag{display:inline-block;font-family:var(--font-mono);font-size:7px;padding:1px 5px;border-radius:3px;margin-right:5px;background:var(--accent-dim);color:var(--accent);border:1px solid var(--border);letter-spacing:.5px;vertical-align:middle;font-weight:600;}
+.nloading{font-family:var(--font-mono);font-size:11px;color:var(--muted);opacity:.5;padding:18px;text-align:center;font-weight:500;}
+.news-links{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
+.news-link{font-family:var(--font-mono);font-size:9px;padding:4px 8px;background:var(--input-bg);border:1px solid var(--border);border-radius:calc(var(--radius)*.35);color:var(--muted);text-decoration:none;font-weight:500;letter-spacing:.3px;transition:all .15s;}
+.news-link:hover{border-color:var(--accent);color:var(--accent);}
+
+/* ═══════════════════════════════════════
+   NETWORK (COLLAPSIBLE)
+═══════════════════════════════════════ */
+.collapsible-toggle{cursor:pointer;user-select:none;}
+.collapsible-body{overflow:hidden;transition:max-height .3s ease,opacity .3s ease;max-height:500px;opacity:1;}
+.collapsible-body.collapsed{max-height:0;opacity:0;}
+.net-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;}
+.net-item{background:var(--input-bg);border-radius:calc(var(--radius)*.5);padding:8px 10px;border:1px solid var(--border);}
+.net-label{font-family:var(--font-mono);font-size:8px;color:var(--accent);letter-spacing:1.5px;margin-bottom:3px;font-weight:600;}
+.net-value{font-family:var(--font-mono);font-size:11px;color:var(--text);word-break:break-all;font-weight:500;}
+
+/* ═══════════════════════════════════════
+   SETTINGS & THEME PICKER MODALS
+═══════════════════════════════════════ */
+.modal-overlay{display:none;position:fixed;inset:0;background:var(--overlay);z-index:10000;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;width:440px;max-width:92vw;max-height:82vh;overflow-y:auto;box-shadow:0 16px 48px rgba(0,0,0,.4);transition:all .35s;}
+.modal-title{font-family:var(--font-display);font-size:18px;font-weight:700;letter-spacing:1px;color:var(--text);margin-bottom:6px;}
+.modal-subtitle{font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:20px;font-weight:500;}
+.modal-section{margin-bottom:20px;}
+.modal-section-title{font-family:var(--font-mono);font-size:9px;color:var(--accent);letter-spacing:1.5px;margin-bottom:10px;font-weight:600;text-transform:uppercase;}
+.modal-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);}
+.modal-row:last-child{border-bottom:none;}
+.modal-row-label{font-size:13px;font-weight:500;color:var(--text);}
+.ios-toggle{position:relative;width:40px;height:24px;cursor:pointer;flex-shrink:0;}
+.ios-toggle input{opacity:0;width:0;height:0;position:absolute;}
+.ios-track{position:absolute;inset:0;border-radius:12px;background:var(--dim);transition:background .3s;}
+.ios-toggle input:checked+.ios-track{background:var(--accent);}
+.ios-thumb{position:absolute;top:2px;left:2px;width:20px;height:20px;background:#fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,.3);transition:transform .28s cubic-bezier(.34,1.2,.64,1);pointer-events:none;}
+.ios-toggle input:checked~.ios-thumb{transform:translateX(16px);}
+.modal-close-btn{background:var(--accent);border:none;color:var(--bg);font-family:var(--font-display);font-size:13px;font-weight:700;letter-spacing:1px;padding:10px 20px;border-radius:calc(var(--radius)*.5);cursor:pointer;width:100%;transition:all .15s;}
+.modal-close-btn:hover{opacity:.85;}
+
+/* Theme picker */
+.theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.theme-swatch{display:flex;align-items:center;gap:6px;padding:8px 10px;border:1px solid var(--border);border-radius:calc(var(--radius)*.5);cursor:pointer;font-family:var(--font-mono);font-size:10px;font-weight:500;color:var(--text);transition:all .2s;background:var(--input-bg);}
+.theme-swatch:hover{border-color:var(--accent);background:var(--surface2);}
+.theme-swatch.active{border-color:var(--accent);box-shadow:0 0 8px var(--accent-glow);background:var(--accent-dim);}
+.swatch-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;border:2px solid rgba(255,255,255,.15);}
+
+/* Feed management in settings */
+.feed-list{display:flex;flex-direction:column;gap:4px;margin-bottom:8px;}
+.feed-row{display:flex;align-items:center;gap:6px;padding:6px 8px;background:var(--input-bg);border:1px solid var(--border);border-radius:calc(var(--radius)*.35);font-family:var(--font-mono);font-size:10px;color:var(--text);font-weight:500;}
+.feed-row .feed-label{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.feed-row .feed-url{font-size:9px;color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.feed-row .feed-del{font-size:10px;color:var(--muted);cursor:pointer;padding:0 4px;transition:color .15s;flex-shrink:0;}
+.feed-row .feed-del:hover{color:var(--red-alert);}
+.feed-row.builtin .feed-del{display:none;}
+.feed-row.builtin::after{content:'BUILT-IN';font-size:7px;color:var(--accent);letter-spacing:1px;opacity:.6;}
+.add-feed-row{display:flex;gap:6px;margin-top:4px;}
+.add-feed-input{flex:1;background:var(--input-bg);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:10px;padding:6px 8px;border-radius:calc(var(--radius)*.35);outline:none;font-weight:500;}
+.add-feed-input:focus{border-color:var(--accent);}
+.add-feed-input::placeholder{color:var(--dim);}
+.add-feed-go{background:var(--accent);border:none;color:var(--bg);font-family:var(--font-display);font-size:11px;font-weight:700;padding:6px 12px;border-radius:calc(var(--radius)*.35);cursor:pointer;}
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+.footer{text-align:center;padding:8px;font-family:var(--font-mono);font-size:9px;color:var(--muted);opacity:.3;letter-spacing:1.5px;flex-shrink:0;font-weight:500;}
+
+/* ═══════════════════════════════════════
+   WLJS RADIO BAR (sticky bottom)
+═══════════════════════════════════════ */
+.radio-bar{position:fixed;bottom:0;left:0;right:0;z-index:9000;background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;gap:12px;padding:6px 20px;height:48px;transition:all .35s,transform .3s;box-shadow:0 -2px 12px rgba(0,0,0,.15);}
+.radio-bar::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 5%,var(--accent) 50%,transparent 95%);opacity:.25;}
+.radio-bar.hidden{transform:translateY(100%);}
+body.radio-active{padding-bottom:48px;}
+body.radio-active .footer{padding-bottom:48px;}
+.radio-play{background:var(--accent);border:none;color:var(--bg);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;transition:all .2s;flex-shrink:0;line-height:1;}
+.radio-play:hover{opacity:.85;transform:scale(1.05);}
+.radio-play.playing{background:var(--accent);animation:radioPulse 2s infinite;}
+@keyframes radioPulse{0%,100%{box-shadow:0 0 0 0 var(--accent-glow)}50%{box-shadow:0 0 0 6px transparent}}
+.radio-info{display:flex;flex-direction:column;min-width:0;flex-shrink:0;}
+.radio-station{font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--text);letter-spacing:.5px;line-height:1.1;}
+.radio-sub{font-family:var(--font-mono);font-size:8px;color:var(--accent);letter-spacing:1.5px;font-weight:500;line-height:1.2;}
+.radio-status{font-family:var(--font-mono);font-size:9px;color:var(--muted);flex-shrink:0;min-width:50px;text-align:center;font-weight:500;}
+.radio-vol-wrap{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.radio-mute{background:none;border:none;color:var(--muted);font-size:14px;cursor:pointer;padding:2px;transition:color .15s;line-height:1;}
+.radio-mute:hover{color:var(--accent);}
+.radio-mute.muted{color:var(--red-alert);}
+.radio-slider{-webkit-appearance:none;appearance:none;width:80px;height:4px;border-radius:2px;background:var(--border);outline:none;transition:all .15s;cursor:pointer;}
+.radio-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.3);}
+.radio-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--accent);cursor:pointer;border:none;box-shadow:0 1px 4px rgba(0,0,0,.3);}
+.radio-eq{display:flex;align-items:flex-end;gap:2px;height:16px;flex-shrink:0;}
+.radio-eq-bar{width:3px;background:var(--accent);border-radius:1px;transition:height .15s;}
+.radio-eq.active .radio-eq-bar{animation:eqBounce .6s infinite ease-in-out alternate;}
+.radio-eq-bar:nth-child(1){animation-delay:0s;}
+.radio-eq-bar:nth-child(2){animation-delay:.15s;}
+.radio-eq-bar:nth-child(3){animation-delay:.3s;}
+.radio-eq-bar:nth-child(4){animation-delay:.1s;}
+@keyframes eqBounce{0%{height:3px}100%{height:14px}}
+.radio-close{background:none;border:none;color:var(--dim);font-size:12px;cursor:pointer;padding:4px;margin-left:auto;transition:color .15s;flex-shrink:0;}
+.radio-close:hover{color:var(--text);}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media(max-width:900px){
+  .links-grid{grid-template-columns:repeat(2,1fr);}
+  .dual-row{grid-template-columns:1fr;}
+  .net-grid{grid-template-columns:1fr 1fr;}
+  .header{flex-wrap:wrap;gap:10px;}
+  .hdr-center{order:3;width:100%;justify-content:flex-start;}
+  .theme-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:600px){
+  .links-grid{grid-template-columns:1fr;}
+  .main{padding:10px 12px;}
+  .header{padding:10px 14px;}
+  .net-grid{grid-template-columns:1fr;}
+}
 </style>
 </head>
 <body>
-<div id="app">
-  <div class="header">
-    <div class="header-inner">
-      <div class="logo-row">
-        <span class="logo-icon">✈</span>
-        <div><div class="logo-title">THE COCKPIT</div><div class="logo-sub">Learning &amp; Development Hub</div></div>
+
+<div id="alert-banner">&#9888; WEATHER ALERT &mdash; <span id="alert-text"></span> &#9888;</div>
+
+<div class="headline-ribbon" id="headline-ribbon">
+  <div class="hr-label"><span>&#9889; LIVE</span></div>
+  <div class="hr-wrap"><div class="hr-track" id="hr-track"><span class="hr-item">Loading headlines&hellip;</span></div></div>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-brand">
+    <div class="rooster">&#x1F413;</div>
+    <div class="brand-text">
+      <div class="brand-title">JSU IT Dashboard</div>
+      <div class="brand-sub">JACKSONVILLE STATE UNIVERSITY &mdash; INFORMATION TECHNOLOGY</div>
+    </div>
+  </div>
+  <div class="hdr-center">
+    <a href="https://my.jsu.edu" target="_blank" class="hdr-link primary">&#x1F393; MyJAXState</a>
+    <a href="mailto:support@jsu.edu?subject=IT%20Support%20Request" class="hdr-link">&#x2709;&#xFE0F; Email Support</a>
+    <a href="https://kmgt.jsu.edu/adminui/ticket.php?QUEUE_ID=18" target="_blank" class="hdr-link">&#x1F3AB; New Ticket</a>
+  </div>
+  <div class="hdr-right">
+    <div class="weather-ribbon" id="weather-ribbon">
+      <span class="wr-icon" id="wr-icon">--</span>
+      <span class="wr-temp" id="wr-temp">--</span>
+      <span class="wr-sep"></span>
+      <span class="wr-desc" id="wr-desc">Loading</span>
+    </div>
+    <div class="clock-block">
+      <div class="clock-time" id="clock">--:--:--</div>
+      <div class="clock-date" id="date">---</div>
+    </div>
+    <button class="hdr-btn" id="theme-btn" title="Themes">&#x1F3A8;</button>
+    <button class="hdr-btn" id="settings-btn" title="Settings">&#x2699;&#xFE0F;</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- 1. QUICK ACCESS -->
+  <div class="panel" id="card-quick-access" style="animation-delay:.05s">
+    <div class="ph"><div class="pdot"></div><div class="ptitle">Quick Access</div></div>
+    <div class="pb">
+      <div class="links-grid" id="links-grid">
+        <div class="lg-col" data-col="ai">
+          <div class="lg-title" data-col-toggle="ai">&#x1F916; AI Tools</div>
+          <div class="lg-stack">
+            <a href="https://arena.ai" target="_blank" class="lb"><span class="li">&#x1F3AF;</span><span class="ll">Arena.ai</span></a>
+            <a href="https://chatgpt.com" target="_blank" class="lb"><span class="li">&#x1F4AC;</span><span class="ll">ChatGPT</span></a>
+            <a href="https://claude.ai" target="_blank" class="lb"><span class="li">&#x1F9E0;</span><span class="ll">Claude AI</span></a>
+            <a href="https://gemini.google.com" target="_blank" class="lb"><span class="li">&#x264A;</span><span class="ll">Gemini</span></a>
+            <a href="https://grok.com" target="_blank" class="lb"><span class="li">&#x26A1;</span><span class="ll">Grok</span></a>
+            <a href="https://notebooklm.google.com" target="_blank" class="lb"><span class="li">&#x1F4D3;</span><span class="ll">NotebookLM</span></a>
+          </div>
+        </div>
+        <div class="lg-col" data-col="it">
+          <div class="lg-title" data-col-toggle="it">&#x1F5A5;&#xFE0F; IT Management</div>
+          <div class="lg-stack">
+            <a href="https://kmgt.jsu.edu/adminui/assets.php" target="_blank" class="lb"><span class="li">&#x1F4E6;</span><span class="ll">Assets</span></a>
+            <a href="https://kmgt.jsu.edu/adminui/computer_inventory.php" target="_blank" class="lb"><span class="li">&#x1F5A5;&#xFE0F;</span><span class="ll">Devices (KACE)</span></a>
+            <a href="https://intune.microsoft.com" target="_blank" class="lb"><span class="li">&#x1F512;</span><span class="ll">Intune</span></a>
+            <a href="https://jsu.jamfcloud.com/" target="_blank" class="lb"><span class="li">&#x1F34E;</span><span class="ll">Jamf Pro</span></a>
+            <a href="https://kmgt.jsu.edu/adminui/ticket_list.php?BY_TYPE_TICKETS=mine_andunassigned&QUEUE_ID=18" target="_blank" class="lb"><span class="li">&#x1F3AB;</span><span class="ll">Tickets</span></a>
+          </div>
+        </div>
+        <div class="lg-col" data-col="campus">
+          <div class="lg-title" data-col-toggle="campus">&#x1F393; JSU Campus</div>
+          <div class="lg-stack">
+            <a href="https://haisteno-ai.github.io/Directory/" target="_blank" class="lb"><span class="li">&#x1F50E;</span><span class="ll">JaxFinder</span></a>
+            <a href="https://mm.jsu.edu" target="_blank" class="lb"><span class="li">&#x1F310;</span><span class="ll">Micetro &mdash; IP Mgmt</span></a>
+            <a href="https://my.jsu.edu" target="_blank" class="lb"><span class="li">&#x1F3E0;</span><span class="ll">MyJAXState</span></a>
+            <a href="https://jsu.sharepoint.com/:x:/s/technologysupportcenter/EQSHP1fhOI5OlLqF5xEvCGsBSiZkEEglx5jFH6lqhPg_tw?e=pu9T7d" target="_blank" class="lb"><span class="li">&#x1F5A8;&#xFE0F;</span><span class="ll">Network Printers</span></a>
+            <a href="https://haisteno-ai.github.io/TSC-Scheduler/" target="_blank" class="lb"><span class="li">&#x1F4CD;</span><span class="ll">Room Tracker</span></a>
+          </div>
+        </div>
+        <div class="lg-col" data-col="ms">
+          <div class="lg-title" data-col-toggle="ms">&#x2601;&#xFE0F; Microsoft &amp; Misc</div>
+          <div class="lg-stack">
+            <a href="https://jsu.sharepoint.com/sites/ditteam/Lists/Approved%20Software%20List/AllItems.aspx" target="_blank" class="lb"><span class="li">&#x2705;</span><span class="ll">Approved Software</span></a>
+            <a href="https://portal.azure.com" target="_blank" class="lb"><span class="li">&#x2601;&#xFE0F;</span><span class="ll">Azure Portal</span></a>
+            <a href="https://forms.office.com/pages/responsepage.aspx?id=FEz0Mg7NOUW3YzyGCnZyerDOIZOjKw1HkHiWWtiqVJNURTE0NDhBRDdZNjNDWEtNWTZPNjlKMU4xQy4u&route=shorturl" target="_blank" class="lb"><span class="li">&#x1F4CB;</span><span class="ll">Software Request</span></a>
+            <a href="https://temp-mail.org" target="_blank" class="lb"><span class="li">&#x1F4E7;</span><span class="ll">Temp Mail</span></a>
+          </div>
+        </div>
       </div>
-      <div class="hdr-prog">
-        <div class="mini-bar"><div class="mini-fill" id="hdr-bar"></div></div>
-        <span class="mini-label" id="hdr-pct">0%</span>
+      <div class="user-links-section">
+        <div class="user-links-header">
+          <span class="user-links-title">&#x1F517; My Quick Links</span>
+          <button class="add-link-btn" id="add-user-link-btn">+ Add Link</button>
+        </div>
+        <div class="user-links-grid" id="user-links-grid"></div>
       </div>
     </div>
   </div>
-  <div class="content" id="content"></div>
-  <div class="tab-bar" id="tab-bar"></div>
+
+  <!-- 2. SERVICE STATUS + CAMPUS EVENTS -->
+  <div class="dual-row">
+    <div class="panel" id="card-service-status" style="animation-delay:.1s">
+      <div class="ph"><div class="pdot"></div><div class="ptitle">Service Status</div><button class="rbtn" id="svc-refresh">&#x21BB; Refresh</button></div>
+      <div class="pb">
+        <div class="svc-grid" id="svc-grid"><div class="nloading">CHECKING SERVICES&hellip;</div></div>
+        <div class="svc-updated" id="svc-updated"></div>
+      </div>
+    </div>
+    <div class="panel" id="card-events" style="animation-delay:.15s">
+      <div class="ph"><div class="pdot"></div><div class="ptitle">Campus Events</div><button class="rbtn" id="events-refresh">&#x21BB; Refresh</button></div>
+      <div class="pb">
+        <div class="events-source-filter" id="events-filter"></div>
+        <div id="events-body"><div class="nloading">LOADING EVENTS&hellip;</div></div>
+        <div class="events-updated" id="events-updated"></div>
+        <div class="events-footer">
+          <a href="https://jsu.campusgroups.com/events" target="_blank" class="news-link">&#x1F4C5; CampusGroups</a>
+          <a href="https://www.jsu.edu/calendars/" target="_blank" class="news-link">&#x1F4C6; Trumba Calendar</a>
+          <a href="https://www.jsu.edu/registrar/academic-calendar/index.html" target="_blank" class="news-link">&#x1F393; Academic Calendar</a>
+          <a href="https://jsu.libcal.com" target="_blank" class="news-link">&#x1F4DA; Library Events</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. GAMEDAY SCOREBOARD + DINING HALL -->
+  <div class="dual-row">
+    <div class="panel" id="card-scoreboard" style="animation-delay:.2s">
+      <div class="ph"><div class="pdot"></div><div class="ptitle">Gameday Scoreboard</div><button class="rbtn" id="scores-refresh">&#x21BB; Refresh</button></div>
+      <div class="pb">
+        <div class="live-banner" id="live-banner"></div>
+        <div class="sport-filter-tabs" id="sport-tabs"></div>
+        <div id="scores-body"><div class="nloading">LOADING SCOREBOARD&hellip;</div></div>
+        <div class="svc-updated" id="scores-updated"></div>
+      </div>
+    </div>
+    <div class="panel" id="card-dining" style="animation-delay:.25s">
+      <div class="ph"><div class="pdot"></div><div class="ptitle"><a href="https://jsudining.sodexomyway.com/en-us/locations/dining-hall" target="_blank">JAX State Dining Hall &#x2197;</a></div></div>
+      <div class="pb">
+        <div class="cafe-period-indicator" id="cafe-period-indicator">
+          <div class="cafe-period-dot"></div>
+          <span class="cafe-period-text" id="cafe-period-text">---</span>
+        </div>
+        <div class="meal-tabs" id="meal-tabs"></div>
+        <div id="cafe-row"><div class="nloading">LOADING MENUS&hellip;</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. NETWORK INFO (COLLAPSIBLE) -->
+  <div class="panel" id="card-network" style="animation-delay:.3s">
+    <div class="ph collapsible-toggle" id="net-toggle">
+      <div class="pdot"></div>
+      <div class="ptitle">Network Info <span id="net-chevron" style="font-size:9px;opacity:.5;">&#x25BC;</span></div>
+      <button class="rbtn" id="net-refresh">&#x21BB; Refresh</button>
+    </div>
+    <div class="collapsible-body" id="net-body">
+      <div class="pb" id="network-body"><div class="nloading">FETCHING&hellip;</div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- WLJS RADIO BAR -->
+<div class="radio-bar hidden" id="radio-bar">
+  <button class="radio-play" id="radio-play" title="Play/Pause">&#x25B6;</button>
+  <div class="radio-info">
+    <div class="radio-station">WLJS 91.9 FM</div>
+    <div class="radio-sub">JACKSONVILLE STATE UNIVERSITY</div>
+  </div>
+  <div class="radio-eq" id="radio-eq">
+    <div class="radio-eq-bar" style="height:3px;"></div>
+    <div class="radio-eq-bar" style="height:3px;"></div>
+    <div class="radio-eq-bar" style="height:3px;"></div>
+    <div class="radio-eq-bar" style="height:3px;"></div>
+  </div>
+  <div class="radio-status" id="radio-status">STOPPED</div>
+  <div class="radio-vol-wrap">
+    <button class="radio-mute muted" id="radio-mute" title="Mute/Unmute">&#x1F507;</button>
+    <input type="range" class="radio-slider" id="radio-vol" min="0" max="100" value="0"/>
+  </div>
+  <button class="radio-close" id="radio-close" title="Hide player">&times;</button>
+</div>
+<audio id="radio-audio" preload="none"></audio>
+
+<div class="footer">JSU GAMECOCKS IT DASHBOARD &mdash; JACKSONVILLE STATE UNIVERSITY &mdash; JACKSONVILLE, AL 36265</div>
+
+<!-- THEME PICKER MODAL -->
+<div class="modal-overlay" id="theme-overlay">
+  <div class="modal" style="width:380px;">
+    <div class="modal-title">&#x1F3A8; Theme</div>
+    <div class="modal-subtitle">CHOOSE YOUR LOOK</div>
+    <div class="theme-grid" id="theme-grid"></div>
+    <div style="margin-top:16px;"><button class="modal-close-btn" id="theme-close">DONE</button></div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settings-overlay">
+  <div class="modal">
+    <div class="modal-title">&#x2699;&#xFE0F; Settings</div>
+    <div class="modal-subtitle">DASHBOARD CONFIGURATION</div>
+    <div class="modal-section">
+      <div class="modal-section-title">Cards</div>
+      <div id="settings-cards-list"></div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">News</div>
+      <div class="modal-row">
+        <span class="modal-row-label">Headline Ticker Ribbon</span>
+        <label class="ios-toggle"><input type="checkbox" id="setting-rss-ribbon" checked/><div class="ios-track"></div><div class="ios-thumb"></div></label>
+      </div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Radio</div>
+      <div class="modal-row">
+        <span class="modal-row-label">WLJS 91.9 Player Bar</span>
+        <label class="ios-toggle"><input type="checkbox" id="setting-radio-bar" checked/><div class="ios-track"></div><div class="ios-thumb"></div></label>
+      </div>
+      <div class="modal-row">
+        <span class="modal-row-label">Start Muted</span>
+        <label class="ios-toggle"><input type="checkbox" id="setting-radio-muted" checked/><div class="ios-track"></div><div class="ios-thumb"></div></label>
+      </div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">RSS Feeds</div>
+      <div class="feed-list" id="feed-list"></div>
+      <div class="add-feed-row">
+        <input class="add-feed-input" id="add-feed-url" placeholder="https://example.com/feed.xml"/>
+        <input class="add-feed-input" id="add-feed-name" placeholder="Label" style="max-width:100px;"/>
+        <button class="add-feed-go" id="add-feed-btn">ADD</button>
+      </div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Display</div>
+      <div class="modal-row">
+        <span class="modal-row-label">Font Size</span>
+        <div class="fontsize-btns" id="fontsize-btns">
+          <button class="fontsize-btn" data-size="compact">Compact</button>
+          <button class="fontsize-btn" data-size="default">Default</button>
+          <button class="fontsize-btn" data-size="large">Large</button>
+          <button class="fontsize-btn" data-size="xl">XL</button>
+        </div>
+      </div>
+    </div>
+    <button class="modal-close-btn" id="settings-close">DONE</button>
+  </div>
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════════════════════════════
-// DATA
-// ═══════════════════════════════════════════════════════════════════════════════
+(function(){
+'use strict';
 
-const GLOSSARY=[
-{term:"API (Application Programming Interface)",def:"A set of rules that lets two software systems talk to each other. The Cockpit uses APIs to communicate with Azure AD, KACE, and 25Live — your app sends a request, the API sends back data.",cat:"Core"},
-{term:"Azure AD (Azure Active Directory)",def:"Microsoft's cloud identity service. JSU uses it to manage who can log into what. The Cockpit will use Azure AD so users sign in with their JSU credentials — no separate password needed.",cat:"Auth"},
-{term:"OAuth 2.0",def:"An authorization protocol that lets your app access a user's data from another service without seeing their password. When a JSU user taps 'Sign In,' OAuth handles the secure handshake between The Cockpit and Azure AD.",cat:"Auth"},
-{term:"SSO (Single Sign-On)",def:"One login, many apps. Users sign into Azure AD once and get access to The Cockpit plus other JSU apps without re-entering credentials.",cat:"Auth"},
-{term:"JWT (JSON Web Token)",def:"A compact, digitally-signed token that proves who a user is. After Azure AD authenticates a user, it issues a JWT. Your app sends this token with every request to prove 'I am faculty member Jane Doe.'",cat:"Auth"},
-{term:"RBAC (Role-Based Access Control)",def:"Assigning permissions based on roles instead of individual users. The Cockpit has 4 roles: Student, Faculty, Staff, IT Tech. Each role sees different screens and can do different things.",cat:"Security"},
-{term:"RLS (Row Level Security)",def:"A Supabase/PostgreSQL feature that restricts which database rows a user can see or modify. Example: a Faculty user can only see their own tickets, but an IT Tech can see all tickets. The database itself enforces this.",cat:"Supabase"},
-{term:"Edge Function",def:"A small serverless function that runs on Supabase's servers (not your phone). You use these as a secure middleman — your app calls the Edge Function, and the Edge Function calls KACE/25Live using secret API keys the phone never sees.",cat:"Supabase"},
-{term:"Supabase",def:"An open-source backend platform built on PostgreSQL. It gives you a database, authentication, Edge Functions, file storage, and realtime subscriptions. It's your entire backend for The Cockpit.",cat:"Supabase"},
-{term:"PostgreSQL",def:"A powerful open-source relational database. Supabase runs on top of it. Your tables (users, rooms, tickets, schedules) all live in PostgreSQL.",cat:"Supabase"},
-{term:"React Native",def:"A framework for building mobile apps using React (JavaScript/TypeScript). Write once, run on both iOS and Android. It renders real native UI components, not a web view.",cat:"Frontend"},
-{term:"Expo",def:"A platform built on top of React Native that simplifies development. Handles builds, push notifications, OTA updates, and device APIs so you don't have to configure native code manually.",cat:"Frontend"},
-{term:"TypeScript",def:"JavaScript with type annotations. Instead of 'let x = 5' you write 'let x: number = 5'. Catches bugs before your code runs. The Cockpit uses TypeScript everywhere.",cat:"Frontend"},
-{term:"EAS Build",def:"Expo Application Services Build — a cloud service that compiles your React Native code into actual iOS (.ipa) and Android (.apk/.aab) app files ready for the App Store and Google Play.",cat:"DevOps"},
-{term:"OTA Update (Over-The-Air)",def:"Push code updates to users without going through App Store review. Expo lets you ship bug fixes instantly. Major changes still need a full app store submission.",cat:"DevOps"},
-{term:"CORS (Cross-Origin Resource Sharing)",def:"A browser security rule that blocks web pages from making requests to different domains. You've dealt with this on the IT Dashboard. In React Native mobile apps, CORS doesn't apply — but your Edge Functions handle it for web fallbacks.",cat:"Security"},
-{term:"Zero Trust",def:"A security model where nothing is trusted by default — not the app, not the network, not even internal systems. Every request must prove it's authorized. The Cockpit treats the phone as untrusted; all sensitive logic runs server-side.",cat:"Security"},
-{term:"Least Privilege",def:"Give every user/system only the minimum permissions it needs. The KACE service account can create tickets and read assets — nothing more. Faculty can see their own schedule — not other people's.",cat:"Security"},
-{term:"Certificate Pinning",def:"Your app only trusts specific SSL certificates, not just any valid one. Prevents man-in-the-middle attacks where someone intercepts traffic between the app and Supabase.",cat:"Security"},
-{term:"Service Account",def:"A non-human account used by your Edge Functions to talk to KACE and 25Live. It has its own credentials and limited permissions. No real person logs into it.",cat:"Security"},
-{term:"TTL (Time To Live)",def:"How long cached data stays valid before it's refreshed. The Cockpit caches 25Live schedules with a 15-minute TTL — after 15 minutes, it fetches fresh data.",cat:"Core"},
-{term:"Webhook",def:"A callback URL that another system hits when something happens. The Epson projector monitor sends a webhook to your Edge Function when a projector fails, auto-creating a KACE ticket.",cat:"Core"},
-{term:"Geofence",def:"A virtual boundary around a real-world location. When a user's phone enters or exits the boundary (e.g., Merrill Hall), the app can trigger a push notification.",cat:"Core"},
-{term:"GIS (Geographic Information System)",def:"Technology for mapping and spatial data. The Cockpit will use GIS data to render interactive building floor plans and campus wayfinding.",cat:"Core"},
-{term:"Push Token",def:"A unique device identifier used to send push notifications. Generated by Expo, stored in your users table, and refreshed every time the app launches. You send this token to Expo's push API along with the notification content.",cat:"Core"},
-{term:"Parameterized Query",def:"A database query where user input is passed as parameters, not concatenated into the SQL string. Prevents SQL injection attacks. Supabase does this automatically.",cat:"Security"},
-{term:"Delegated Permissions",def:"Azure AD permissions that act on behalf of a signed-in user (not the app itself). The Cockpit uses delegated permissions so it can only access data the logged-in user is allowed to see.",cat:"Auth"},
-{term:"Deno",def:"A JavaScript/TypeScript runtime (like Node.js but more secure). Supabase Edge Functions run on Deno. Syntax is almost identical to what you know — the main difference is import style.",cat:"Supabase"},
-{term:"CI/CD (Continuous Integration / Continuous Deployment)",def:"Automated pipelines that test and deploy your code when you push changes. GitHub Actions can run your tests, then trigger EAS Build to create a new app version.",cat:"DevOps"},
-{term:"MSW (Mock Service Worker)",def:"A testing library that intercepts API calls in your tests and returns fake responses. You'll use it to test ticket creation without actually hitting KACE.",cat:"DevOps"}
+// ══════════════════════════════════
+// THEMES
+// ══════════════════════════════════
+var THEMES=[
+  {id:'cocky',name:'Stay Cocky',dot:'#cc0000'},
+  {id:'jobs',name:'Jobs',dot:'#007aff'},
+  {id:'woz',name:'Woz',dot:'#888'},
+  {id:'terminal',name:'Terminal',dot:'#00ff00'},
+  {id:'oled',name:'OLED',dot:'#fff'},
+  {id:'tesla',name:'Tesla',dot:'#a87fff'},
+  {id:'gotham',name:'Gotham',dot:'#7ab3e0'},
+  {id:'obsidian',name:'Obsidian',dot:'#ff6622'},
+  {id:'gameboy',name:'Game Boy',dot:'#9bbc0f'},
+  {id:'synthwave',name:'Synthwave',dot:'#ff00ff'},
+  {id:'phosphor',name:'Phosphor',dot:'#ffaa00'},
+  {id:'nightgame',name:'Night Game',dot:'#ffcc00'}
 ];
+function setTheme(id){
+  document.documentElement.setAttribute('data-theme',id);
+  localStorage.setItem('jsu_theme',id);
+  renderThemeGrid();
+}
+function renderThemeGrid(){
+  var cur=document.documentElement.getAttribute('data-theme')||'cocky';
+  var grid=document.getElementById('theme-grid');
+  grid.innerHTML=THEMES.map(function(t){
+    return '<div class="theme-swatch'+(t.id===cur?' active':'')+'" data-tid="'+t.id+'">'
+      +'<div class="swatch-dot" style="background:'+t.dot+';"></div>'+t.name+'</div>';
+  }).join('');
+  grid.querySelectorAll('.theme-swatch').forEach(function(el){
+    el.addEventListener('click',function(){setTheme(el.dataset.tid);});
+  });
+}
+var savedTheme=localStorage.getItem('jsu_theme')||'cocky';
+document.documentElement.setAttribute('data-theme',savedTheme);
 
-const PHASES=[
-{id:0,title:"Foundation & Permissions",weeks:"Weeks 1–4",duration:"~4 weeks",
-summary:"No user-facing features. You're laying the infrastructure, getting API access approved, and setting up Supabase with security from day one.",
-concepts:[
-{title:"What is Supabase and Why It's Your Backend",
-content:"Supabase replaces what would normally be 4-5 separate services: a database (PostgreSQL), authentication, serverless functions (Edge Functions), file storage, and realtime data sync. Instead of stitching together Firebase + AWS Lambda + a separate DB, Supabase gives you one dashboard.\n\nFor The Cockpit, Supabase handles:\n• Storing users, rooms, tickets, schedules\n• Authenticating users via Azure AD\n• Running Edge Functions that securely talk to KACE & 25Live\n• Enforcing who sees what data via Row Level Security",
-fc:{q:"Why does The Cockpit use Supabase Edge Functions instead of calling KACE/25Live directly from the phone?",a:"API keys and secrets would be exposed in the app binary. Edge Functions run server-side, keeping secrets safe. The phone is untrusted (Zero Trust principle)."}},
-{title:"React Native + Expo + TypeScript — The Stack",
-content:"You've built React components in our Cockpit demo. React Native is the same mental model — components, props, state, hooks — but instead of <div> you use <View>, instead of <p> you use <Text>, and instead of CSS files you use StyleSheet.create().\n\nExpo wraps React Native and handles the hard parts: building for iOS/Android, push notifications, camera access, location services. Think of Expo as the 'easy button' for React Native.\n\nTypeScript adds type safety. Instead of 'let x = 5' you write 'let x: number = 5'. The compiler catches mistakes before you run the app.",
-fc:{q:"What's the key difference between React (web) and React Native (mobile) component syntax?",a:"React Native uses <View> instead of <div>, <Text> instead of <p>/<span>, and StyleSheet.create() instead of CSS files. The component logic (state, hooks, props) is identical."}},
-{title:"Database Schema Design",
-content:"Before writing any code, you design your tables. The Cockpit needs:\n\n• users — id, azure_id, email, name, role, department, push_token\n• rooms — id, building, room_number, seating, av_equipment (JSON), floor\n• schedules — id, room_id, event_name, instructor, start_time, end_time, date\n• tickets — id, reporter_id, room_id, device_id, description, status, priority, created_at\n• room_statuses — id, room_id, status (ready/known_issue/maintenance/resolved), set_by, note, expires_at\n• room_notes — id, room_id, author_id, content, created_at\n• audit_log — id, user_id, action, target_table, target_id, ip, timestamp\n\nEvery table gets Row Level Security policies on day one. Never disable RLS.",
-fc:{q:"What is the audit_log table for?",a:"It records every significant action (ticket creation, room status change, role-based action) with who did it, when, and from where. Required for security compliance and troubleshooting."}},
-{title:"Row Level Security (RLS) — Your Data Gatekeeper",
-content:"RLS is a PostgreSQL feature that adds WHERE clauses to every query automatically based on who's asking. You write policies like:\n\nCREATE POLICY \"Users see own tickets\"\nON tickets FOR SELECT\nUSING (reporter_id = auth.uid());\n\nThis means even if someone hacks the client to request all tickets, the database only returns their own. The security lives in the database, not in your app code.\n\nFor The Cockpit, IT Techs need to see ALL tickets. So you add a second policy:\n\nCREATE POLICY \"Techs see all tickets\"\nON tickets FOR SELECT\nUSING (\n  EXISTS (\n    SELECT 1 FROM users\n    WHERE users.id = auth.uid()\n    AND users.role = 'tech'\n  )\n);",
-fc:{q:"If you forget to enable RLS on the tickets table, what happens?",a:"Any authenticated user can read, update, or delete ANY ticket — not just their own. RLS must be enabled on every table from day one. Supabase lets you toggle it, but leaving it off is a critical security hole."}},
-{title:"Git Workflow & Branch Protection",
-content:"Your roadmap requires a private GitHub repo with branch protection. This means:\n\n• No one (including you) pushes directly to 'main'\n• All changes go through Pull Requests\n• PRs require review before merging\n\nThis matters because production app code needs a review trail. When JSU IT Security audits your project, they want to see that every change was intentional and reviewed.\n\nBasic workflow:\ngit checkout -b feature/ticket-creation\n// make changes\ngit add . && git commit -m \"Add ticket creation Edge Function\"\ngit push origin feature/ticket-creation\n// Open PR on GitHub, review, merge",
-fc:{q:"Why does the roadmap require branch protection on 'main'?",a:"It creates an audit trail. Every code change goes through a Pull Request, which means there's a record of what changed, who approved it, and when. JSU IT Security will want to see this."}}
-],
-exercises:[
-{title:"Exercise: Design a Table",type:"thinking",
-prompt:"Look at the 'tickets' table schema above. Without looking ahead, write down what columns you think the 'room_statuses' table needs. Think about:\n- Who set the status?\n- When does a 'resolved' status expire?\n- What are the possible status values?\n\nThen compare to the schema in the concepts section."},
-{title:"Exercise: Write an RLS Policy",type:"code",
-prompt:"Write a Supabase RLS policy that allows:\n- Faculty to INSERT tickets (but only with their own user ID as reporter_id)\n- Prevents students from creating tickets\n\nHint: You need a policy ON tickets FOR INSERT that checks the user's role.",
-solution:"CREATE POLICY \"Faculty can create tickets\"\nON tickets FOR INSERT\nWITH CHECK (\n  auth.uid() = reporter_id\n  AND EXISTS (\n    SELECT 1 FROM users\n    WHERE users.id = auth.uid()\n    AND users.role IN ('faculty', 'tech')\n  )\n);"},
-{title:"Exercise: TypeScript Basics",type:"code",
-prompt:"Convert this JavaScript to TypeScript by adding type annotations:\n\nfunction createTicket(roomId, description, isUrgent) {\n  return {\n    room_id: roomId,\n    description: description,\n    priority: isUrgent ? 'high' : 'normal',\n    created_at: new Date()\n  };\n}",
-solution:"interface Ticket {\n  room_id: string;\n  description: string;\n  priority: 'high' | 'normal';\n  created_at: Date;\n}\n\nfunction createTicket(\n  roomId: string,\n  description: string,\n  isUrgent: boolean\n): Ticket {\n  return {\n    room_id: roomId,\n    description: description,\n    priority: isUrgent ? 'high' : 'normal',\n    created_at: new Date()\n  };\n}"}
-],
-prompts:[
-{title:"Initialize the Expo Project",desc:"Scaffold the entire project structure with TypeScript, navigation, and folder conventions.",
-cli:'claude "Initialize a new React Native Expo project with TypeScript for a campus facility management app called The Cockpit. Use expo-router for navigation. Create folder structure: /app (screens), /components, /lib (supabase client, API helpers), /types, /constants. Add dependencies: @supabase/supabase-js, expo-secure-store, expo-notifications. Set up a basic tab navigator with Home, Tickets, Rooms, and Profile tabs. Make sure tsconfig is strict."',
-chat:"I'm starting a React Native Expo project called \"The Cockpit\" for JSU campus facility management. I need you to help me:\n\n1. Initialize with TypeScript (strict mode)\n2. Set up expo-router with tab navigation: Home, Tickets, Rooms, Profile\n3. Create folder structure: /app, /components, /lib, /types, /constants\n4. Install: @supabase/supabase-js, expo-secure-store, expo-notifications\n5. Create a basic Supabase client in /lib/supabase.ts using expo-secure-store for token storage\n\nGive me the commands to run and the files to create."},
-{title:"Set Up Supabase Schema",desc:"Create all database tables with proper types, relationships, and RLS policies.",
-cli:'claude "Create a Supabase migration file for The Cockpit app. Tables needed: users (id uuid PK references auth.users, azure_id text unique, email text, full_name text, role text check in student/faculty/staff/tech, department text, push_token text), rooms (id uuid PK, building text, room_number text, seating int, av_equipment jsonb, floor int), schedules (id uuid PK, room_id references rooms, event_name text, instructor text, start_time timestamptz, end_time timestamptz, date date), tickets (id uuid PK, reporter_id references users, room_id references rooms nullable, device_id text nullable, description text, status text default open, priority text default normal, created_at timestamptz default now()), room_statuses, room_notes, audit_log. Enable RLS on ALL tables. Write policies for each role."',
-chat:"I need a complete Supabase SQL migration for The Cockpit. Here are my tables and their RLS requirements:\n\n[Paste the schema from Phase 0 concepts]\n\nRLS Rules:\n- users: users can read their own row, techs can read all\n- rooms: all authenticated users can read\n- schedules: all authenticated can read\n- tickets: faculty see own, tech sees all, students see none\n- room_statuses: all authenticated can read, only tech can write\n- room_notes: all can read, tech can write\n- audit_log: only tech/admin can read, system inserts only\n\nPlease write the full migration SQL with CREATE TABLE, ALTER TABLE ENABLE ROW LEVEL SECURITY, and CREATE POLICY statements."}
-]},
+// Theme modal
+document.getElementById('theme-btn').addEventListener('click',function(){
+  renderThemeGrid();
+  document.getElementById('theme-overlay').classList.add('open');
+});
+document.getElementById('theme-close').addEventListener('click',function(){document.getElementById('theme-overlay').classList.remove('open');});
+document.getElementById('theme-overlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
 
-{id:1,title:"Core Platform",weeks:"Weeks 5–12",duration:"~8 weeks",
-summary:"The MVP: Azure AD login, live room schedules from 25Live, ticket creation via KACE, IT tech dashboard, and push notifications. The static demo becomes a real app.",
-concepts:[
-{title:"OAuth 2.0 Flow — How Azure AD Login Actually Works",
-content:"When a user taps 'Sign In with JSU,' here's what happens step by step:\n\n1. App opens a browser window to Azure AD's login page\n2. User enters JSU email + password (your app never sees the password)\n3. Azure AD validates credentials and sends back an authorization code\n4. Your app exchanges that code for tokens (access token + refresh token)\n5. The access token is a JWT containing user info (name, email, groups)\n6. Your app sends this JWT to Supabase, which verifies the signature\n7. Supabase creates/updates the user record and issues a Supabase session\n\nThe key insight: your app never handles passwords. Azure AD does all the hard work. Your app just receives tokens.",
-fc:{q:"In the OAuth flow, does The Cockpit app ever see the user's JSU password?",a:"No. The user types their password into Azure AD's login page. The app only receives tokens (JWT) after successful authentication. The app never handles or stores passwords."}},
-{title:"Edge Functions as a Secure API Proxy",
-content:"Every external API call follows this pattern:\n\nPhone → Edge Function → External API (KACE/25Live)\nPhone ← Edge Function ← External API\n\nThe Edge Function is a small TypeScript program running on Supabase's Deno servers. It:\n1. Verifies the caller's JWT (is this a real, logged-in user?)\n2. Checks the caller's role (is this user allowed to do this?)\n3. Makes the API call using secrets stored as environment variables\n4. Transforms the response (strips sensitive data, reshapes for the app)\n5. Returns clean JSON to the phone\n\nExample Edge Function structure:\nimport { serve } from \"https://deno.land/std/http/server.ts\"\nimport { createClient } from \"https://esm.sh/@supabase/supabase-js\"\n\nserve(async (req) => {\n  // 1. Get JWT from Authorization header\n  // 2. Verify with Supabase\n  // 3. Check role\n  // 4. Call KACE/25Live with stored secrets\n  // 5. Return transformed data\n})",
-fc:{q:"What are the 3 things an Edge Function checks BEFORE making an external API call?",a:"1. Is the JWT valid? (Authentication) 2. Does this user's role allow this action? (Authorization) 3. Is the request data valid? (Input validation). Only then does it call the external API."}},
-{title:"25Live Integration — Read-Only Schedule Data",
-content:"25Live is JSU's room scheduling system. The integration pattern:\n\n1. Edge Function authenticates to 25Live's API using a service account\n2. Fetches today's schedules for requested building(s)\n3. Transforms the response into your app's schema\n4. Caches results in a schedules_cache table with a 15-min TTL\n5. Next request checks cache first — if fresh, returns cached data\n\nWhy start with 25Live? It's read-only (low risk), the data format is predictable, and it directly replaces your current CSV-based system. You're upgrading from static CSVs to live data with one integration.",
-fc:{q:"Why does the roadmap recommend building the 25Live integration BEFORE KACE?",a:"25Live is read-only (you only fetch schedules, never write). This makes it lower risk. KACE involves writes (creating tickets) which need more security validation. Start simple."}},
-{title:"KACE Integration — Ticket Creation & Device Lookup",
-content:"KACE is the ticketing system. This integration is more complex because it writes data:\n\nTicket Creation Flow:\n1. Faculty taps 'Report Issue' → selects emoji (projector/computer/sound) or types description\n2. App pre-fills: room (from schedule), reporter (from Azure AD), device (from KACE lookup)\n3. Faculty chooses: 'Come ASAP' or 'After class at [end time from 25Live]'\n4. App sends to Edge Function → validates → creates KACE ticket → returns ticket ID\n5. Edge Function triggers push notification to all IT Techs\n6. Edge Function logs action to audit_log table\n\nDevice Lookup:\nFor personal device tickets, the Edge Function queries KACE's asset management:\nGET /api/devices?user_id=xxx → returns devices assigned to that user\nIf only one device, it's auto-selected. If multiple, user picks from a list.",
-fc:{q:"When a faculty member creates a classroom ticket, where does the 'after class' time come from?",a:"The end time of their current class, pulled from 25Live schedule data that's already cached in Supabase. The app knows who they are (Azure AD) and where they're scheduled to be (25Live), so the ticket is mostly pre-filled."}},
-{title:"Push Notifications with Expo",
-content:"Push notifications use a chain: Your App → Supabase → Expo Push Service → Apple (APNs) / Google (FCM) → User's Phone.\n\nSetup:\n1. On app launch, call Notifications.getExpoPushTokenAsync() to get the device's push token\n2. Store this token in the users table\n3. When a ticket is created, a Supabase database trigger fires\n4. The trigger calls an Edge Function that fetches all tech users' push tokens\n5. The Edge Function sends tokens + message to Expo's push API\n6. Expo routes to Apple or Google depending on the device\n\nKey push events in The Cockpit:\n• New ticket → all IT Techs\n• Room marked unavailable → instructors scheduled in that room\n• Ticket resolved → the person who filed it",
-fc:{q:"What is an Expo Push Token?",a:"A unique string identifying a specific device for push notifications. Generated by Expo, stored in your users table, and refreshed every time the app launches. You send this token to Expo's push API along with the notification content."}}
-],
-exercises:[
-{title:"Exercise: Trace the Ticket Flow",type:"thinking",
-prompt:"A faculty member in MAH 130 taps the 'projector not working' emoji. Trace every system involved from tap to the IT tech receiving a push notification. List each step and which system handles it (App, Edge Function, Supabase, KACE, Azure AD, 25Live, Expo Push)."},
-{title:"Exercise: Write an Edge Function Skeleton",type:"code",
-prompt:"Write the skeleton of a Supabase Edge Function that:\n1. Reads the JWT from the Authorization header\n2. Verifies the user is a 'tech' role\n3. Returns 401 if no JWT, 403 if wrong role\n4. Returns a JSON response { status: \"ok\" } if authorized\n\nUse Deno serve() and @supabase/supabase-js",
-solution:"import { serve } from \"https://deno.land/std@0.177.0/http/server.ts\";\nimport { createClient } from \"https://esm.sh/@supabase/supabase-js@2\";\n\nserve(async (req) => {\n  const authHeader = req.headers.get(\"Authorization\");\n  if (!authHeader) {\n    return new Response(\n      JSON.stringify({ error: \"No authorization header\" }),\n      { status: 401, headers: { \"Content-Type\": \"application/json\" } }\n    );\n  }\n\n  const supabase = createClient(\n    Deno.env.get(\"SUPABASE_URL\"),\n    Deno.env.get(\"SUPABASE_ANON_KEY\"),\n    { global: { headers: { Authorization: authHeader } } }\n  );\n\n  const { data: { user }, error } = await supabase.auth.getUser();\n  if (error || !user) {\n    return new Response(\n      JSON.stringify({ error: \"Invalid token\" }),\n      { status: 401, headers: { \"Content-Type\": \"application/json\" } }\n    );\n  }\n\n  const { data: profile } = await supabase\n    .from(\"users\")\n    .select(\"role\")\n    .eq(\"id\", user.id)\n    .single();\n\n  if (profile?.role !== \"tech\") {\n    return new Response(\n      JSON.stringify({ error: \"Insufficient permissions\" }),\n      { status: 403, headers: { \"Content-Type\": \"application/json\" } }\n    );\n  }\n\n  return new Response(\n    JSON.stringify({ status: \"ok\" }),\n    { status: 200, headers: { \"Content-Type\": \"application/json\" } }\n  );\n});"},
-{title:"Exercise: Cache Logic",type:"thinking",
-prompt:"The 25Live Edge Function caches schedules with a 15-minute TTL. Write pseudocode for the cache check:\n- If cache exists and is fresh → return cached data\n- If cache is stale or missing → fetch from 25Live, store in cache, return\n\nWhat column in your schedules_cache table determines freshness?"}
-],
-prompts:[
-{title:"Build Azure AD Authentication",desc:"Implement the complete SSO flow with role mapping.",
-cli:'claude "Implement Azure AD SSO for The Cockpit. I have an Azure AD App Registration with client_id and tenant_id. Configure Supabase Auth with Azure AD as an OAuth provider. Create the auth flow: login button → Azure AD browser auth → callback handler → read user\'s AD group memberships → map groups to app roles (student/faculty/staff/tech) → upsert into users table. Use expo-auth-session for the OAuth flow and expo-secure-store for token storage. Include a useAuth hook that provides user, role, loading, signIn, signOut."',
-chat:"I need to implement Azure AD SSO in my Expo app. Here's what I have:\n- Azure AD App Registration (client_id: [YOUR_ID], tenant_id: [YOUR_TENANT])\n- Supabase project configured\n- Expo app with expo-auth-session installed\n\nPlease build:\n1. The OAuth flow using expo-auth-session to authenticate with Azure AD\n2. A Supabase Edge Function for the callback that reads AD group memberships and maps to roles\n3. A useAuth() React hook that exposes: user, role, isLoading, signIn(), signOut()\n4. Token refresh logic using expo-secure-store\n\nExplain each step as you go so I understand the flow."},
-{title:"Build the KACE Ticket Creation Edge Function",desc:"Secure ticket creation with full validation and audit logging.",
-cli:'claude "Create a Supabase Edge Function at /api/tickets for The Cockpit. POST creates a ticket: validate JWT, check role is faculty/staff/tech, validate required fields (description, room_id or device_id), call KACE API to create the ticket using service account creds from env vars, store ticket reference in Supabase tickets table, log to audit_log, trigger push notification to tech role users via Expo push API. Include error handling for KACE API failures. The KACE API endpoint is [YOUR_KACE_URL]/api/service_desk/tickets."',
-chat:"I need a Supabase Edge Function for ticket creation. The flow:\n\n1. Receive POST with: { description, room_id?, device_id?, priority, timing? }\n2. Verify JWT → get user from Supabase\n3. Check user.role is faculty, staff, or tech (students can't create tickets)\n4. Call KACE API: POST [KACE_URL]/api/service_desk/tickets with ticket data\n5. Store the KACE ticket ID in my Supabase tickets table\n6. Insert an audit_log record\n7. Fetch all users with role='tech' and their push_tokens\n8. Send push notification via Expo push API\n9. Return the created ticket\n\nKACE API uses basic auth with a service account. Creds are in env vars KACE_URL, KACE_USER, KACE_PASS.\n\nWrite the complete Edge Function with error handling."}
-]},
-
-{id:2,title:"Student Experience & Room Finder",weeks:"Weeks 13–18",duration:"~6 weeks",
-summary:"Add the student role with class schedules, dining menus, and app links. Build the searchable room availability finder. Extend tickets to non-teaching staff.",
-concepts:[
-{title:"Multi-Role UI Architecture",
-content:"The Cockpit renders different screens based on the user's role. This isn't just hiding buttons — it's a full architectural pattern:\n\n1. After login, the useAuth hook provides the user's role\n2. The tab navigator conditionally renders tabs based on role\n3. Each screen checks role before rendering role-specific content\n4. The backend (RLS + Edge Functions) independently enforces the same rules\n\nNever rely on the UI alone for security. If you hide a button but the API still works, someone can call the API directly. Security is enforced at both layers.",
-fc:{q:"Why must role checks happen on BOTH the client (UI) and server (Edge Functions/RLS)?",a:"The UI can be bypassed. Someone could call your Edge Function directly using curl or Postman. If only the UI checks roles, anyone with a valid JWT could perform any action. Server-side checks are the real security layer; client-side checks are just UX."}},
-{title:"Data Scraping & Menu Integration",
-content:"The dining menu comes from JSU's Sodexo page (jsudining.sodexomyway.com). Two approaches:\n\n1. API/JSON scraping: Many Sodexo sites embed menu data as preloaded JSON in the HTML. An Edge Function can fetch the page, extract the JSON, and serve it to the app.\n\n2. Static rotation: If scraping is unreliable, store a rotating menu schedule in Supabase that staff can update manually.\n\nThe Edge Function approach is better because it's always current, but you need a fallback in case the Sodexo site structure changes.",
-fc:{q:"Why use an Edge Function to scrape the Sodexo menu instead of doing it directly in the app?",a:"CORS would block the request from a web context, and even in React Native, putting scraping logic in the app means updates require a new app release. An Edge Function can be updated instantly and handles parsing server-side."}},
-{title:"Advanced Supabase Queries — Room Finder",
-content:"The Room Finder replaces your TSC Room Tracker. Users select building, date, time range, and optionally filter by AV equipment or seating. The query:\n\n1. Get all rooms in the selected building\n2. LEFT JOIN with schedules for that date\n3. Filter OUT rooms that have a schedule conflict in the requested time range\n4. Optionally filter by av_equipment (JSONB contains) and minimum seating\n\nIn Supabase JS:\nconst { data } = await supabase\n  .from('rooms')\n  .select('*, schedules!left(*)')\n  .eq('building', 'MAH')\n  .gte('seating', minSeats)\n  .contains('av_equipment', requiredAV)\n\nThen filter client-side for time conflicts (or use a database function for better performance).",
-fc:{q:"What does a LEFT JOIN do in the room finder query?",a:"It returns ALL rooms, even those with no schedule entries. This is what you want — rooms with no schedules for that time are available. An INNER JOIN would only return rooms that HAVE schedules, which is the opposite of what you need."}}
-],
-exercises:[
-{title:"Exercise: Role-Based Tab Config",type:"code",
-prompt:"Write a TypeScript function getTabsForRole(role: string) that returns an array of tab objects. Rules:\n- Student: Home, Schedule, Dining, Links\n- Faculty: Home, Schedule, Tickets, Rooms\n- Staff: Home, Tickets, Rooms\n- Tech: Home, Tickets, Rooms, Dashboard",
-solution:"type Tab = {\n  name: string;\n  icon: string;\n  screen: string;\n};\n\nconst ALL_TABS: Record<string, Tab> = {\n  home: { name: \"Home\", icon: \"home\", screen: \"HomeScreen\" },\n  schedule: { name: \"Schedule\", icon: \"calendar\", screen: \"ScheduleScreen\" },\n  tickets: { name: \"Tickets\", icon: \"ticket\", screen: \"TicketsScreen\" },\n  rooms: { name: \"Rooms\", icon: \"door-open\", screen: \"RoomsScreen\" },\n  dining: { name: \"Dining\", icon: \"utensils\", screen: \"DiningScreen\" },\n  links: { name: \"Links\", icon: \"link\", screen: \"LinksScreen\" },\n  dashboard: { name: \"Dashboard\", icon: \"chart-bar\", screen: \"DashboardScreen\" },\n};\n\nconst ROLE_TABS: Record<string, string[]> = {\n  student: [\"home\", \"schedule\", \"dining\", \"links\"],\n  faculty: [\"home\", \"schedule\", \"tickets\", \"rooms\"],\n  staff: [\"home\", \"tickets\", \"rooms\"],\n  tech: [\"home\", \"tickets\", \"rooms\", \"dashboard\"],\n};\n\nfunction getTabsForRole(role: string): Tab[] {\n  const tabKeys = ROLE_TABS[role] || ROLE_TABS.student;\n  return tabKeys.map(key => ALL_TABS[key]);\n}"},
-{title:"Exercise: Room Availability Query",type:"thinking",
-prompt:"A user searches for rooms in Martin Hall on Monday from 2:00–3:30 PM with a projector and at least 30 seats. Write the pseudocode for this query. Which parts happen in the database vs. client-side filtering?"}
-],
-prompts:[
-{title:"Build the Student Home Screen",desc:"Schedule display, dining menu, quick links, and first-launch prompts.",
-cli:'claude "Build the Student Home Screen for The Cockpit. Components: 1) Today\'s schedule — show class cards with room, time, instructor from the schedules cache. 2) DiningMenu — call the /api/dining Edge Function and show today\'s meals. 3) QuickLinks — grid of buttons for MyJAXState, DUO, OmniAlert, Everyday, JSU Athletics using Linking.openURL(). 4) FirstLaunchModal — on first open, prompt to download MyJAXState and OmniAlert with deep links to app stores. Store hasSeenPrompt in AsyncStorage. Use the existing useAuth hook for role checking."',
-chat:"I need the Student Home Screen for The Cockpit. It has 4 sections:\n\n1. Today's Schedule: Card list showing each class (time, room, instructor) from my schedules cache in Supabase\n2. Dining Menu: Fetched from an Edge Function I'll build separately\n3. Quick Links: Buttons that open MyJAXState, DUO, OmniAlert, Everyday, JSU Athletics via deep link or URL\n4. First-Launch Modal: Shows once, prompts user to download MyJAXState and OmniAlert\n\nPlease build the React Native screen component with proper TypeScript types. Use the useAuth() hook for the user's name and role."}
-]},
-
-{id:3,title:"AV Guides, Maps & Analytics",weeks:"Weeks 19–28",duration:"~10 weeks",
-summary:"Room-specific AV how-to guides, interactive campus maps with wayfinding, and an analytics dashboard for IT leadership.",
-concepts:[
-{title:"Structured Content in Supabase (AV Guides)",
-content:"AV guides are stored as structured JSON in Supabase, not as PDFs or images. Each room has a guide with steps:\n\n{\n  \"room_id\": \"mah-130\",\n  \"begin_class\": [\n    { \"step\": 1, \"text\": \"Turn on projector using remote\", \"image_url\": \"...\" },\n    { \"step\": 2, \"text\": \"Switch input to HDMI 1\", \"image_url\": \"...\" }\n  ],\n  \"end_class\": [\n    { \"step\": 1, \"text\": \"Power off projector\", \"image_url\": \"...\" }\n  ],\n  \"version\": 3,\n  \"updated_by\": \"tech-user-id\",\n  \"updated_at\": \"2026-05-01T10:00:00Z\"\n}\n\nVersioning means IT techs can update guides in-app without losing history. Every edit creates a new version in an av_guide_versions table.",
-fc:{q:"Why store AV guides as structured JSON instead of PDF files?",a:"JSON renders natively as step-by-step cards in the app (better UX). It's searchable, versionable, and editable by IT techs directly in the app. A PDF would need a viewer and can't be updated without re-uploading."}},
-{title:"Maps with react-native-maps",
-content:"react-native-maps renders Google Maps or Apple Maps in your app. For indoor floor plans:\n\n1. Create SVG or tile-based floor plans for each building\n2. Overlay them on the map as custom tile layers positioned to match the building's real coordinates\n3. Tapping a room on the floor plan opens the room card\n4. Wayfinding uses the device's GPS + floor plan data to show walking directions\n\nStart with the 4 buildings with the most AV rooms: Martin Hall, Merrill Building, Stone Center, Ayers Hall. You can expand later.",
-fc:{q:"What is a tile overlay in react-native-maps?",a:"A custom image layer positioned over the real map at specific coordinates. You use these to show indoor floor plans on top of the building's footprint on the map. The floor plan aligns with the building's real-world position."}},
-{title:"Analytics with Aggregated Queries",
-content:"The analytics dashboard doesn't query raw data — it queries aggregated views. You create PostgreSQL views or functions:\n\n• Ticket volume by building (last 30 days)\n• Average resolution time by issue type\n• Most common issues (count of each emoji/category)\n• Room utilization rate (scheduled hours / available hours)\n\nThese run as database queries, not client-side math. For performance, you can materialize these as Supabase database functions that run on a schedule.\n\nOnly IT Tech and Admin roles can access this screen — enforced by both UI rendering and Edge Function role checks.",
-fc:{q:"Why calculate analytics in the database instead of fetching all tickets and calculating in the app?",a:"Performance and security. Aggregating thousands of tickets on a phone is slow and drains battery. Doing it in PostgreSQL is fast. Also, the app would need access to ALL tickets, which violates least privilege for non-tech users."}}
-],
-exercises:[
-{title:"Exercise: AV Guide JSON Schema",type:"code",
-prompt:"Write a TypeScript interface for an AV guide that includes: room ID, building, begin-class steps, end-class steps, a troubleshooting section, version number, and who last updated it. Each step has a number, text instruction, and optional image URL.",
-solution:"interface AVGuideStep {\n  step: number;\n  text: string;\n  imageUrl?: string;\n}\n\ninterface TroubleshootingItem {\n  issue: string;\n  solution: string;\n  escalate: boolean; // true = suggest filing a ticket\n}\n\ninterface AVGuide {\n  roomId: string;\n  building: string;\n  beginClass: AVGuideStep[];\n  endClass: AVGuideStep[];\n  troubleshooting: TroubleshootingItem[];\n  version: number;\n  updatedBy: string;\n  updatedAt: string; // ISO timestamp\n}"}
-],
-prompts:[
-{title:"Build the AV Guide Screen",desc:"Room-specific how-to with inline ticket creation.",
-cli:'claude "Build an AV Guide screen for The Cockpit. It fetches the guide for the user\'s current scheduled room from Supabase av_guides table. Display as step cards with BEGIN CLASS and END CLASS sections. Each step shows number, text, and optional image. Add a Still need help? floating button that opens the ticket creation form pre-filled with the current room. IT Tech role sees an Edit Guide button that enables inline editing of steps with version tracking. Use TypeScript and React Native components."',
-chat:"I need an AV Guide screen that:\n1. Detects the user's current room from their schedule\n2. Fetches that room's AV guide from Supabase (JSON format)\n3. Shows step-by-step cards for BEGIN CLASS and END CLASS\n4. Has a \"Still need help?\" button → opens ticket form pre-filled with room\n5. IT Techs see an \"Edit\" button to modify steps in-app\n6. Edits create a new version (don't overwrite history)\n\nPlease build the React Native screen with TypeScript. Include the Supabase query and the edit/save logic."}
-]},
-
-{id:4,title:"Geofencing, Monitoring & Automation",weeks:"Weeks 29–36",duration:"~8 weeks",
-summary:"Location-based notifications, automatic projector monitoring via Epson webhooks, and department-specific role extensions.",
-concepts:[
-{title:"Geofencing with expo-location",
-content:"Geofencing creates invisible boundaries around buildings. When a phone crosses one, your app is woken up (even if backgrounded) and can act.\n\nSetup:\nLocation.startGeofencingAsync(\"BUILDING_FENCES\", [\n  { latitude: 33.8209, longitude: -85.7653, radius: 50, identifier: \"merrill\" },\n  { latitude: 33.8215, longitude: -85.7648, radius: 50, identifier: \"martin\" },\n]);\n\nThis requires \"Always Allow\" location permission — many users will deny this. Fallbacks:\n1. WiFi hub: Determine proximity from which campus WiFi access point the device is connected to\n2. Schedule-based: If a student has a class in Merrill at 2:00 PM and the notification is about Merrill at 2:30 PM, send it anyway\n\nAll location data is anonymized. You never store individual user positions.",
-fc:{q:"What are the two fallback methods if a user denies 'Always Allow' location permission?",a:"1. WiFi hub association — infer which building they're near based on which campus WiFi access point they're connected to. 2. Schedule-based proximity — if they have a class in that building near the notification's time, send it regardless of location."}},
-{title:"Webhooks — Automatic Projector Monitoring",
-content:"A webhook is the reverse of an API call. Instead of your app calling Epson, Epson calls your Edge Function when something happens.\n\nFlow:\n1. Epson monitoring system detects projector error in MAH 130\n2. Epson sends HTTP POST to your Edge Function: /api/webhooks/epson\n3. Edge Function validates the payload (is this really from Epson?)\n4. Maps the projector serial number to a room in your rooms table\n5. Creates a KACE ticket automatically\n6. Updates room_statuses to 'known_issue'\n7. Sends push notification to IT techs\n\nNo human involved. The projector breaks, and within seconds the ticket exists and techs are notified.",
-fc:{q:"How does the Edge Function verify a webhook is really from Epson and not a spoofed request?",a:"Typically via a shared secret or HMAC signature. Epson includes a hash of the payload signed with a secret key. Your Edge Function computes the same hash and compares. If they match, it's legitimate."}},
-{title:"Department Role Extensions",
-content:"Post-launch, different departments will want custom UIs:\n• Custodians: Room cleaning schedules, supply requests\n• Electricians: Power system alerts, maintenance logs\n• Administration: Campus-wide analytics, policy announcements\n\nThe architecture supports this via Azure AD groups. Each department gets an AD group, which maps to an app role. New roles get new RLS policies and new UI screens. The app's tab navigator already conditionally renders based on role — adding a new role means adding a new tab configuration and the screens it includes.\n\nThis is why RBAC is built into the foundation, not bolted on later.",
-fc:{q:"How do you add a new department role (like Custodian) without rebuilding the app?",a:"1. Create an Azure AD group for custodians. 2. Add the role mapping in your Edge Function. 3. Write new RLS policies for custodian-specific data. 4. Add a new tab configuration in ROLE_TABS. 5. Build the custodian-specific screens. Push via OTA update."}}
-],
-exercises:[
-{title:"Exercise: Webhook Validation",type:"code",
-prompt:"Write a function that validates an incoming webhook from the Epson monitoring system. It receives the request body and a signature header. Use HMAC-SHA256 with a shared secret to verify the payload hasn't been tampered with.\n\nHint: Deno has a built-in crypto.subtle API.",
-solution:"async function validateWebhook(\n  body: string,\n  signatureHeader: string,\n  secret: string\n): Promise<boolean> {\n  const encoder = new TextEncoder();\n  const key = await crypto.subtle.importKey(\n    \"raw\",\n    encoder.encode(secret),\n    { name: \"HMAC\", hash: \"SHA-256\" },\n    false,\n    [\"sign\"]\n  );\n\n  const signature = await crypto.subtle.sign(\n    \"HMAC\",\n    key,\n    encoder.encode(body)\n  );\n\n  const expectedHex = Array.from(new Uint8Array(signature))\n    .map(b => b.toString(16).padStart(2, \"0\"))\n    .join(\"\");\n\n  return expectedHex === signatureHeader;\n}"},
-{title:"Exercise: Design the Notification Logic",type:"thinking",
-prompt:"An admin creates a geofenced notification: \"Water shut off in Merrill Hall 2:30–4:00 PM today.\" Design the logic that decides WHO gets this notification. Consider:\n- Users with \"Always Allow\" location near Merrill\n- Users on Merrill WiFi\n- Users with classes in Merrill between 1:30–4:00 PM\n- Users who denied all location permissions and aren't on WiFi\n\nWrite pseudocode for the notification targeting function."}
-],
-prompts:[
-{title:"Build the Epson Webhook Edge Function",desc:"Automatic ticket creation from projector monitoring.",
-cli:'claude "Create a Supabase Edge Function at /api/webhooks/epson for The Cockpit. It receives POST requests from Epson\'s projector monitoring system. Validate HMAC-SHA256 signature using EPSON_WEBHOOK_SECRET env var. Parse payload to extract projector serial number and error type. Look up room by projector serial in a projector_assets table. Create a KACE ticket via the existing /api/tickets Edge Function pattern. Update room_statuses to known_issue with the error description as the note. Send push notification to tech role users. Log to audit_log with action auto_ticket_projector. Return 200 on success, 401 on invalid signature, 500 on processing error."',
-chat:"I need a webhook Edge Function for automatic projector ticket creation. When Epson's monitoring system detects a projector error, it POSTs to my Edge Function. Build the full flow:\n\n1. Validate the webhook signature (HMAC-SHA256)\n2. Extract projector serial + error type from payload\n3. Map serial number to a room via projector_assets table\n4. Create a KACE ticket (reuse my existing ticket creation pattern)\n5. Update room_statuses to 'known_issue'\n6. Push notify IT techs\n7. Audit log the event\n\nInclude error handling for: invalid signature, unknown projector serial, KACE API failure.\n\nAlso create the projector_assets table migration (serial_number, room_id, model, install_date)."}
-]}
+// ══════════════════════════════════
+// SETTINGS
+// ══════════════════════════════════
+var CARDS=[
+  {id:'card-quick-access',label:'Quick Access'},
+  {id:'card-service-status',label:'Service Status'},
+  {id:'card-events',label:'Campus Events'},
+  {id:'card-scoreboard',label:'Gameday Scoreboard'},
+  {id:'card-dining',label:'Dining Hall'},
+  {id:'card-network',label:'Network Info'}
 ];
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// STATE & PERSISTENCE
-// ═══════════════════════════════════════════════════════════════════════════════
-
-const STORAGE_KEY = 'cockpit-learning-progress';
-let state = {
-  tab: 'Roadmap',
-  phase: null,
-  progress: {},
-  flipped: {},
-  solutions: {},
-  prompts: {},
-  gSearch: '',
-  gFilter: 'All'
-};
-
-function loadProgress() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) state.progress = JSON.parse(raw);
-  } catch(e) {}
-}
-
-function saveProgress() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.progress)); } catch(e) {}
-}
-
-function toggleProgress(key) {
-  state.progress[key] = !state.progress[key];
-  saveProgress();
-  render();
-}
-
-function getPhaseProgress(pid) {
-  const p = PHASES[pid];
-  const total = p.concepts.length + p.exercises.length + p.prompts.length;
-  let done = 0;
-  p.concepts.forEach((_,i) => { if(state.progress[`p${pid}-c${i}`]) done++; });
-  p.exercises.forEach((_,i) => { if(state.progress[`p${pid}-e${i}`]) done++; });
-  p.prompts.forEach((_,i) => { if(state.progress[`p${pid}-cp${i}`]) done++; });
-  return { done, total, pct: total ? Math.round(done/total*100) : 0 };
-}
-
-function getTotalProgress() {
-  let done=0, total=0;
-  PHASES.forEach(p => { const r=getPhaseProgress(p.id); done+=r.done; total+=r.total; });
-  return { done, total, pct: total ? Math.round(done/total*100) : 0 };
-}
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// RENDERING
-// ═══════════════════════════════════════════════════════════════════════════════
-
-function h(tag, attrs, ...children) {
-  const el = document.createElement(tag);
-  if (attrs) Object.entries(attrs).forEach(([k,v]) => {
-    if (k === 'onclick' || k === 'oninput') el[k] = v;
-    else if (k === 'className') el.className = v;
-    else if (k === 'innerHTML') el.innerHTML = v;
-    else if (k === 'disabled') { if(v) el.setAttribute('disabled',''); }
-    else el.setAttribute(k, v);
+function getVis(){try{return JSON.parse(localStorage.getItem('jsu_cards'))||{};}catch(e){return {};}}
+function saveVis(v){localStorage.setItem('jsu_cards',JSON.stringify(v));}
+function applyVis(){
+  var v=getVis();
+  CARDS.forEach(function(c){
+    var el=document.getElementById(c.id);
+    if(el)el.style.display=v[c.id]===false?'none':'';
   });
-  children.flat().forEach(c => {
-    if (c == null) return;
-    el.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+  // Handle dual-row parent visibility for both rows
+  var dualRows=document.querySelectorAll('.dual-row');
+  dualRows.forEach(function(dr){
+    var children=dr.querySelectorAll('.panel');
+    var visCount=0;
+    children.forEach(function(ch){if(ch.style.display!=='none')visCount++;});
+    if(visCount===0)dr.style.display='none';
+    else{dr.style.display='';dr.style.gridTemplateColumns=visCount>1?'55fr 45fr':'1fr';}
   });
-  return el;
 }
-
-function renderTabBar() {
-  const bar = document.getElementById('tab-bar');
-  bar.innerHTML = '';
-  const tabs = [
-    {name:'Roadmap',icon:'◈'},{name:'Learn',icon:'◉'},{name:'Glossary',icon:'◎'},{name:'Progress',icon:'◆'}
-  ];
-  tabs.forEach(t => {
-    const btn = h('button', {
-      className: 'tab-btn' + (state.tab===t.name?' active':''),
-      onclick: () => { state.tab=t.name; render(); }
-    },
-      h('span',{className:'tab-icon'},t.icon),
-      h('span',{className:'tab-label'},t.name)
-    );
-    bar.appendChild(btn);
+function renderSettingsCards(){
+  var list=document.getElementById('settings-cards-list');
+  var v=getVis();
+  list.innerHTML=CARDS.map(function(c){
+    var checked=v[c.id]!==false;
+    return '<div class="modal-row"><span class="modal-row-label">'+c.label+'</span>'
+      +'<label class="ios-toggle"><input type="checkbox" data-card="'+c.id+'" '+(checked?'checked':'')+'/><div class="ios-track"></div><div class="ios-thumb"></div></label></div>';
+  }).join('');
+  list.querySelectorAll('input[data-card]').forEach(function(inp){
+    inp.addEventListener('change',function(){var v2=getVis();v2[inp.dataset.card]=inp.checked;saveVis(v2);applyVis();});
   });
 }
 
-function renderHeader() {
-  const tp = getTotalProgress();
-  document.getElementById('hdr-bar').style.width = tp.pct+'%';
-  document.getElementById('hdr-pct').textContent = tp.pct+'%';
+// RSS ribbon toggle
+document.getElementById('setting-rss-ribbon').addEventListener('change',function(){
+  localStorage.setItem('jsu_rss_ribbon',this.checked?'on':'off');
+  applyRibbon();
+});
+function applyRibbon(){
+  var on=localStorage.getItem('jsu_rss_ribbon')!=='off';
+  document.getElementById('headline-ribbon').classList.toggle('active',on);
 }
 
-function renderRoadmap(container) {
-  const wrap = h('div',{className:'tab-content'});
-  wrap.appendChild(h('h2',{className:'sec-title'},'Development Roadmap'));
-  wrap.appendChild(h('p',{className:'sec-desc'},'5 phases, 36 weeks. Tap a phase to start learning.'));
+document.getElementById('settings-btn').addEventListener('click',function(){
+  renderSettingsCards();renderFeedList();
+  document.getElementById('setting-rss-ribbon').checked=localStorage.getItem('jsu_rss_ribbon')!=='off';
+  document.getElementById('settings-overlay').classList.add('open');
+});
+document.getElementById('settings-close').addEventListener('click',function(){document.getElementById('settings-overlay').classList.remove('open');});
+document.getElementById('settings-overlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
 
-  PHASES.forEach((phase,i) => {
-    const prog = getPhaseProgress(phase.id);
-    const card = h('button',{className:'phase-card', onclick:()=>{ state.phase=phase.id; state.tab='Learn'; render(); }},
-      h('div',{className:'phase-hdr'},
-        h('span',{className:'phase-badge'},'Phase '+phase.id),
-        h('span',{className:'phase-dur'},phase.duration)
-      ),
-      h('div',{className:'phase-title'},phase.title),
-      h('p',{className:'phase-summary'},phase.summary),
-      h('div',{className:'phase-footer'},
-        h('div',{className:'bar-track'}, h('div',{className:'bar-fill',style:'width:'+prog.pct+'%'})),
-        h('span',{className:'bar-label'},prog.done+'/'+prog.total)
-      )
-    );
-    wrap.appendChild(card);
-    if (i < PHASES.length-1) wrap.appendChild(h('div',{className:'timeline-line'}));
+applyVis();applyRibbon();
+
+// ══════════════════════════════════
+// FONT SIZE SCALER
+// ══════════════════════════════════
+var savedFontSize=localStorage.getItem('jsu_fontsize')||'default';
+document.documentElement.setAttribute('data-fontsize',savedFontSize);
+function renderFontSizeBtns(){
+  var cur=document.documentElement.getAttribute('data-fontsize')||'default';
+  document.querySelectorAll('#fontsize-btns .fontsize-btn').forEach(function(btn){
+    btn.classList.toggle('active',btn.dataset.size===cur);
   });
-  container.appendChild(wrap);
 }
+document.getElementById('fontsize-btns').addEventListener('click',function(e){
+  var btn=e.target.closest('.fontsize-btn');
+  if(!btn)return;
+  var size=btn.dataset.size;
+  document.documentElement.setAttribute('data-fontsize',size);
+  localStorage.setItem('jsu_fontsize',size);
+  renderFontSizeBtns();
+});
+renderFontSizeBtns();
 
-function renderLearn(container) {
-  const wrap = h('div',{className:'tab-content'});
+// ══════════════════════════════════
+// FEEDS MANAGEMENT
+// ══════════════════════════════════
+var BUILTIN_FEEDS=[];
+function getUserFeeds(){try{return JSON.parse(localStorage.getItem('jsu_user_feeds'))||[];}catch(e){return[];}}
+function saveUserFeeds(f){localStorage.setItem('jsu_user_feeds',JSON.stringify(f));}
+function getAllFeeds(){return BUILTIN_FEEDS.concat(getUserFeeds());}
 
-  if (state.phase === null) {
-    wrap.appendChild(h('div',{className:'empty'},
-      h('div',{className:'empty-icon'},'◉'),
-      h('p',{className:'empty-text'},'Select a phase from the Roadmap tab to begin learning')
-    ));
-    container.appendChild(wrap);
+function renderFeedList(){
+  var list=document.getElementById('feed-list');
+  var userFeeds=getUserFeeds();
+  if(!userFeeds.length){
+    list.innerHTML='<div style="font-family:var(--font-mono);font-size:10px;color:var(--dim);padding:8px 0;">No feeds added yet. Add RSS feed URLs below.</div>';
     return;
   }
-
-  const phase = PHASES[state.phase];
-  const prog = getPhaseProgress(phase.id);
-
-  // Nav
-  const nav = h('div',{className:'phase-nav'},
-    h('button',{className:'phase-nav-btn',disabled:phase.id===0,onclick:()=>{state.phase=phase.id-1;render();}},'← Prev'),
-    h('span',{className:'phase-nav-label'},'Phase '+phase.id),
-    h('button',{className:'phase-nav-btn',disabled:phase.id===4,onclick:()=>{state.phase=phase.id+1;render();}},'Next →')
-  );
-  wrap.appendChild(nav);
-  wrap.appendChild(h('h2',{className:'sec-title'},phase.title));
-  wrap.appendChild(h('p',{className:'sec-desc'},phase.weeks+' · '+phase.duration));
-  wrap.appendChild(h('div',{className:'learn-bar'},h('div',{className:'learn-fill',style:'width:'+prog.pct+'%'})));
-  wrap.appendChild(h('p',{className:'sec-desc',style:'margin-top:4px'},prog.done+' of '+prog.total+' items complete'));
-
-  // Concepts
-  wrap.appendChild(h('h3',{className:'learn-sec'},h('span',null,'📖'),' Concepts'));
-  phase.concepts.forEach((c,i) => {
-    const key = `p${phase.id}-c${i}`;
-    const fcKey = `p${phase.id}-fc${i}`;
-    const card = h('div',{className:'card'});
-    card.appendChild(h('div',{className:'card-hdr'},
-      h('button',{className:'chk'+(state.progress[key]?' done':''),onclick:()=>toggleProgress(key)}, state.progress[key]?'✓':''),
-      h('h4',{className:'card-title'},c.title)
-    ));
-    card.appendChild(h('div',{className:'concept-body'},c.content));
-    if (c.fc) {
-      const flipped = state.flipped[fcKey];
-      const fcBtn = h('button',{className:'flashcard',onclick:()=>{state.flipped[fcKey]=!state.flipped[fcKey];render();}},
-        h('div',{className:'fc-label'},'FLASHCARD — '+(flipped?'ANSWER':'TAP TO FLIP')),
-        h('p',{className:'fc-text'},flipped?c.fc.a:c.fc.q)
-      );
-      card.appendChild(fcBtn);
+  list.innerHTML=userFeeds.map(function(f,i){
+    return '<div class="feed-row" id="feed-row-'+i+'">'
+      +'<span class="feed-status-dot" id="feed-dot-'+i+'" style="width:8px;height:8px;border-radius:50%;background:var(--dim);flex-shrink:0;" title="Not tested"></span>'
+      +'<span class="feed-label">'+f.label+'</span>'
+      +'<span class="feed-url">'+f.url+'</span>'
+      +'<span class="feed-test" data-fi="'+i+'" style="font-size:9px;color:var(--accent);cursor:pointer;flex-shrink:0;padding:0 4px;font-family:var(--font-mono);font-weight:600;" title="Test feed">TEST</span>'
+      +'<span class="feed-del" data-fi="'+i+'">&times;</span>'
+      +'</div>';
+  }).join('');
+  list.querySelectorAll('.feed-del').forEach(function(el){
+    el.addEventListener('click',function(){
+      var uf=getUserFeeds();uf.splice(parseInt(el.dataset.fi),1);saveUserFeeds(uf);
+      // Remove from cache too
+      var cache=getRSSCache();delete cache[uf.url];saveRSSCache(cache);
+      renderFeedList();renderFromCache();
+    });
+  });
+  // Test buttons — check individual feed and show green/red dot
+  list.querySelectorAll('.feed-test').forEach(function(el){
+    el.addEventListener('click',function(){
+      var idx=parseInt(el.dataset.fi);
+      var feed=getUserFeeds()[idx];
+      if(!feed)return;
+      var dot=document.getElementById('feed-dot-'+idx);
+      dot.style.background='var(--yellow)';dot.title='Testing...';
+      el.textContent='...';
+      fetchRSS(feed.url,2).then(function(items){
+        dot.style.background='var(--green)';dot.style.boxShadow='0 0 4px var(--green)';
+        dot.title='Working \u2014 '+items.length+' items';
+        el.textContent='\u2713';el.style.color='var(--green)';
+      }).catch(function(){
+        dot.style.background='var(--red-alert)';dot.style.boxShadow='0 0 4px var(--red-alert)';
+        dot.title='Failed \u2014 check URL';
+        el.textContent='\u2715';el.style.color='var(--red-alert)';
+      });
+    });
+  });
+  // Show cached status immediately (no network hit)
+  var cache=getRSSCache();
+  userFeeds.forEach(function(f,i){
+    var dot=document.getElementById('feed-dot-'+i);
+    var testEl=list.querySelector('.feed-test[data-fi="'+i+'"]');
+    var c=cache[f.url];
+    if(c&&c.items&&c.items.length&&!c.error){
+      // Has cached data and no error
+      if(dot){dot.style.background='var(--green)';dot.style.boxShadow='0 0 4px var(--green)';
+        var age=Date.now()-c.ts;
+        var mins=Math.round(age/60000);
+        dot.title='Cached \u2014 '+c.items.length+' items ('+mins+'m ago)';}
+      if(testEl){testEl.textContent='\u2713';testEl.style.color='var(--green)';}
+    }else if(c&&c.error&&c.items&&c.items.length){
+      // Has stale cached data
+      if(dot){dot.style.background='var(--yellow)';dot.style.boxShadow='0 0 4px var(--yellow)';dot.title='Stale \u2014 last refresh failed';}
+      if(testEl){testEl.textContent='!';testEl.style.color='var(--yellow)';}
+    }else if(c&&c.error){
+      // Failed, no cached data
+      if(dot){dot.style.background='var(--red-alert)';dot.style.boxShadow='0 0 4px var(--red-alert)';dot.title='Failed';}
+      if(testEl){testEl.textContent='\u2715';testEl.style.color='var(--red-alert)';}
     }
-    wrap.appendChild(card);
+    // else: never tested, stays gray
   });
+}
+document.getElementById('add-feed-btn').addEventListener('click',function(){
+  var url=document.getElementById('add-feed-url').value.trim();
+  var name=document.getElementById('add-feed-name').value.trim()||'Custom';
+  if(!url)return;
+  if(url.indexOf('http')!==0)url='https://'+url;
+  var uf=getUserFeeds();uf.push({url:url,label:name});saveUserFeeds(uf);
+  document.getElementById('add-feed-url').value='';document.getElementById('add-feed-name').value='';
+  renderFeedList();
+  // Fetch just this one feed immediately — won't hit rate limit
+  fetchSingleFeedNow({url:url,label:name});
+});
 
-  // Exercises
-  wrap.appendChild(h('h3',{className:'learn-sec'},h('span',null,'🛠'),' Exercises'));
-  phase.exercises.forEach((ex,i) => {
-    const key = `p${phase.id}-e${i}`;
-    const solKey = `p${phase.id}-sol${i}`;
-    const card = h('div',{className:'card'});
-    card.appendChild(h('div',{className:'card-hdr'},
-      h('button',{className:'chk'+(state.progress[key]?' done':''),onclick:()=>toggleProgress(key)}, state.progress[key]?'✓':''),
-      h('h4',{className:'card-title'},ex.title)
-    ));
-    card.appendChild(h('span',{className:'ex-type'},ex.type==='code'?'Coding':'Thinking'));
-    card.appendChild(h('div',{className:'concept-body'},ex.prompt));
-    if (ex.solution) {
-      const showing = state.solutions[solKey];
-      card.appendChild(h('button',{className:'sol-toggle',onclick:()=>{state.solutions[solKey]=!state.solutions[solKey];render();}},
-        showing?'Hide Solution ▲':'Show Solution ▼'));
-      if (showing) card.appendChild(h('pre',{className:'sol-code'},ex.solution));
+// ══════════════════════════════════
+// CLOCK
+// ══════════════════════════════════
+function tick(){
+  var n=new Date();
+  document.getElementById('clock').textContent=n.toLocaleTimeString('en-US',{hour12:false});
+  document.getElementById('date').textContent=n.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase();
+}
+tick();setInterval(tick,1000);
+
+// ══════════════════════════════════
+// QUICK ACCESS — collapsible columns
+// ══════════════════════════════════
+(function(){
+  var saved;try{saved=JSON.parse(localStorage.getItem('jsu_collapsed_cols'))||{};}catch(e){saved={};}
+  function apply(){
+    document.querySelectorAll('.lg-col').forEach(function(col){
+      var key=col.dataset.col;
+      if(saved[key])col.classList.add('collapsed');else col.classList.remove('collapsed');
+    });
+  }
+  document.querySelectorAll('[data-col-toggle]').forEach(function(title){
+    title.addEventListener('click',function(){
+      var key=title.dataset.colToggle;
+      saved[key]=!saved[key];
+      localStorage.setItem('jsu_collapsed_cols',JSON.stringify(saved));
+      apply();
+    });
+  });
+  apply();
+})();
+
+// User quick links
+(function(){
+  function load(){try{return JSON.parse(localStorage.getItem('jsu_user_links'))||[];}catch(e){return[];}}
+  function save(arr){localStorage.setItem('jsu_user_links',JSON.stringify(arr));}
+  function render(){
+    var grid=document.getElementById('user-links-grid');
+    var links=load();
+    grid.innerHTML=links.map(function(l,i){
+      return '<a href="'+l.url+'" target="_blank" class="user-link-chip"><span class="ulc-name">'+l.name+'</span><span class="ulc-del" data-idx="'+i+'">&times;</span></a>';
+    }).join('');
+    grid.querySelectorAll('.ulc-del').forEach(function(btn){
+      btn.addEventListener('click',function(e){
+        e.preventDefault();e.stopPropagation();
+        var arr=load();arr.splice(parseInt(btn.dataset.idx),1);save(arr);render();
+      });
+    });
+  }
+  document.getElementById('add-user-link-btn').addEventListener('click',function(){
+    var name=prompt('Link name:');if(!name||!name.trim())return;
+    var url=prompt('URL:');if(!url||!url.trim())return;
+    if(url.indexOf('http')!==0)url='https://'+url;
+    var arr=load();arr.push({name:name.trim(),url:url.trim()});save(arr);render();
+  });
+  render();
+})();
+
+// ══════════════════════════════════
+// WEATHER (ribbon only)
+// ══════════════════════════════════
+var WI={0:'\u2600\uFE0F',1:'\uD83C\uDF24\uFE0F',2:'\u26C5',3:'\u2601\uFE0F',45:'\uD83C\uDF2B\uFE0F',48:'\uD83C\uDF2B\uFE0F',51:'\uD83C\uDF26\uFE0F',53:'\uD83C\uDF26\uFE0F',55:'\uD83C\uDF27\uFE0F',61:'\uD83C\uDF27\uFE0F',63:'\uD83C\uDF27\uFE0F',65:'\uD83C\uDF27\uFE0F',71:'\uD83C\uDF28\uFE0F',73:'\uD83C\uDF28\uFE0F',75:'\u2744\uFE0F',80:'\uD83C\uDF26\uFE0F',81:'\uD83C\uDF26\uFE0F',82:'\u26C8\uFE0F',95:'\u26C8\uFE0F',99:'\u26C8\uFE0F'};
+var WD={0:'Clear Sky',1:'Mostly Clear',2:'Partly Cloudy',3:'Overcast',45:'Foggy',48:'Icy Fog',51:'Light Drizzle',53:'Drizzle',55:'Heavy Drizzle',61:'Light Rain',63:'Rain',65:'Heavy Rain',71:'Light Snow',73:'Snow',75:'Heavy Snow',80:'Rain Showers',81:'Showers',82:'Heavy Showers',95:'Thunderstorm',99:'Hail Storm'};
+function loadWeather(){
+  fetch('https://api.open-meteo.com/v1/forecast?latitude=33.8126&longitude=-85.7616&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m,apparent_temperature&temperature_unit=fahrenheit&wind_speed_unit=mph')
+  .then(function(r){return r.json();})
+  .then(function(wx){
+    var c=wx.current,code=c.weather_code;
+    document.getElementById('wr-icon').textContent=WI[code]||'\uD83C\uDF21\uFE0F';
+    document.getElementById('wr-temp').textContent=Math.round(c.temperature_2m)+'\u00B0F';
+    document.getElementById('wr-desc').textContent=WD[code]||'';
+  }).catch(function(){
+    document.getElementById('wr-temp').textContent='--';
+    document.getElementById('wr-desc').textContent='N/A';
+  });
+  fetch('https://api.weather.gov/alerts/active?point=33.8126,-85.7616')
+  .then(function(r){return r.json();})
+  .then(function(al){
+    var severe=['Tornado Warning','Tornado Watch','Severe Thunderstorm Warning','Flash Flood Warning','Winter Storm Warning','Extreme Wind Warning'];
+    var hits=al.features?al.features.filter(function(f){return severe.indexOf(f.properties.event)>-1;}):[];
+    if(hits.length){document.getElementById('alert-banner').style.display='block';document.getElementById('alert-text').textContent=hits.map(function(f){return f.properties.event;}).join(' \u2022 ');}
+    else{document.getElementById('alert-banner').style.display='none';}
+  }).catch(function(){document.getElementById('alert-banner').style.display='none';});
+}
+loadWeather();setInterval(loadWeather,900000);
+
+// ══════════════════════════════════
+// NETWORK (collapsible)
+// ══════════════════════════════════
+var netCollapsed=localStorage.getItem('jsu_net_collapsed')==='true';
+function applyNetCollapse(){
+  document.getElementById('net-body').classList.toggle('collapsed',netCollapsed);
+  document.getElementById('net-chevron').textContent=netCollapsed?'\u25B6':'\u25BC';
+}
+document.getElementById('net-toggle').addEventListener('click',function(e){
+  if(e.target.classList.contains('rbtn'))return;
+  netCollapsed=!netCollapsed;
+  localStorage.setItem('jsu_net_collapsed',netCollapsed);
+  applyNetCollapse();
+  if(!netCollapsed&&document.getElementById('network-body').querySelector('.nloading'))loadNetwork();
+});
+applyNetCollapse();
+
+function loadNetwork(){
+  var el=document.getElementById('network-body');
+  el.innerHTML='<div class="nloading">FETCHING...</div>';
+  fetch('https://ipapi.co/json/')
+  .then(function(r){return r.json();})
+  .then(function(d){
+    var ua=navigator.userAgent;
+    var br='Unknown';
+    if(ua.indexOf('Firefox')>-1)br='Firefox';else if(ua.indexOf('Edg')>-1)br='Edge';else if(ua.indexOf('Chrome')>-1)br='Chrome';else if(ua.indexOf('Safari')>-1)br='Safari';
+    var os='Unknown';
+    if(ua.indexOf('Windows NT 10')>-1)os='Windows 10/11';else if(ua.indexOf('Windows')>-1)os='Windows';else if(ua.indexOf('Mac')>-1)os='macOS';else if(ua.indexOf('Linux')>-1)os='Linux';
+    el.innerHTML='<div class="net-grid">'
+      +'<div class="net-item"><div class="net-label">PUBLIC IP</div><div class="net-value">'+( d.ip||'N/A')+'</div></div>'
+      +'<div class="net-item"><div class="net-label">ISP / ORG</div><div class="net-value">'+((d.org||'N/A').replace(/^AS\d+ /,''))+'</div></div>'
+      +'<div class="net-item"><div class="net-label">LOCATION</div><div class="net-value">'+(d.city||'')+', '+(d.region||'')+'</div></div>'
+      +'<div class="net-item"><div class="net-label">BROWSER</div><div class="net-value">'+br+'</div></div>'
+      +'<div class="net-item"><div class="net-label">OS</div><div class="net-value">'+os+'</div></div>'
+      +'<div class="net-item"><div class="net-label">RESOLUTION</div><div class="net-value">'+screen.width+'x'+screen.height+'</div></div>'
+      +'</div>';
+  }).catch(function(){el.innerHTML='<div class="nloading">UNAVAILABLE</div>';});
+}
+document.getElementById('net-refresh').addEventListener('click',function(){loadNetwork();});
+loadNetwork();
+
+// ══════════════════════════════════
+// SERVICE STATUS — DIRECT CORS FETCH
+// ══════════════════════════════════
+// Statuspage APIs (Atlassian-hosted) serve Access-Control-Allow-Origin: *
+// so direct browser fetch works. Microsoft has no Statuspage API,
+// so we do no-cors reachability pings against actual MS service endpoints.
+// mode:'no-cors' returns an opaque response (can't read body) but the fetch
+// RESOLVES if the server responded at all. If the server is truly down,
+// fetch() throws a TypeError network error. This is the only reliable way
+// to check non-CORS endpoints from a static page.
+
+var SVCS=[
+  // A-Z order. Statuspage = CORS JSON API. Ping = no-cors reachability. Gcors = CORS reachability.
+  {name:'Azure',type:'ping',url:'https://portal.azure.com',statusUrl:'https://azure.status.microsoft/en-us/status'},
+  {name:'Canvas',type:'statuspage',base:'https://status.instructure.com'},
+  {name:'Cloudflare',type:'statuspage',base:'https://www.cloudflarestatus.com'},
+  {name:'Ellucian',type:'statuspage',base:'https://status.elluciancloud.com'},
+  {name:'Google Workspace',type:'gcors',url:'https://www.googleapis.com/discovery/v1/apis',statusUrl:'https://www.google.com/appsstatus/dashboard/'},
+  {name:'Jamf Cloud',type:'statuspage',base:'https://status.jamf.com'},
+  {name:'Microsoft 365',type:'ping',url:'https://outlook.office.com',statusUrl:'https://status.office365.com'},
+  {name:'Teams',type:'ping',url:'https://teams.microsoft.com',statusUrl:'https://status.office365.com'},
+  {name:'Zoom',type:'ping',url:'https://zoom.us',statusUrl:'https://status.zoom.us'}
+];
+
+function checkSvc(s){
+  if(s.type==='statuspage'){
+    var statusUrl=s.base+'/api/v2/status.json';
+    var incUrl=s.base+'/api/v2/incidents/unresolved.json';
+    return Promise.all([
+      fetch(statusUrl,{mode:'cors',cache:'no-cache'}).then(function(r){return r.ok?r.json():null;}).catch(function(){return null;}),
+      fetch(incUrl,{mode:'cors',cache:'no-cache'}).then(function(r){return r.ok?r.json():null;}).catch(function(){return null;})
+    ]).then(function(res){
+      var sd=res[0],id=res[1];
+      var status='unknown',incident='';
+      if(sd&&sd.status){
+        if(sd.status.indicator==='none')status='ok';
+        else if(sd.status.indicator==='minor')status='warn';
+        else if(sd.status.indicator)status='down';
+      }
+      if(id&&id.incidents&&id.incidents.length){
+        var inc=id.incidents[0];
+        incident=inc.name||'';
+        if(inc.incident_updates&&inc.incident_updates.length){
+          var upd=inc.incident_updates[0];
+          if(upd.body)incident=upd.body.replace(/<[^>]+>/g,'').substring(0,140);
+        }
+      }
+      return{status:status,incident:incident,link:s.base};
+    });
+  }
+  if(s.type==='gcors'){
+    // Google supports CORS — real reachability check
+    return fetch(s.url,{mode:'cors',cache:'no-cache'})
+      .then(function(r){return{status:r.ok?'ok':'warn',incident:r.ok?'':'HTTP '+r.status,link:s.statusUrl};})
+      .catch(function(){return{status:'warn',incident:'Unreachable',link:s.statusUrl};});
+  }
+  // no-cors ping for Microsoft services
+  // An opaque response means the server responded (service is up)
+  // A network error means the server is truly unreachable
+  return fetch(s.url,{mode:'no-cors',cache:'no-cache'})
+    .then(function(){
+      return{status:'ok',incident:'',link:s.statusUrl};
+    })
+    .catch(function(){
+      return{status:'down',incident:'Service unreachable',link:s.statusUrl};
+    });
+}
+
+function loadStatus(){
+  var grid=document.getElementById('svc-grid');
+  grid.innerHTML=SVCS.map(function(s){
+    return '<div class="svc-row" id="sc-'+s.name.replace(/\s+/g,'_')+'"><div class="svc-dot loading"></div><div class="svc-info"><div class="svc-name">'+s.name+'</div></div></div>';
+  }).join('');
+  var promises=SVCS.map(function(s){
+    return checkSvc(s).then(function(r){
+      var row=document.getElementById('sc-'+s.name.replace(/\s+/g,'_'));
+      if(!row)return;
+      row.className='svc-row '+r.status;
+      if(r.link){row.style.cursor='pointer';row.onclick=function(){window.open(r.link,'_blank');};}
+      row.querySelector('.svc-dot').className='svc-dot '+r.status;
+      var incHtml=r.incident?'<div class="svc-incident" title="'+r.incident.replace(/"/g,'&quot;')+'">'+r.incident+'</div>':'';
+      row.querySelector('.svc-info').innerHTML='<div class="svc-name">'+s.name+'</div>'+incHtml;
+    });
+  });
+  Promise.all(promises).then(function(){
+    document.getElementById('svc-updated').textContent='LAST CHECKED: '+new Date().toLocaleTimeString('en-US',{hour12:false});
+  });
+}
+loadStatus();
+setInterval(loadStatus,300000);
+document.getElementById('svc-refresh').addEventListener('click',loadStatus);
+
+// ══════════════════════════════════
+// WLJS RADIO PLAYER
+// ══════════════════════════════════
+(function(){
+  var STREAM_URL='https://s8.yesstreaming.net:17014/stream';
+  var audio=document.getElementById('radio-audio');
+  var bar=document.getElementById('radio-bar');
+  var playBtn=document.getElementById('radio-play');
+  var muteBtn=document.getElementById('radio-mute');
+  var volSlider=document.getElementById('radio-vol');
+  var statusEl=document.getElementById('radio-status');
+  var eqEl=document.getElementById('radio-eq');
+  var closeBtn=document.getElementById('radio-close');
+  var settingBar=document.getElementById('setting-radio-bar');
+  var settingMuted=document.getElementById('setting-radio-muted');
+
+  var isPlaying=false;
+  var startMuted=localStorage.getItem('jsu_radio_muted')!=='false'; // default true
+  var barVisible=localStorage.getItem('jsu_radio_bar')!=='false'; // default true
+
+  function applyBarVisibility(){
+    bar.classList.toggle('hidden',!barVisible);
+    document.body.classList.toggle('radio-active',barVisible);
+  }
+
+  function updateMuteUI(){
+    var muted=audio.muted||audio.volume===0;
+    muteBtn.classList.toggle('muted',muted);
+    muteBtn.innerHTML=muted?'&#x1F507;':'&#x1F50A;';
+    volSlider.value=muted?0:Math.round(audio.volume*100);
+  }
+
+  function updatePlayUI(){
+    playBtn.innerHTML=isPlaying?'&#x23F8;':'&#x25B6;';
+    playBtn.classList.toggle('playing',isPlaying);
+    eqEl.classList.toggle('active',isPlaying);
+    statusEl.textContent=isPlaying?'LIVE':'STOPPED';
+    statusEl.style.color=isPlaying?'var(--green)':'var(--muted)';
+  }
+
+  // Init volume
+  var savedVol=parseFloat(localStorage.getItem('jsu_radio_vol'))||0.5;
+  audio.volume=startMuted?0:savedVol;
+  audio.muted=startMuted;
+  volSlider.value=startMuted?0:Math.round(savedVol*100);
+  updateMuteUI();
+
+  // Autoplay if start muted is off and bar is visible
+  if(!startMuted&&barVisible){
+    audio.src=STREAM_URL;
+    audio.load();
+    statusEl.textContent='CONNECTING';statusEl.style.color='var(--yellow)';
+    var autoP=audio.play();
+    if(autoP&&autoP.then){
+      autoP.then(function(){
+        // Autoplay worked — audio 'playing' event will update UI
+      }).catch(function(){
+        // Browser blocked autoplay — show waiting state, retry on first interaction
+        statusEl.textContent='TAP TO START';statusEl.style.color='var(--yellow)';
+        var resumeOnce=function(){
+          audio.play().catch(function(){});
+          document.removeEventListener('click',resumeOnce);
+          document.removeEventListener('keydown',resumeOnce);
+        };
+        document.addEventListener('click',resumeOnce);
+        document.addEventListener('keydown',resumeOnce);
+      });
     }
-    wrap.appendChild(card);
-  });
+    // Don't set isPlaying=true here — let the 'playing' event handle it
+  }
 
-  // Claude Prompts
-  wrap.appendChild(h('h3',{className:'learn-sec'},h('span',null,'🤖'),' Claude Prompts'));
-  phase.prompts.forEach((cp,i) => {
-    const key = `p${phase.id}-cp${i}`;
-    const expKey = `p${phase.id}-exp${i}`;
-    const card = h('div',{className:'card'});
-    card.appendChild(h('div',{className:'card-hdr'},
-      h('button',{className:'chk'+(state.progress[key]?' done':''),onclick:()=>toggleProgress(key)}, state.progress[key]?'✓':''),
-      h('h4',{className:'card-title'},cp.title)
-    ));
-    card.appendChild(h('p',{className:'prompt-desc'},cp.desc));
-    const expanded = state.prompts[expKey];
-    card.appendChild(h('button',{className:'sol-toggle',onclick:()=>{state.prompts[expKey]=!state.prompts[expKey];render();}},
-      expanded?'Hide Prompts ▲':'View Prompts ▼'));
-    if (expanded) {
-      const pw = h('div',{className:'prompts-wrap'});
-      // CLI
-      const cliBlock = h('div',{className:'prompt-block'});
-      cliBlock.appendChild(h('div',{className:'prompt-label'},'CLAUDE CODE CLI'));
-      cliBlock.appendChild(h('div',{className:'prompt-code'},cp.cli));
-      const cliCopy = h('button',{className:'copy-btn',onclick:(e)=>{
-        navigator.clipboard.writeText(cp.cli).then(()=>{e.target.textContent='Copied!';e.target.classList.add('copied');setTimeout(()=>{e.target.textContent='Copy';e.target.classList.remove('copied');},1500);});
-      }},'Copy');
-      cliBlock.appendChild(cliCopy);
-      pw.appendChild(cliBlock);
-      // Chat
-      const chatBlock = h('div',{className:'prompt-block'});
-      chatBlock.appendChild(h('div',{className:'prompt-label'},'CHAT PROMPT'));
-      chatBlock.appendChild(h('div',{className:'prompt-code'},cp.chat));
-      const chatCopy = h('button',{className:'copy-btn',onclick:(e)=>{
-        navigator.clipboard.writeText(cp.chat).then(()=>{e.target.textContent='Copied!';e.target.classList.add('copied');setTimeout(()=>{e.target.textContent='Copy';e.target.classList.remove('copied');},1500);});
-      }},'Copy');
-      chatBlock.appendChild(chatCopy);
-      pw.appendChild(chatBlock);
-      card.appendChild(pw);
+  playBtn.addEventListener('click',function(){
+    if(isPlaying){
+      audio.pause();
+      audio.removeAttribute('src');
+      audio.load();
+      isPlaying=false;
+    }else{
+      audio.src=STREAM_URL;
+      audio.load();
+      var p=audio.play();
+      if(p&&p.catch)p.catch(function(){});
+      isPlaying=true;
     }
-    wrap.appendChild(card);
+    updatePlayUI();
   });
 
-  container.appendChild(wrap);
+  muteBtn.addEventListener('click',function(){
+    if(audio.muted||audio.volume===0){
+      audio.muted=false;
+      audio.volume=parseFloat(localStorage.getItem('jsu_radio_vol'))||0.5;
+    }else{
+      localStorage.setItem('jsu_radio_vol',audio.volume);
+      audio.muted=true;
+    }
+    updateMuteUI();
+  });
+
+  volSlider.addEventListener('input',function(){
+    var v=parseInt(volSlider.value)/100;
+    audio.volume=v;
+    audio.muted=v===0;
+    if(v>0)localStorage.setItem('jsu_radio_vol',v);
+    updateMuteUI();
+  });
+
+  closeBtn.addEventListener('click',function(){
+    barVisible=false;
+    localStorage.setItem('jsu_radio_bar','false');
+    applyBarVisibility();
+    if(isPlaying){audio.pause();audio.removeAttribute('src');audio.load();isPlaying=false;updatePlayUI();}
+  });
+
+  // Audio events
+  audio.addEventListener('playing',function(){isPlaying=true;updatePlayUI();});
+  audio.addEventListener('pause',function(){isPlaying=false;updatePlayUI();});
+  audio.addEventListener('error',function(){
+    isPlaying=false;updatePlayUI();
+    statusEl.textContent='ERROR';statusEl.style.color='var(--red-alert)';
+  });
+  audio.addEventListener('waiting',function(){statusEl.textContent='BUFFERING';statusEl.style.color='var(--yellow)';});
+
+  // Settings toggles
+  settingBar.checked=barVisible;
+  settingMuted.checked=startMuted;
+  settingBar.addEventListener('change',function(){
+    barVisible=settingBar.checked;
+    localStorage.setItem('jsu_radio_bar',barVisible?'true':'false');
+    applyBarVisibility();
+  });
+  settingMuted.addEventListener('change',function(){
+    startMuted=settingMuted.checked;
+    localStorage.setItem('jsu_radio_muted',startMuted?'true':'false');
+  });
+
+  // Restore settings on settings open
+  document.getElementById('settings-btn').addEventListener('click',function(){
+    settingBar.checked=localStorage.getItem('jsu_radio_bar')!=='false';
+    settingMuted.checked=localStorage.getItem('jsu_radio_muted')!=='false';
+  });
+
+  applyBarVisibility();
+})();
+
+// ══════════════════════════════════
+// DINING HALL — with meal toggle
+// ══════════════════════════════════
+(function(){
+  var MEALS=[
+    {name:'Breakfast',sH:6,sM:30,eH:10,eM:0,emoji:'\uD83C\uDF05'},
+    {name:'Lunch',sH:10,sM:30,eH:14,eM:0,emoji:'\u2600\uFE0F'},
+    {name:'Afternoon',sH:14,sM:0,eH:16,eM:30,emoji:'\uD83C\uDF24\uFE0F'},
+    {name:'Dinner',sH:16,sM:30,eH:20,eM:30,emoji:'\uD83C\uDF19'},
+    {name:'Late Night',sH:20,sM:30,eH:23,eM:59,emoji:'\uD83C\uDF03'}
+  ];
+  var MENU={
+    'Breakfast':[{station:'Grill',items:['Scrambled Eggs','Bacon','Sausage Patty','Hash Browns','Pancakes']},{station:'Bakery',items:['Biscuits & Gravy','Muffins','Toast','Fruit Cup']},{station:'Beverages',items:['Coffee','Orange Juice','Milk','Hot Tea']}],
+    'Lunch':[{station:'Entree',items:['Grilled Chicken','BBQ Pulled Pork','Baked Fish Fillet']},{station:'Sides',items:['Mac & Cheese','Green Beans','Mashed Potatoes','Cornbread']},{station:'Salad Bar',items:['Mixed Greens','Tomatoes','Cucumbers','Ranch','Italian']},{station:'Dessert',items:['Brownies','Cookies','Soft Serve']}],
+    'Afternoon':[{station:'Lite Fare',items:['Chicken Tenders','Fries','Onion Rings']},{station:'Grab & Go',items:['Wraps','Fruit','Chips','Bottled Water']}],
+    'Dinner':[{station:'Entree',items:['Roast Beef','Chicken Alfredo','Vegetable Stir-Fry']},{station:'Sides',items:['Rice Pilaf','Steamed Broccoli','Dinner Roll','Baked Potato']},{station:'Dessert',items:['Cake Slice','Pudding','Fresh Fruit']}],
+    'Late Night':[{station:'Late Bites',items:['Pizza Slices','Chicken Wings','Mozzarella Sticks']},{station:'Beverages',items:['Fountain Drinks','Coffee','Hot Chocolate']}]
+  };
+  var selectedMeal=null; // null = auto (current period)
+
+  function getCurrent(){
+    var now=new Date(),m=now.getHours()*60+now.getMinutes();
+    for(var i=0;i<MEALS.length;i++){var p=MEALS[i];if(m>=p.sH*60+p.sM&&m<=p.eH*60+p.eM)return{cur:p,curIdx:i,next:(i+1)%MEALS.length};}
+    return{cur:null,curIdx:-1,next:0};
+  }
+  function fmt(h,m){var ap=h>=12?'PM':'AM';var h2=h%12;if(!h2)h2=12;return h2+':'+(m<10?'0':'')+m+' '+ap;}
+  function getActiveMeal(){
+    if(selectedMeal)return selectedMeal;
+    var mp=getCurrent();return mp.cur?mp.cur.name:MEALS[mp.next].name;
+  }
+
+  function renderTabs(){
+    var mp=getCurrent();
+    var active=getActiveMeal();
+    var tabsEl=document.getElementById('meal-tabs');
+    tabsEl.innerHTML=MEALS.map(function(p){
+      var isCurrent=mp.cur&&mp.cur.name===p.name;
+      var isActive=active===p.name;
+      var cls='meal-tab'+(isActive?' active':'')+(isCurrent?' now':'');
+      return '<button class="'+cls+'" data-meal="'+p.name+'">'+p.emoji+' '+p.name+'</button>';
+    }).join('');
+    tabsEl.querySelectorAll('.meal-tab').forEach(function(btn){
+      btn.addEventListener('click',function(){
+        var meal=btn.dataset.meal;
+        var mp2=getCurrent();
+        var autoMeal=mp2.cur?mp2.cur.name:MEALS[mp2.next].name;
+        // If tapping the current auto meal, go back to auto mode
+        if(meal===autoMeal)selectedMeal=null;
+        else selectedMeal=meal;
+        render();
+      });
+    });
+  }
+
+  function updateIndicator(){
+    var mp=getCurrent();
+    var dot=document.querySelector('#cafe-period-indicator .cafe-period-dot');
+    var txt=document.getElementById('cafe-period-text');
+    if(mp.cur){
+      dot.style.background='var(--green)';dot.style.boxShadow='0 0 5px var(--green)';
+      txt.textContent='NOW SERVING: '+mp.cur.emoji+' '+mp.cur.name.toUpperCase()+' (until '+fmt(mp.cur.eH,mp.cur.eM)+')';
+      txt.style.color='var(--green)';
+    }else{
+      var nx=MEALS[mp.next];
+      dot.style.background='var(--yellow)';dot.style.boxShadow='0 0 5px var(--yellow)';
+      txt.textContent='BETWEEN MEALS \u2014 NEXT: '+nx.emoji+' '+nx.name.toUpperCase()+' at '+fmt(nx.sH,nx.sM);
+      txt.style.color='var(--yellow)';
+    }
+    // If viewing a different period, show a note
+    if(selectedMeal){
+      var mp2=getCurrent();
+      var autoMeal=mp2.cur?mp2.cur.name:MEALS[mp2.next].name;
+      if(selectedMeal!==autoMeal){
+        txt.textContent+=(' \u2014 Viewing: '+selectedMeal);
+      }
+    }
+  }
+
+  function renderMenu(){
+    var meal=getActiveMeal();
+    var data=MENU[meal]||[];
+    var h='';
+    for(var s=0;s<data.length;s++){
+      var st=data[s];
+      h+='<div class="cafe-station"><div class="cafe-station-name">'+st.station+'</div><div class="cafe-items">'+st.items.map(function(i){return '<span class="cafe-item">'+i+'</span>';}).join('')+'</div></div>';
+    }
+    if(!data.length)h='<div class="nloading">No menu data</div>';
+    document.getElementById('cafe-row').innerHTML=h;
+  }
+
+  function render(){
+    updateIndicator();
+    renderTabs();
+    renderMenu();
+  }
+
+  render();
+
+  // Sodexo Live API — attempts to fetch real menu, falls back to hardcoded
+  var SODEXO_API='https://api-prd.sodexomyway.net/v0.2/data/menu/54263001/15321';
+  var SODEXO_KEY='68717828-b754-420d-9488-4c37cb7d7ef7';
+  var sodexoAttempted=false;
+
+  function fetchSodexoMenu(){
+    var today=new Date();
+    var dateStr=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+    fetch(SODEXO_API+'?date='+dateStr,{
+      headers:{'API-Key':SODEXO_KEY,'Content-Type':'application/json'}
+    })
+    .then(function(r){return r.ok?r.json():null;})
+    .then(function(data){
+      sodexoAttempted=true;
+      if(!data||!Array.isArray(data)||!data.length){
+        // API returned empty — check if it's a weekday during normal hours
+        var day=today.getDay();
+        var hour=today.getHours();
+        if(day>=1&&day<=5&&hour>=7&&hour<=21){
+          // Weekday during service hours but API empty — dining hall likely closed
+          document.getElementById('cafe-row').innerHTML='<div class="nloading" style="text-align:left;">&#x1F6AB; Dining Hall appears to be closed today.<br><span style="font-size:9px;opacity:.6;margin-top:4px;display:inline-block;">Sodexo API returned no menu data. Showing default menu below as reference.</span></div>';
+          // Still render hardcoded below after a moment
+          setTimeout(function(){renderMenu();},100);
+        }
+        return;
+      }
+      // Parse Sodexo data and replace hardcoded menu
+      // TODO: Map Sodexo JSON structure to MENU format once we have a sample response
+      // For now, the data structure is unknown — log it for inspection
+      console.log('Sodexo menu data received:',data);
+    })
+    .catch(function(){
+      sodexoAttempted=true;
+      // API unreachable — silently use hardcoded data
+    });
+  }
+  // Attempt Sodexo fetch on load
+  fetchSodexoMenu();
+
+  var lastAutoMeal=getActiveMeal();
+  setInterval(function(){
+    var newAuto=getCurrent();
+    var newMeal=newAuto.cur?newAuto.cur.name:MEALS[newAuto.next].name;
+    if(lastAutoMeal!==newMeal){lastAutoMeal=newMeal;if(!selectedMeal)render();else{updateIndicator();renderTabs();}}
+  },60000);
+})();
+
+// ══════════════════════════════════
+// CAMPUS EVENTS — iCal + RSS feeds with dedup and source filtering
+// ══════════════════════════════════
+(function(){
+  var EVENT_FEEDS=[
+    {url:'https://jsu.campusgroups.com/ical/jsu/ical_jsu.ics',label:'CampusGroups',type:'ical'},
+    {url:'https://www.trumba.com/calendars/jsu-events.ics',label:'JSU Events',type:'ical'}
+  ];
+  var EVENTS_CACHE_KEY='jsu_events_cache';
+  var EVENTS_CACHE_MAX=60*60*1000;
+  var activeSourceFilter='all';
+
+  function getEventsCache(){try{return JSON.parse(localStorage.getItem(EVENTS_CACHE_KEY))||{};}catch(e){return{};}}
+  function saveEventsCache(c){try{localStorage.setItem(EVENTS_CACHE_KEY,JSON.stringify(c));}catch(e){}}
+
+  function parseICal(text){
+    var events=[];
+    text=text.replace(/\r\n[ \t]/g,'').replace(/\r/g,'');
+    var blocks=text.split('BEGIN:VEVENT');
+    for(var i=1;i<blocks.length;i++){
+      var block=blocks[i].split('END:VEVENT')[0];
+      var ev={};
+      var lines=block.split('\n');
+      for(var j=0;j<lines.length;j++){
+        var line=lines[j].trim();
+        if(!line)continue;
+        var colonIdx=line.indexOf(':');
+        if(colonIdx<0)continue;
+        var key=line.substring(0,colonIdx);
+        var val=line.substring(colonIdx+1);
+        var semiIdx=key.indexOf(';');
+        if(semiIdx>0)key=key.substring(0,semiIdx);
+        if(key==='SUMMARY')ev.title=val.replace(/\\,/g,',').replace(/\\;/g,';').replace(/\\n/g,' ').trim();
+        else if(key==='DTSTART')ev.start=parseICalDate(val);
+        else if(key==='DTEND')ev.end=parseICalDate(val);
+        else if(key==='LOCATION')ev.location=val.replace(/\\,/g,',').replace(/\\n/g,', ').trim();
+        else if(key==='DESCRIPTION')ev.desc=val.replace(/\\n/g,' ').substring(0,200).trim();
+        else if(key==='URL')ev.url=val.trim();
+      }
+      if(ev.title&&ev.start)events.push(ev);
+    }
+    return events;
+  }
+
+  function parseICalDate(s){
+    s=s.trim();
+    if(s.length>=15){
+      var y=parseInt(s.substr(0,4)),mo=parseInt(s.substr(4,2))-1,d=parseInt(s.substr(6,2));
+      var h=parseInt(s.substr(9,2)),mi=parseInt(s.substr(11,2)),sec=parseInt(s.substr(13,2))||0;
+      if(s.endsWith('Z'))return new Date(Date.UTC(y,mo,d,h,mi,sec));
+      return new Date(y,mo,d,h,mi,sec);
+    }
+    if(s.length>=8){
+      return new Date(parseInt(s.substr(0,4)),parseInt(s.substr(4,2))-1,parseInt(s.substr(6,2)));
+    }
+    return new Date(s);
+  }
+
+  function fetchEventFeed(feed){
+    var url=feed.url;
+    return fetchWithTimeout('https://corsproxy.io/?'+encodeURIComponent(url),{cache:'no-cache'},15000)
+      .then(function(r){if(!r.ok)throw new Error('');return r.text();})
+      .catch(function(){
+        return fetchWithTimeout('https://api.allorigins.win/raw?url='+encodeURIComponent(url),{cache:'no-cache'},15000)
+          .then(function(r){if(!r.ok)throw new Error('');return r.text();});
+      })
+      .then(function(text){
+        if(feed.type==='ical'){
+          if(text.indexOf('BEGIN:VCALENDAR')<0)throw new Error('Not iCal');
+          var events=parseICal(text);
+          return events.map(function(e){e.source=feed.label;return e;});
+        }
+        // RSS parsing for Trumba RSS
+        return parseRSSEvents(text,feed.label);
+      });
+  }
+
+  function parseRSSEvents(xml,label){
+    var events=[];
+    try{
+      var doc=new DOMParser().parseFromString(xml,'text/xml');
+      if(doc.querySelector('parsererror'))return events;
+      var items=doc.querySelectorAll('item');
+      items.forEach(function(item){
+        var title=(item.querySelector('title')||{}).textContent||'';
+        var desc=(item.querySelector('description')||{}).textContent||'';
+        var link='';
+        var les=item.getElementsByTagName('link');
+        for(var i=0;i<les.length;i++){var hr=les[i].getAttribute('href');var tx=(les[i].textContent||'').trim();if(hr){link=hr;break;}if(tx&&tx.indexOf('http')===0){link=tx;break;}}
+        var pubDate=(item.querySelector('pubDate')||item.querySelector('published')||{}).textContent||'';
+        if(title&&pubDate){
+          events.push({title:title.trim(),start:new Date(pubDate),location:'',source:label,url:link});
+        }
+      });
+    }catch(e){}
+    return events;
+  }
+
+  // Deduplication — events with same title + same day = duplicate
+  function dedup(events){
+    var seen={};
+    return events.filter(function(e){
+      var key=e.title.toLowerCase().replace(/\s+/g,' ').trim()+'|'+e.start.toDateString();
+      if(seen[key])return false;
+      seen[key]=true;
+      return true;
+    });
+  }
+
+  function isToday(d){var n=new Date();return d.getFullYear()===n.getFullYear()&&d.getMonth()===n.getMonth()&&d.getDate()===n.getDate();}
+  function isTomorrow(d){var t=new Date();t.setDate(t.getDate()+1);return d.getFullYear()===t.getFullYear()&&d.getMonth()===t.getMonth()&&d.getDate()===t.getDate();}
+  function isThisWeek(d){var now=new Date();var endOfWeek=new Date(now);endOfWeek.setDate(now.getDate()+(7-now.getDay()));endOfWeek.setHours(23,59,59);return d<=endOfWeek&&d>=now;}
+  function fmtTime(d){return d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});}
+  function fmtDayShort(d){return d.toLocaleDateString('en-US',{weekday:'short',month:'numeric',day:'numeric'});}
+  function timeAgo(ts){var m=Math.round((Date.now()-ts)/60000);if(m<1)return'just now';if(m<60)return m+'m ago';var h=Math.round(m/60);return h+'h ago';}
+
+  function renderSourceFilter(events){
+    var filterEl=document.getElementById('events-filter');
+    var sources={};
+    events.forEach(function(e){sources[e.source]=true;});
+    var srcList=Object.keys(sources).sort();
+    if(srcList.length<2){filterEl.innerHTML='';return;}
+    var html='<button class="esf-btn'+(activeSourceFilter==='all'?' active':'')+'" data-src="all">All</button>';
+    srcList.forEach(function(s){
+      html+='<button class="esf-btn'+(activeSourceFilter===s?' active':'')+'" data-src="'+s+'">'+s+'</button>';
+    });
+    filterEl.innerHTML=html;
+    filterEl.querySelectorAll('.esf-btn').forEach(function(btn){
+      btn.addEventListener('click',function(){
+        activeSourceFilter=btn.dataset.src;
+        var cache=getEventsCache();
+        if(cache.events){
+          var evts=cache.events.map(function(e){e.start=new Date(e.start);if(e.end)e.end=new Date(e.end);return e;});
+          renderEvents(evts);
+        }
+      });
+    });
+  }
+
+  function renderEvents(events){
+    var el=document.getElementById('events-body');
+    if(!events||!events.length){
+      el.innerHTML='<div class="events-empty">No upcoming events found</div>';
+      renderSourceFilter([]);
+      return;
+    }
+    renderSourceFilter(events);
+    // Apply source filter
+    var filtered=activeSourceFilter==='all'?events:events.filter(function(e){return e.source===activeSourceFilter;});
+    // Filter to future events only (within next 14 days)
+    var now=new Date();
+    var cutoff=new Date(now);cutoff.setDate(cutoff.getDate()+14);
+    var upcoming=filtered.filter(function(e){return e.start>=now&&e.start<=cutoff;});
+    upcoming.sort(function(a,b){return a.start-b.start;});
+    upcoming=dedup(upcoming);
+    upcoming=upcoming.slice(0,20);
+    if(!upcoming.length){
+      el.innerHTML='<div class="events-empty">No events in the next 2 weeks'+(activeSourceFilter!=='all'?' for '+activeSourceFilter:'')+'</div>';
+      return;
+    }
+    var groups={today:[],tomorrow:[],week:[],later:[]};
+    upcoming.forEach(function(e){
+      if(isToday(e.start))groups.today.push(e);
+      else if(isTomorrow(e.start))groups.tomorrow.push(e);
+      else if(isThisWeek(e.start))groups.week.push(e);
+      else groups.later.push(e);
+    });
+    var html='';
+    function renderGroup(label,items,showDay){
+      if(!items.length)return '';
+      var h='<div class="events-day-group"><div class="events-day-label">'+label+'</div>';
+      items.forEach(function(e){
+        var timeStr=showDay?fmtDayShort(e.start)+' '+fmtTime(e.start):fmtTime(e.start);
+        var locStr=e.location?'<div class="event-loc">'+e.location+'</div>':'';
+        h+='<div class="event-row"><div class="event-time">'+timeStr+'</div><div class="event-details"><div class="event-title">'+e.title+'<span class="event-src-tag">'+e.source+'</span></div>'+locStr+'</div></div>';
+      });
+      h+='</div>';
+      return h;
+    }
+    html+=renderGroup('Today',groups.today,false);
+    html+=renderGroup('Tomorrow',groups.tomorrow,false);
+    html+=renderGroup('This Week',groups.week,true);
+    html+=renderGroup('Coming Up',groups.later,true);
+    el.innerHTML=html;
+  }
+
+  function loadEvents(){
+    var el=document.getElementById('events-body');
+    var cache=getEventsCache();
+    if(cache.events&&cache.events.length){
+      var evts=cache.events.map(function(e){e.start=new Date(e.start);if(e.end)e.end=new Date(e.end);return e;});
+      renderEvents(evts);
+      if(cache.ts)document.getElementById('events-updated').textContent='Updated '+timeAgo(cache.ts);
+    }
+    if(cache.ts&&(Date.now()-cache.ts)<EVENTS_CACHE_MAX)return;
+    if(!cache.events||!cache.events.length)el.innerHTML='<div class="nloading">LOADING EVENTS&hellip;</div>';
+    var allEvents=[];var idx=0;
+    function nextFeed(){
+      if(idx>=EVENT_FEEDS.length){
+        if(allEvents.length){
+          var toCache=allEvents.map(function(e){return{title:e.title,start:e.start.toISOString(),end:e.end?e.end.toISOString():null,location:e.location||'',source:e.source,url:e.url||''};});
+          saveEventsCache({events:toCache,ts:Date.now()});
+          document.getElementById('events-updated').textContent='Updated just now';
+        }
+        renderEvents(allEvents);
+        return;
+      }
+      var feed=EVENT_FEEDS[idx];idx++;
+      fetchEventFeed(feed).then(function(events){
+        allEvents=allEvents.concat(events);
+        renderEvents(allEvents);
+        setTimeout(nextFeed,3000);
+      }).catch(function(){
+        setTimeout(nextFeed,1000);
+      });
+    }
+    nextFeed();
+  }
+  loadEvents();
+  setInterval(loadEvents,30*60*1000);
+  document.getElementById('events-refresh').addEventListener('click',function(){
+    localStorage.removeItem(EVENTS_CACHE_KEY);
+    activeSourceFilter='all';
+    loadEvents();
+  });
+})();
+
+// ══════════════════════════════════
+// GAMEDAY SCOREBOARD — Sidearm Sports JSON API
+// ══════════════════════════════════
+(function(){
+  var SCORES_CACHE_KEY='jsu_scores_cache';
+  var SCORES_CACHE_MAX=30*60*1000;
+  var selectedSport='all';
+  var todayOnly=false;
+
+  function getScoresCache(){try{return JSON.parse(localStorage.getItem(SCORES_CACHE_KEY))||{};}catch(e){return{};}}
+  function saveScoresCache(c){try{localStorage.setItem(SCORES_CACHE_KEY,JSON.stringify(c));}catch(e){}}
+  function timeAgo(ts){var m=Math.round((Date.now()-ts)/60000);if(m<1)return'just now';if(m<60)return m+'m ago';return Math.round(m/60)+'h ago';}
+
+  function proxyFetch(url){
+    return fetchWithTimeout('https://corsproxy.io/?'+encodeURIComponent(url),{cache:'no-cache'},15000)
+      .then(function(r){if(!r.ok)throw new Error('');return r.json();})
+      .catch(function(){
+        return fetchWithTimeout('https://api.allorigins.win/raw?url='+encodeURIComponent(url),{cache:'no-cache'},15000)
+          .then(function(r){if(!r.ok)throw new Error('');return r.json();});
+      });
+  }
+
+  function fetchCalendar(){
+    var now=new Date();
+    var dateStr=(now.getMonth()+1)+'/'+now.getDate()+'/'+now.getFullYear();
+    return proxyFetch('https://jaxstatesports.com/services/responsive-calendar.ashx?type=month&sport=0&date='+encodeURIComponent(dateStr));
+  }
+
+  function fetchLiveStats(){
+    return proxyFetch('https://jaxstatesports.com/services/livestats.ashx');
+  }
+
+  function isToday(d){var n=new Date();return d.getFullYear()===n.getFullYear()&&d.getMonth()===n.getMonth()&&d.getDate()===n.getDate();}
+  function fmtGameDate(d){return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});}
+
+  function renderSportTabs(events){
+    var tabsEl=document.getElementById('sport-tabs');
+    var sports={};
+    events.forEach(function(e){if(e.sport)sports[e.sport.short_display||e.sport.abbreviation]=e.sport.shortname;});
+    var sportList=Object.keys(sports).sort();
+    var html='<button class="sport-tab'+(selectedSport==='all'?' active':'')+'" data-sport="all">All</button>';
+    html+='<button class="sport-tab today-btn'+(todayOnly?' active':'')+'" data-today="1">Today Only</button>';
+    sportList.forEach(function(s){
+      html+='<button class="sport-tab'+(selectedSport===s?' active':'')+'" data-sport="'+s+'">'+s+'</button>';
+    });
+    tabsEl.innerHTML=html;
+    tabsEl.querySelectorAll('.sport-tab').forEach(function(btn){
+      btn.addEventListener('click',function(){
+        if(btn.dataset.today){todayOnly=!todayOnly;}
+        else{selectedSport=btn.dataset.sport;}
+        renderScoreboard(getScoresCache().events||[]);
+      });
+    });
+  }
+
+  function renderScoreboard(events){
+    var el=document.getElementById('scores-body');
+    if(!events||!events.length){el.innerHTML='<div class="events-empty">No game data available</div>';renderSportTabs([]);return;}
+    renderSportTabs(events);
+    var now=new Date();
+    // Filter by sport
+    var filtered=selectedSport==='all'?events:events.filter(function(e){return(e.sport.short_display||e.sport.abbreviation)===selectedSport;});
+    if(todayOnly)filtered=filtered.filter(function(e){return isToday(new Date(e.date));});
+    // Split into upcoming and results
+    var upcoming=[],results=[];
+    filtered.forEach(function(e){
+      if(e.result&&e.result.team_score&&e.result.team_score!=='')results.push(e);
+      else if(new Date(e.date)>=new Date(now.getFullYear(),now.getMonth(),now.getDate()))upcoming.push(e);
+    });
+    upcoming.sort(function(a,b){return new Date(a.date)-new Date(b.date);});
+    results.sort(function(a,b){return new Date(b.date)-new Date(a.date);});
+    upcoming=upcoming.slice(0,5);
+    results=results.slice(0,5);
+    var html='';
+    if(upcoming.length){
+      html+='<div class="scores-section"><div class="scores-section-title">Upcoming</div>';
+      upcoming.forEach(function(e){
+        var d=new Date(e.date);
+        var abbr=e.sport.short_display||e.sport.abbreviation||'';
+        var opp=e.opponent?e.opponent.title:'TBD';
+        var atVs=e.at_vs==='at'?'at ':'vs ';
+        var loc=e.location||'';
+        var time=e.time||fmtGameDate(d);
+        html+='<div class="game-row" title="'+loc+'">';
+        html+='<div class="game-sport">'+abbr+'</div>';
+        html+='<div class="game-details"><div class="game-matchup">'+atVs+opp+'</div><div class="game-meta">'+fmtGameDate(d)+(e.time?' \u2022 '+e.time:'')+(loc?' \u2022 '+loc:'')+'</div></div>';
+        html+='<div class="game-time">'+(e.time||'TBD')+'</div>';
+        html+='</div>';
+      });
+      html+='</div>';
+    }
+    if(results.length){
+      html+='<div class="scores-section"><div class="scores-section-title">Recent Results</div>';
+      results.forEach(function(e){
+        var abbr=e.sport.short_display||e.sport.abbreviation||'';
+        var opp=e.opponent?e.opponent.title:'';
+        var atVs=e.at_vs==='at'?'at ':'vs ';
+        var isWin=e.result.status==='W';
+        var score=e.result.team_score+'-'+e.result.opponent_score;
+        var boxUrl=e.result.boxscore?e.result.boxscore.url:'';
+        html+='<div class="game-row"'+(boxUrl?' onclick="window.open(\'https://jaxstatesports.com'+boxUrl+'\',\'_blank\')"':'')+' title="Click for box score">';
+        html+='<div class="game-sport">'+abbr+'</div>';
+        html+='<div class="game-details"><div class="game-matchup">'+atVs+opp+'</div><div class="game-meta">'+fmtGameDate(new Date(e.date))+(e.result.postscore_info?' \u2022 '+e.result.postscore_info:'')+'</div></div>';
+        html+='<div class="game-result '+(isWin?'win':'loss')+'">'+e.result.status+' '+score+'</div>';
+        html+='</div>';
+      });
+      html+='</div>';
+    }
+    if(!html)html='<div class="events-empty">No games found'+(todayOnly?' today':'')+(selectedSport!=='all'?' for '+selectedSport:'')+'</div>';
+    el.innerHTML=html;
+  }
+
+  function renderLiveBanner(liveData){
+    var banner=document.getElementById('live-banner');
+    if(!liveData||!liveData.Games||!liveData.Games.length){
+      banner.classList.remove('active');
+      return;
+    }
+    var game=liveData.Games[0];
+    banner.classList.add('active');
+    banner.innerHTML='<div class="live-dot"></div><div class="live-label">LIVE</div><div class="live-info">'
+      +'<div class="live-matchup">'+(game.Sport||'')+ ' \u2022 '+(game.Opponent||'Game in Progress')+'</div>'
+      +'<div class="live-score">'+(game.HomeScore||'0')+' - '+(game.AwayScore||'0')+'</div>'
+      +'</div>'+(game.Url?'<a class="live-link" href="'+game.Url+'" target="_blank">STATS \u2197</a>':'');
+  }
+
+  function loadScoreboard(){
+    var cache=getScoresCache();
+    if(cache.events&&cache.events.length){
+      renderScoreboard(cache.events);
+      if(cache.ts)document.getElementById('scores-updated').textContent='Updated '+timeAgo(cache.ts);
+    }
+    if(cache.ts&&(Date.now()-cache.ts)<SCORES_CACHE_MAX)return;
+    if(!cache.events||!cache.events.length)document.getElementById('scores-body').innerHTML='<div class="nloading">LOADING SCOREBOARD&hellip;</div>';
+    fetchCalendar().then(function(cal){
+      var allEvents=[];
+      if(cal&&Array.isArray(cal)){
+        cal.forEach(function(day){
+          if(day.events)day.events.forEach(function(e){allEvents.push(e);});
+        });
+      }
+      if(allEvents.length){
+        saveScoresCache({events:allEvents,ts:Date.now()});
+        document.getElementById('scores-updated').textContent='Updated just now';
+      }
+      renderScoreboard(allEvents);
+    }).catch(function(){
+      if(!cache.events)document.getElementById('scores-body').innerHTML='<div class="events-empty">Could not load scoreboard</div>';
+    });
+  }
+
+  // Poll live stats every 60s
+  function pollLive(){
+    fetchLiveStats().then(renderLiveBanner).catch(function(){});
+  }
+
+  loadScoreboard();
+  pollLive();
+  setInterval(loadScoreboard,30*60*1000);
+  setInterval(pollLive,60000);
+  document.getElementById('scores-refresh').addEventListener('click',function(){
+    localStorage.removeItem(SCORES_CACHE_KEY);
+    selectedSport='all';todayOnly=false;
+    loadScoreboard();pollLive();
+  });
+})();
+
+// ══════════════════════════════════
+// RSS ENGINE — CACHED + STAGGERED
+// ══════════════════════════════════
+// Problem: allorigins proxy rate-limits parallel requests, so fetching
+// all feeds at once works the first time then they all 429.
+// Solution: cache results in localStorage, render from cache instantly,
+// refresh feeds ONE AT A TIME in the background with delays.
+
+var RSS_CACHE_KEY='jsu_rss_cache';
+var RSS_CACHE_MAX_AGE=30*60*1000; // 30 min — consider stale after this
+var RSS_FETCH_DELAY=4000; // 4 sec between each feed refresh
+
+function getRSSCache(){
+  try{return JSON.parse(localStorage.getItem(RSS_CACHE_KEY))||{};}catch(e){return{};}
+}
+function saveRSSCache(c){
+  try{localStorage.setItem(RSS_CACHE_KEY,JSON.stringify(c));}catch(e){}
 }
 
-function renderGlossary(container) {
-  const wrap = h('div',{className:'tab-content'});
-  const cats = ['All',...[...new Set(GLOSSARY.map(g=>g.cat))]];
-  wrap.appendChild(h('h2',{className:'sec-title'},'Glossary'));
-  wrap.appendChild(h('p',{className:'sec-desc'},GLOSSARY.length+' terms across '+(cats.length-1)+' categories'));
-
-  const input = h('input',{className:'search-input',type:'text',placeholder:'Search terms...',value:state.gSearch,
-    oninput:(e)=>{state.gSearch=e.target.value;render();}});
-  wrap.appendChild(input);
-
-  const filterRow = h('div',{className:'filter-row'});
-  cats.forEach(c => {
-    filterRow.appendChild(h('button',{className:'filter-btn'+(state.gFilter===c?' active':''),
-      onclick:()=>{state.gFilter=c;render();}},c));
+function parseRSS(xml,limit){
+  limit=limit||8;xml=xml.replace(/^\s*/,'').replace(/^\uFEFF/,'');
+  var doc=new DOMParser().parseFromString(xml,'text/xml');
+  if(doc.querySelector('parsererror'))throw new Error('XML parse error');
+  var items=[],nodes=doc.querySelectorAll('item');
+  if(!nodes.length)nodes=doc.querySelectorAll('entry');
+  for(var i=0;i<Math.min(nodes.length,limit);i++){
+    var n=nodes[i],title='',link='',pub='';
+    var te=n.querySelector('title');if(te)title=te.textContent||'';
+    var les=n.getElementsByTagName('link');
+    for(var li=0;li<les.length;li++){var le=les[li];var hr=le.getAttribute('href');var tx=(le.textContent||'').trim();if(hr){link=hr;break;}if(tx&&tx.indexOf('http')===0){link=tx;break;}}
+    var de=n.querySelector('pubDate')||n.querySelector('published')||n.querySelector('updated');
+    if(de)pub=de.textContent||'';
+    if(title)items.push({title:title.trim(),link:link.trim(),pubDate:pub});
+  }
+  if(!items.length)throw new Error('No items');
+  return items;
+}
+function fetchWithTimeout(url,opts,ms){
+  ms=ms||10000;
+  return new Promise(function(res,rej){
+    var t=setTimeout(function(){rej(new Error('Timeout'));},ms);
+    fetch(url,opts||{}).then(function(r){clearTimeout(t);res(r);}).catch(function(e){clearTimeout(t);rej(e);});
   });
-  wrap.appendChild(filterRow);
+}
+// Single feed fetch — tries multiple proxies then direct
+function fetchRSS(url,limit){
+  limit=limit||8;
+  // Strategy 1: allorigins /raw
+  return fetchWithTimeout('https://api.allorigins.win/raw?url='+encodeURIComponent(url),{cache:'no-cache'},12000)
+    .then(function(r){if(!r.ok)throw new Error('');return r.text();})
+    .then(function(t){return parseRSS(t,limit);})
+    .catch(function(){
+      // Strategy 2: allorigins /get (JSON wrapper)
+      return fetchWithTimeout('https://api.allorigins.win/get?url='+encodeURIComponent(url),{cache:'no-cache'},12000)
+        .then(function(r){if(!r.ok)throw new Error('');return r.json();})
+        .then(function(j){if(!j.contents)throw new Error('');return parseRSS(j.contents,limit);});
+    })
+    .catch(function(){
+      // Strategy 3: corsproxy.io
+      return fetchWithTimeout('https://corsproxy.io/?'+encodeURIComponent(url),{cache:'no-cache'},12000)
+        .then(function(r){if(!r.ok)throw new Error('');return r.text();})
+        .then(function(t){return parseRSS(t,limit);});
+    })
+    .catch(function(){
+      // Strategy 4: direct fetch (works for CORS-enabled feeds)
+      return fetchWithTimeout(url,{cache:'no-cache'},10000)
+        .then(function(r){if(!r.ok)throw new Error('');return r.text();})
+        .then(function(t){return parseRSS(t,limit);});
+    });
+}
+function cleanTitle(t){return t.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/<[^>]+>/g,'').trim();}
 
-  const filtered = GLOSSARY.filter(g => {
-    const ms = !state.gSearch || g.term.toLowerCase().includes(state.gSearch.toLowerCase()) || g.def.toLowerCase().includes(state.gSearch.toLowerCase());
-    const mc = state.gFilter==='All' || g.cat===state.gFilter;
-    return ms && mc;
+// Fetch a single feed, update cache ONLY if successful or if no cache exists
+function fetchAndCacheFeed(feed){
+  return fetchRSS(feed.url,6).then(function(items){
+    var cleaned=items.map(function(i){return{title:cleanTitle(i.title),link:i.link,pubDate:i.pubDate};});
+    var cache=getRSSCache();
+    cache[feed.url]={items:cleaned,label:feed.label,ts:Date.now(),error:false};
+    saveRSSCache(cache);
+    return{label:feed.label,items:cleaned,error:false};
+  }).catch(function(){
+    var cache=getRSSCache();
+    var existing=cache[feed.url];
+    if(existing&&existing.items&&existing.items.length){
+      // KEEP the good cached data, just note the refresh failed
+      // Do NOT set error=true if cache is still fresh (< max age)
+      var age=Date.now()-(existing.ts||0);
+      if(age<RSS_CACHE_MAX_AGE){
+        // Cache is still fresh — don't mark as error at all
+        return{label:feed.label,items:existing.items,error:false};
+      }
+      // Cache is stale — mark as stale but keep showing items
+      existing.error=true;
+      existing.label=feed.label;
+      saveRSSCache(cache);
+      return{label:feed.label,items:existing.items,error:true,stale:true};
+    }
+    // No cached data at all — this is a real failure
+    cache[feed.url]={items:[],label:feed.label,ts:Date.now(),error:true};
+    saveRSSCache(cache);
+    return{label:feed.label,items:[],error:true,stale:false};
   });
-
-  filtered.forEach(g => {
-    wrap.appendChild(h('div',{className:'g-item'},
-      h('div',{className:'g-term-row'},
-        h('span',{className:'g-term'},g.term),
-        h('span',{className:'g-cat'},g.cat)
-      ),
-      h('p',{className:'g-def'},g.def)
-    ));
-  });
-
-  if (!filtered.length) wrap.appendChild(h('p',{className:'empty-text',style:'text-align:center;padding:20px'},'No terms match your search.'));
-  container.appendChild(wrap);
 }
 
-function renderProgress(container) {
-  const wrap = h('div',{className:'tab-content'});
-  const total = getTotalProgress();
-
-  wrap.appendChild(h('h2',{className:'sec-title'},'Your Progress'));
-
-  // SVG circle
-  const overall = h('div',{className:'prog-overall'});
-  const svgNS = 'http://www.w3.org/2000/svg';
-  const svg = document.createElementNS(svgNS,'svg');
-  svg.setAttribute('viewBox','0 0 100 100');
-  svg.style.width='120px'; svg.style.height='120px';
-
-  const bgCircle = document.createElementNS(svgNS,'circle');
-  bgCircle.setAttribute('cx','50'); bgCircle.setAttribute('cy','50'); bgCircle.setAttribute('r','42');
-  bgCircle.setAttribute('fill','none'); bgCircle.setAttribute('stroke','#2a2a3a'); bgCircle.setAttribute('stroke-width','8');
-  svg.appendChild(bgCircle);
-
-  const fgCircle = document.createElementNS(svgNS,'circle');
-  fgCircle.setAttribute('cx','50'); fgCircle.setAttribute('cy','50'); fgCircle.setAttribute('r','42');
-  fgCircle.setAttribute('fill','none'); fgCircle.setAttribute('stroke','#C41E3A'); fgCircle.setAttribute('stroke-width','8');
-  fgCircle.setAttribute('stroke-dasharray', (total.pct*2.64)+' '+(264-total.pct*2.64));
-  fgCircle.setAttribute('stroke-dashoffset','66'); fgCircle.setAttribute('stroke-linecap','round');
-  fgCircle.style.transition='stroke-dasharray 0.5s ease';
-  svg.appendChild(fgCircle);
-
-  const pctText = document.createElementNS(svgNS,'text');
-  pctText.setAttribute('x','50'); pctText.setAttribute('y','46'); pctText.setAttribute('text-anchor','middle');
-  pctText.setAttribute('fill','#f0e6d3'); pctText.setAttribute('font-size','22'); pctText.setAttribute('font-weight','bold');
-  pctText.setAttribute('font-family',"'DM Mono',monospace");
-  pctText.textContent=total.pct+'%';
-  svg.appendChild(pctText);
-
-  const countText = document.createElementNS(svgNS,'text');
-  countText.setAttribute('x','50'); countText.setAttribute('y','62'); countText.setAttribute('text-anchor','middle');
-  countText.setAttribute('fill','#8a8a9a'); countText.setAttribute('font-size','10');
-  countText.setAttribute('font-family',"'DM Mono',monospace");
-  countText.textContent=total.done+'/'+total.total;
-  svg.appendChild(countText);
-
-  overall.appendChild(svg);
-  overall.appendChild(h('p',{className:'prog-label'},'Overall Mastery'));
-  wrap.appendChild(overall);
-
-  // Per phase
-  PHASES.forEach(phase => {
-    const p = getPhaseProgress(phase.id);
-    const row = h('div',{className:'prog-phase'});
-    row.appendChild(h('div',{className:'prog-phase-info'},
-      h('span',{className:'prog-phase-name'},'Phase '+phase.id+': '+phase.title),
-      h('span',{className:'prog-phase-pct'},p.pct+'%')
-    ));
-    row.appendChild(h('div',{className:'bar-track'},h('div',{className:'bar-fill',style:'width:'+p.pct+'%'})));
-    const cDone = phase.concepts.filter((_,i)=>state.progress[`p${phase.id}-c${i}`]).length;
-    const eDone = phase.exercises.filter((_,i)=>state.progress[`p${phase.id}-e${i}`]).length;
-    const cpDone = phase.prompts.filter((_,i)=>state.progress[`p${phase.id}-cp${i}`]).length;
-    row.appendChild(h('div',{className:'prog-details'},
-      h('span',{className:'prog-detail'},'Concepts: '+cDone+'/'+phase.concepts.length),
-      h('span',{className:'prog-detail'},'Exercises: '+eDone+'/'+phase.exercises.length),
-      h('span',{className:'prog-detail'},'Prompts: '+cpDone+'/'+phase.prompts.length)
-    ));
-    wrap.appendChild(row);
+// Render the headline ribbon from whatever data we have
+function renderRibbon(feedResults){
+  var track=document.getElementById('hr-track');
+  var all=[];var errors=[];
+  feedResults.forEach(function(fr){
+    fr.items.forEach(function(i){
+      all.push({title:i.title,link:i.link,tag:fr.label,isError:false});
+    });
+    if(fr.error){
+      var msg=fr.stale?'\u26A0 Showing cached \u2014 refresh failed':'\u26A0 Feed failed to load';
+      errors.push({title:msg,link:'#',tag:fr.label,isError:true});
+    }
   });
-
-  wrap.appendChild(h('button',{className:'reset-btn',onclick:()=>{
-    if(confirm('Reset all progress? This cannot be undone.')){state.progress={};saveProgress();render();}
-  }},'Reset All Progress'));
-
-  container.appendChild(wrap);
+  // Put errors at the end so they don't dominate
+  all=all.concat(errors);
+  if(!all.length){all=[{title:'No feeds configured \u2014 add them in Settings',link:'#',tag:'INFO',isError:true}];}
+  var doubled=all.concat(all);
+  track.innerHTML=doubled.map(function(i){
+    if(i.isError){
+      return '<span class="hr-item" style="color:var(--yellow);opacity:.7;cursor:default;">'
+        +'<span class="hr-badge" style="background:rgba(243,156,18,.12);color:var(--yellow);border-color:rgba(243,156,18,.3);">'+i.tag+'</span>'
+        +i.title+'</span>';
+    }
+    return '<a class="hr-item" href="'+i.link+'" target="_blank"><span class="hr-badge">'+i.tag+'</span>'+i.title+'</a>';
+  }).join('');
+  track.style.animationDuration=Math.max(50,doubled.length*4)+'s';
 }
 
-function render() {
-  const content = document.getElementById('content');
-  content.innerHTML = '';
-  content.scrollTop = 0;
-
-  renderHeader();
-  renderTabBar();
-
-  if (state.tab==='Roadmap') renderRoadmap(content);
-  else if (state.tab==='Learn') renderLearn(content);
-  else if (state.tab==='Glossary') renderGlossary(content);
-  else if (state.tab==='Progress') renderProgress(content);
+// Build results from cache (instant render)
+function renderFromCache(){
+  var feeds=getAllFeeds();
+  if(!feeds.length){
+    renderRibbon([]);return;
+  }
+  var cache=getRSSCache();
+  var results=feeds.map(function(f){
+    var c=cache[f.url];
+    if(c&&c.items&&c.items.length){
+      return{label:f.label,items:c.items,error:c.error||false,stale:c.error||false};
+    }
+    return{label:f.label,items:[],error:false,stale:false};
+  });
+  // Only render if we have at least some cached data
+  var hasData=results.some(function(r){return r.items.length>0;});
+  if(hasData)renderRibbon(results);
 }
 
-// Boot
-loadProgress();
-render();
+// Staggered background refresh — one feed at a time, skips fresh cache
+var _refreshTimer=null;
+function refreshFeedsStaggered(){
+  if(_refreshTimer)clearTimeout(_refreshTimer);
+  var feeds=getAllFeeds();
+  if(!feeds.length){renderRibbon([]);return;}
+  var cache=getRSSCache();
+  var idx=0;
+  function next(){
+    if(idx>=feeds.length){
+      renderFromCache();
+      return;
+    }
+    var feed=feeds[idx];idx++;
+    // Skip if cache is fresh enough
+    var existing=cache[feed.url];
+    if(existing&&existing.items&&existing.items.length&&!existing.error){
+      var age=Date.now()-(existing.ts||0);
+      if(age<RSS_CACHE_MAX_AGE){
+        // Fresh — skip this feed, move to next immediately
+        _refreshTimer=setTimeout(next,500);
+        return;
+      }
+    }
+    fetchAndCacheFeed(feed).then(function(){
+      renderFromCache();
+      _refreshTimer=setTimeout(next,RSS_FETCH_DELAY);
+    });
+  }
+  next();
+}
+
+// Initial load: render cache immediately, then stagger refresh
+function initRSS(){
+  renderFromCache();
+  // Small delay before starting background refresh to let page settle
+  setTimeout(refreshFeedsStaggered,1500);
+}
+
+// Fetch a single new feed immediately (for when user adds one in settings)
+function fetchSingleFeedNow(feed){
+  return fetchAndCacheFeed(feed).then(function(){renderFromCache();});
+}
+
+initRSS();
+// Refresh every 15 min (staggered, not parallel)
+setInterval(refreshFeedsStaggered,15*60*1000);
+
+})();
 </script>
 </body>
 </html>
